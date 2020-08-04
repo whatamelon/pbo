@@ -12,6 +12,7 @@ import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
 import orderRouter from './modules/order'
+import productRouter from './modules/product'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -120,16 +121,17 @@ export const asyncRoutes = [
 
   /** when your routing map is too long, you can split it into small modules **/
   orderRouter,
+  productRouter,
 
   {
-    path: '/product',
+    path: '/coupon',
     component: Layout,
     children: [
       {
-        path: 'product',
-        component: () => import('@/views/product/index'),
-        name: '상품 리스트',
-        meta: { title: '상품 리스트', icon: 'theme' }
+        path: 'coupon',
+        component: () => import('@/views/coupon'),
+        name: '쿠폰',
+        meta: { title: '쿠폰', icon: 'clipboard' }
       }
     ]
   },

@@ -25,6 +25,12 @@ const orderRouter = {
       meta: { title: '교환/환불 리스트' }
     },
     {
+      path: 'createRC',
+      component: () => import('@/views/order/createRC/index'),
+      name: '교환/환불 생성',
+      meta: { title: '교환/환불 생성' }
+    },
+    {
       path: 'shipList',
       component: () => import('@/views/order/shipList/index'),
       name: '배송 리스트',
