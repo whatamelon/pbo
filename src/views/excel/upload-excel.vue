@@ -9,6 +9,7 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import { parseTime } from '@/utils'
 
 export default {
   name: 'UploadExcel',
@@ -16,10 +17,17 @@ export default {
   data() {
     return {
       tableData: [],
-      tableHeader: []
+      tableHeader: [],
+      bookType: 'csv',
+      filename: this.getFileName()
     }
   },
   methods: {
+    getFileName() {
+      const now = new Date()
+      const secondsSinceEpoch = Math.round(now.getTime() / 1000)
+      return secondsSinceEpoch
+    },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1
 
@@ -36,6 +44,31 @@ export default {
     handleSuccess({ results, header }) {
       this.tableData = results
       this.tableHeader = header
+      // this.handleDownload()
+    },
+    handleDownload() {
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = this.tableHeader
+        const filterVal = ['id', 'decryptUid', 'encryptUid']
+        const list = this.tableData
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
     }
   }
 }

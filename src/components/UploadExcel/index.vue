@@ -1,10 +1,9 @@
 <template>
   <div>
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
-    <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-      Drop excel file here or
-      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
-        Browse
+    <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">엑셀 or CSV 파일을 넣어주세요 or
+      <el-button :loading="loading" style="margin-left:16px;" type="primary" @click="handleUpload">
+        파일 찾기
       </el-button>
     </div>
   </div>
@@ -12,6 +11,7 @@
 
 <script>
 import XLSX from 'xlsx'
+// import ReverseMd5 from 'reverse-md5'
 
 export default {
   props: {
@@ -39,7 +39,7 @@ export default {
       if (this.loading) return
       const files = e.dataTransfer.files
       if (files.length !== 1) {
-        this.$message.error('Only support uploading one file!')
+        this.$message.error('한 개의 파일만 지원합니다 :D')
         return
       }
       const rawFile = files[0] // only use files[0]
@@ -89,6 +89,21 @@ export default {
           const worksheet = workbook.Sheets[firstSheetName]
           const header = this.getHeaderRow(worksheet)
           const results = XLSX.utils.sheet_to_json(worksheet)
+
+          // var reverseMd5 = ReverseMd5({
+          //   lettersUpper: false,
+          //   lettersLower: true,
+          //   numbers: true,
+          //   special: false,
+          //   whitespace: true,
+          //   maxLen: 5
+          // })
+
+          results.forEach(function(part, index) {
+            // this[index].decrypt = reverseMd5(this[index]['__rowNum__'])
+            // // this[index].decrypt = reverseMd5(this[index]['__rowNum__'])
+          }, results)
+          console.log(results)
           this.generateData({ header, results })
           this.loading = false
           resolve()
@@ -108,7 +123,9 @@ export default {
         let hdr = 'UNKNOWN ' + C // <-- replace with your desired default
         if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
         headers.push(hdr)
+        headers.push('decrypt')
       }
+      console.log(headers)
       return headers
     },
     isExcel(file) {
