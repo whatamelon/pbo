@@ -9,12 +9,12 @@ export function getOrderListAPI(parameter) {
   })
 }
 
-export function getOrderItemListAPI(parameter, orderId) {
-  console.log(parameter)
-  console.log(orderId)
+export function getOrderItemListAPI(orderId) {
+  const orderIds = orderId['orderId']
   return ax({
-    url: '/orders/item/' + orderId,
-    method: 'get'
+    url: `/orders/item/` + orderIds,
+    method: 'get',
+    withCredentials: true
   })
 }
 

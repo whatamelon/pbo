@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 
 const ax = axios.create({
   baseURL: 'https://admin.pickling.kr'
@@ -9,7 +9,7 @@ ax.defaults.timeout = 12000
 
 ax.interceptors.request.use(
   request => {
-    request.headers.Authorization = getToken()
+    request.headers.Authorization = localStorage.getItem('token') ? localStorage.getItem('token') : null
     return request
   },
   error => Promise.reject(error)
@@ -17,8 +17,12 @@ ax.interceptors.request.use(
 
 ax.interceptors.response.use(
   response => {
-    const res = response.data
-    return res
+    const accessToken = response.headers.authorization
+    if (accessToken) {
+      localStorage.token = accessToken
+    }
+    response.data.accessToken = accessToken !== null ? accessToken : null
+    return response.data
   },
   error => Promise.reject(error)
 )

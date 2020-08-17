@@ -11,8 +11,6 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
-import orderRouter from './modules/order'
-import productRouter from './modules/product'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -80,8 +78,8 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: '메인',
-        meta: { title: '메인', icon: 'component', affix: true, roles: ['admin', 'editor'] }
+        name: 'dashboard',
+        meta: { title: 'dashboard', icon: 'component', affix: true, roles: ['admin', 'editor'] }
       }
     ]
   },
@@ -106,32 +104,17 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  {
-    path: '/users',
-    component: Layout,
-    children: [
-      {
-        path: 'users',
-        component: () => import('@/views/users'),
-        name: '회원',
-        meta: { title: '회원', icon: 'peoples' }
-      }
-    ]
-  },
-
   /** when your routing map is too long, you can split it into small modules **/
-  orderRouter,
-  productRouter,
 
   {
-    path: '/coupon',
+    path: '/order',
     component: Layout,
     children: [
       {
-        path: 'coupon',
-        component: () => import('@/views/coupon'),
-        name: '쿠폰',
-        meta: { title: '쿠폰', icon: 'clipboard' }
+        path: 'order',
+        component: () => import('@/views/order/index'),
+        name: 'Order',
+        meta: { title: '주문', icon: 'icon', noCache: true }
       }
     ]
   },

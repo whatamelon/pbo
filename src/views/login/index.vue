@@ -52,15 +52,10 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="getOrderList">
         getList
       </el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="getOrderItemList">
+        getList
+      </el-button>
     </el-form>
-
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
   </div>
 </template>
 
@@ -81,12 +76,12 @@ export default {
         limit: 30,
         orderId: '',
         dateFrom: '20200701',
-        dateTo: '20200810'
+        dateTo: '20200814'
       },
-      passwordType: 'password',
+      orderId: '10080',
+      passwordType: 'passwd',
       capsTooltip: false,
       loading: false,
-      showDialog: false,
       redirect: undefined,
       otherQuery: {}
     }
@@ -135,7 +130,7 @@ export default {
       this.$store.dispatch('admin_user/login', this.loginForm)
         .then(() => {
           console.log('22')
-          // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
           this.loading = false
         })
         .catch(() => {
@@ -149,7 +144,21 @@ export default {
       this.$store.dispatch('order/getOrderList', this.params)
         .then(() => {
           console.log('22')
-          this.$router.push({ path: '/' })
+          // this.$router.push({ path: '/' })
+          this.loading = false
+        })
+        .catch(() => {
+          console.log('33')
+          this.loading = false
+        })
+    },
+    getOrderItemList() {
+      console.log('11')
+      this.loading = true
+      this.$store.dispatch('order/getOrderItemList', this.orderId)
+        .then(() => {
+          console.log('22')
+          this.$router.replace({ path: '/' })
           this.loading = false
         })
         .catch(() => {

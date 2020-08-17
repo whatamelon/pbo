@@ -9,10 +9,10 @@ export function adminLoginAPI(data) {
   })
 }
 
-export function getInfo(token) {
-  return ax({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
+// export function getInfo(token) {
+//   return ax({
+//     url: '/vue-element-admin/user/info',
+//     method: 'get',
+//     params: { token }
+//   })
+// }

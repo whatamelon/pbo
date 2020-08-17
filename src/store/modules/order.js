@@ -1,6 +1,6 @@
 import {
-  getOrderListAPI
-  // getOrderItemListAPI,
+  getOrderListAPI,
+  getOrderItemListAPI
   // getOrderProcessListAPI,
   // getOrderRequestConfirmListAPI,
   // addOrderProcess
@@ -45,6 +45,22 @@ const actions = {
         orderId: orderId,
         dateFrom: dateFrom,
         dateTo: dateTo
+      }).then(
+        response => {
+          // commit('SET_USERROLE', response['result']['role'])
+          console.log(response)
+          resolve(response)
+        }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getOrderItemList({ commit }, orderId) {
+    console.log(orderId)
+    new Promise((resolve, reject) => {
+      getOrderItemListAPI({
+        orderId
       }).then(
         response => {
           // commit('SET_USERROLE', response['result']['role'])
