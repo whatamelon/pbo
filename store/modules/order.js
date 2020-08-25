@@ -9,7 +9,7 @@ const order = {
       ORDER_LIST:[],
       ORDER_ID:"",
       DATE_FROM: "200701",
-      DATE_TO: "200818",
+      DATE_TO: "200825",
       OFFSET: 0,
       TOTAL_CNT:0,
       ORDER_ITEM_LIST:[]

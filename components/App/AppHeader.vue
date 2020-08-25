@@ -2,6 +2,7 @@
   <div>
     <b-nav class="app-header">
       <img class="logo" src="/p_red_logo.png" @click="goToHome" />
+      <a v-bind:href="link">링크</a>
     </b-nav>
   </div>
 </template>
@@ -26,6 +27,7 @@ export default {
             text: "전체 상품",
         }
         ],
+      link:"madeleine://picklingdev.com?pick=1",
     }
   },
 

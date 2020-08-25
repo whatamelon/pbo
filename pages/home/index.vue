@@ -7,6 +7,7 @@
     id="reviewModal"
     v-show="SHOW_REVIEW_MODAL == true">
 
+
         <div class="review-modal__second" v-if="REVIEW_ID == '1'">
             <img src="/app/black_logo_big.png" class="fitchooLogo"/>
             <span class="goMin1">어때요?</span>
@@ -151,6 +152,7 @@ export default {
           value1: "",
           value2:"finish"
         },
+      link:"madeleine://picklingdev.com?pick=1",
       cardSpinning:false,
       moreCards: true,
       height: localStorage.getItem("height"),

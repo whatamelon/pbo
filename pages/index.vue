@@ -60,11 +60,34 @@ export default {
 },
 
    async asyncData({ next }) {
-    if (localStorage.getItem("tokenExpire") < new Date()) {
+
+function getFormatDate(date){
+    var year = date.getFullYear();              //yyyy
+    var month = (1 + date.getMonth());          //M
+    month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+    var day = date.getDate();                   //d
+    day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+    return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+}
+
+var x = new Date();
+
+if(!localStorage.getItem("tokenExpire")) {
+
+} else {
+
+    if (localStorage.getItem("tokenExpire") < getFormatDate(x)) {
+      console.log('dd')
+      var i = new Date();
+      console.log(li)
     } else {
+      console.log(localStorage.getItem("tokenExpire"))
+      var i = new Date();
+      console.log(li)
       next("/home");
     }
 
+}
   },
   created() {
     console.log('dd');

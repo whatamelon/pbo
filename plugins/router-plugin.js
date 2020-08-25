@@ -68,52 +68,7 @@ export default ({ app, store }) => {
 
   app.router.beforeEach(async (to, from, next) => {
 
-    if (from.name != null) {
-      localStorage.setItem("previousPage", from.name);
-    }
-
-    if(from.name == null || from.name == '') {
-      function callbackAuthToken(token){
-        window.AuthToken = token;
-        localStorage.setItem("accessToken", token);
-      }
-    
-      function callbackHeight(height){    
-        window.Height = height;
-        const getHeight = JSON.parse(height);
-            store.dispatch("setHeight", getHeight);
-            localStorage.setItem("height", getHeight);
-      }
-    
-      window.callbackAuthToken = callbackAuthToken;
-      window.callbackHeight = callbackHeight;
-    }
-
     store.dispatch("setPreviousPage", localStorage.getItem("previousPage"));
-
-    if (localStorage.getItem("height")) {
-      store.dispatch("setHeight", localStorage.getItem("height"));
-    }
-
-    if (localStorage.getItem("model")) {
-      const model = JSON.parse(localStorage.getItem("model"));
-      store.dispatch("setModel", model);
-      console.log("새로운모델세팅함");
-    }
-
-    // if (localStorage.getItem("modelId")) {
-    //   const modelId = JSON.parse(localStorage.getItem("modelId"));
-    //   console.log("겟모델함.");
-    //   console.log(modelId);
-    //   await store.dispatch("getModelInfo", modelId);
-    // }
-
-
-    // if (localStorage.getItem("product")) {
-    //   const product = JSON.parse(localStorage.getItem("product"));
-    //   store.dispatch("setProductInfo", product);
-    //   console.log("새로운상품세팅함");
-    // }
 
     next();
   });

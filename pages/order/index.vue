@@ -7,6 +7,7 @@
           <th>주문번호</th>
           <th>주문날짜</th>
           <th>주문자 이름</th>
+          <th>주문자 유저 아이디</th>
           <th>결제 금액</th>
           <th>주문 상태</th>
         </thead>
@@ -16,11 +17,12 @@
             :key="order.orderId"
             class="category"
           >
-            <td>{{ order.orderId }}</td>
-            <td>{{ order.crDate }}</td>
-            <td>{{ order.name }}</td>
-            <td>{{ order.priceTotal }}</td>
-            <td>{{ order.stateTitle }}</td>
+            <td @click="getOrderId(order.orderId)" class="ol-td">{{ order.orderId }}</td>
+            <td class="ol-td">{{ order.crDate }}</td>
+            <td class="ol-td">{{ order.name }}</td>
+            <td class="ol-td">{{ order.userId }}</td>
+            <td class="ol-td">{{ order.priceTotal }}</td>
+            <td class="ol-td">{{ order.stateTitle }}</td>
           </tr>
         </tbody>
       </table>
@@ -60,7 +62,7 @@ export default {
 
   data() {
     return {
-      orderId: '10081'
+      orderId: '10081',
     };
   },
 
@@ -77,9 +79,8 @@ export default {
 
     
   async asyncData({ store, to }) {
-    
+  
      await store.dispatch("getOrderList")
-     await store.dispatch("getOrderItemList",10081)
   },
 
 created() {
@@ -96,6 +97,10 @@ mounted() {
 },
 
 methods:{
+
+ async getOrderId(i) {
+     await this.$store.dispatch("getOrderItemList",i)
+  }
 },
 
   beforeRouteLeave(to, from, next) {
@@ -124,6 +129,12 @@ tr {
 
 td {
   padding : 2% 4%;
+}
+
+.ol {
+&-td {
+    font-size: 9pt;
+  }
 }
 
 </style>
