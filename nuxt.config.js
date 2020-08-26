@@ -219,7 +219,6 @@ module.exports = {
     "~/plugins/vuetify.js",
     "~/plugins/amplitude.js",
     "~/plugins/v-viewer.js",
-    "~/plugins/swiper.js",
-    "~/plugins/vue-tables-2.js"
+    "~/plugins/swiper.js"
   ]
 };

@@ -79,11 +79,11 @@ if(!localStorage.getItem("tokenExpire")) {
     if (localStorage.getItem("tokenExpire") < getFormatDate(x)) {
       console.log('dd')
       var i = new Date();
-      console.log(li)
+      console.log(i)
     } else {
       console.log(localStorage.getItem("tokenExpire"))
       var i = new Date();
-      console.log(li)
+      console.log(i)
       next("/home");
     }
 
