@@ -3,35 +3,63 @@
 
     <main class="size-input">
 
-      <div class="input">
-        <input
-          v-model="loginForm.adminId"
-          class="input__bottom"
-          type="text"
-        />
+    <div class="hello">
+      반가워요!👋 <br/> 피클링 픽키센터 입니다!
+    </div>
+
+      <div class="input-container">
+        <div class="input-title">
+          이메일
+        </div>
+        <div class="input">
+          <input
+          placeholder="이메일"
+            v-model="loginForm.userId"
+            class="input__bottom"
+            type="text"
+          />
+        </div>
       </div>
 
-      <div class="input">
-        <input
-          v-model="loginForm.passWd"
-          class="input__bottom"
-          type="text"
-        />
-      </div>
 
-      <div class="button-container">
-        <button
-          class="button"
-          @click="clickButton"
-        >
-          <span>시작하기</span>
-        </button>
+      <div class="input-container">
+        <div class="input-title">
+          비밀번호
+        </div>
+        <div class="input">
+          <input
+          placeholder="영문 + 숫자 ( 8~20자 )"
+            v-model="loginForm.passWd"
+            class="input__bottom"
+            type="text"
+          />
+        </div>
       </div>
 
       <AppAlert
         ref="appAlert"
         :alert-message="'로그인 실패'"
       ></AppAlert>
+
+      <div class="button-container">
+        <button
+          class="button"
+          @click="clickButton"
+        >
+          <span>로그인</span>
+        </button>
+      </div>
+
+
+      <div class="button-container">
+        <button
+          class="button2"
+          @click="clickButton2"
+        >
+          <span>회원가입</span>
+        </button>
+      </div>
+
     </main>
   </main>
 </template>
@@ -47,8 +75,8 @@ export default {
   data() {
     return {
       loginForm : {
-        adminId: 'test1',
-        passWd: '11111111',
+        userId: 'q1@pickling.kr',
+        passWd: 'q1234567',
         passWd2: "",
       }
     };
@@ -97,7 +125,7 @@ if(!localStorage.getItem("tokenExpire")) {
   },
   methods: {
     async clickButton() {
-      this.loginForm.passWd2 = this.loginForm.passWd;
+      // this.loginForm.passWd2 = this.loginForm.passWd;
        await this.$store.dispatch("adminLogin", this.loginForm).then(() => {
           console.log('22')
             location.replace(document.URL + "home");
@@ -105,6 +133,11 @@ if(!localStorage.getItem("tokenExpire")) {
         .catch(() => {
         this.$refs.appAlert.showAlert();
         })
+  },
+
+    async clickButton2() {
+      this.$router.push("createAccount");
+      console.log('회원가입ㄱ!')
   },
   },
   beforeRouteLeave(to, from, next) {
@@ -114,8 +147,15 @@ if(!localStorage.getItem("tokenExpire")) {
 </script>
 
 <style lang="scss" scoped>
+.hello{
+  text-align: center;
+  font-size: 2em;
+  font-weight: 900;
+  margin-bottom: 15%;
+}
+
 .size-input {
-  padding: 35% 0 0 0;
+  padding: 20% 0 0 0;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -131,7 +171,7 @@ if(!localStorage.getItem("tokenExpire")) {
   }
   &__title {
     margin: 5px 0;
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: 800;
     letter-spacing: -1px;
     color: #000;
@@ -148,9 +188,23 @@ if(!localStorage.getItem("tokenExpire")) {
   align-items: flex-end;
   display: flex;
   justify-content: center;
-  padding: 25% 0 0 0;
+  // padding: 25% 0 0 0;
   border-radius: 0;
   color: #000;
+&-container{
+  display: flex;
+  margin-top: 5%;
+}
+
+&-title{
+  margin-left: 10%;
+  margin-right: 10px;
+  font-size: 1.5em;
+  font-weight: 800;
+  width: 100px;
+  // text-align:center;
+}
+
   &__bottom {
     border: 0;
     border-bottom: 5px solid #000;
@@ -158,17 +212,15 @@ if(!localStorage.getItem("tokenExpire")) {
     padding: 0;
     background: transparent;
     font-weight: 600;
-    font-size: 1.8em;
+    font-size: 1.1em;
     outline: 0;
-    width: 90px;
-    margin-left: 35px;
-    margin-top: 15px;
+    width: 200px;
     text-align: center;
     color: #000;
   }
   &__cm {
     font-weight: 600;
-    font-size: 2em;
+    font-size: 1.5em;
     color: $black;
     margin-top: 15px;
     color: #000;
@@ -183,14 +235,33 @@ if(!localStorage.getItem("tokenExpire")) {
   padding: 10px;
   width: 90%;
   left:5%;
-  bottom: 30%;
+  bottom: 20%;
   border-radius: 5px;
   font-size: 1em;
   font-weight: 600;
   height: 50px;
   color: #fff;
-  position: fixed;
+  margin-top:30%;
   background-color: #000;
+  &--active {
+    border: 0;
+    background-color: $primary;
+    color: $white;
+  }
+}
+.button2 {
+  padding: 10px;
+  width: 90%;
+  left:5%;
+  bottom: 20%;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 600;
+  height: 50px;
+  color: $primary;
+  margin-top:10%;
+  border: 3px solid $primary;
+  background-color: #fff;
   &--active {
     border: 0;
     background-color: $primary;
@@ -206,235 +277,5 @@ if(!localStorage.getItem("tokenExpire")) {
 .image {
   width: 100%;
   opacity: 0.5;
-}
-.canvas {
-  height: 100vh;
-  width: 100vw;
-  background-image: linear-gradient(to top, #eb3349, #f45c43);
-  position: absolute;
-  overflow: hidden;
-  max-width:-webkit-fill-available;
-}
-.bubble {
-  display: block;
-  border-radius: 100%;
-  opacity: 0.8;
-  position: absolute;
-}
-.bubble:nth-child(1) {
-  background: radial-gradient(
-    ellipse at center,
-    #b8c6c6 0%,
-    #30b3d3 46%,
-    #20628c 100%
-  );
-  width: 100px;
-  height:100px;
-  left: 10vw;
-  bottom: 100vh;
-  -webkit-animation: move1 infinite 5s;
-  animation: move1 infinite 5s;
-}
-@-webkit-keyframes move1 {
-  0% {
-    bottom: -100px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(10px, 0);
-    transform: translate(10px, 0);
-    opacity: 0;
-  }
-}
-@keyframes move1 {
-  0% {
-    bottom: -100px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(10px, 0);
-    transform: translate(10px, 0);
-    opacity: 0;
-  }
-}
-.bubble:nth-child(2) {
-  background: radial-gradient(
-    ellipse at top right,
-    #b8c6c6 0%,
-    #30b3d3 46%,
-    #20628c 100%
-  );
-  width: 100px;
-  height: 100px;
-  left: 10vw;
-  bottom: 100vh;
-  -webkit-animation: move2 infinite 10s;
-  animation: move2 infinite 10s;
-}
-@-webkit-keyframes move2 {
-  0% {
-    bottom: -50px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(-150px, 0);
-    transform: translate(-150px, 0);
-    opacity: 0;
-  }
-}
-@keyframes move2 {
-  0% {
-    bottom: -50px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(-150px, 0);
-    transform: translate(-150px, 0);
-    opacity: 0;
-  }
-}
-.bubble:nth-child(3) {
-  background: radial-gradient(
-    ellipse at center,
-    #b8c6c6 0%,
-    #30b3d3 46%,
-    #20628c 100%
-  );
-  width: 100px;
-  height: 100px;
-  left: 10vw;
-  bottom: 100vh;
-  -webkit-animation: move3 infinite 7s;
-  animation: move3 infinite 7s;
-}
-@-webkit-keyframes move3 {
-  0% {
-    bottom: -100px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(150px, 0);
-    transform: translate(150px, 0);
-    opacity: 0;
-  }
-}
-@keyframes move3 {
-  0% {
-    bottom: -100px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(150px, 0);
-    transform: translate(150px, 0);
-    opacity: 0;
-  }
-}
-.bubble:nth-child(4) {
-  background: radial-gradient(
-    ellipse at top right,
-    #b8c6c6 0%,
-    #30b3d3 46%,
-    #20628c 100%
-  );
-  width: 100px;
-  height: 100px;
-  left: 50vw;
-  bottom: 100vh;
-  -webkit-animation: move4 infinite 9s;
-  animation: move4 infinite 9s;
-}
-@-webkit-keyframes move4 {
-  0% {
-    bottom: -50px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(125px, 0);
-    transform: translate(125px, 0);
-    opacity: 0;
-  }
-}
-@keyframes move4 {
-  0% {
-    bottom: -50px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(125px, 0);
-    transform: translate(125px, 0);
-    opacity: 0;
-  }
-}
-.bubble:nth-child(5) {
-  background: radial-gradient(
-    ellipse at center,
-    #b8c6c6 0%,
-    #30b3d3 46%,
-    #20628c 100%
-  );
-  width: 90px;
-  height: 90px;
-  left: 70vw;
-  bottom: 120vh;
-  -webkit-animation: move5 infinite 8s;
-  animation: move5 infinite 8s;
-}
-@-webkit-keyframes move5 {
-  0% {
-    bottom: -200px;
-  }
-  100% {
-    bottom: 120vh;
-    -webkit-transform: translate(1px, 0);
-    transform: translate(1px, 0);
-    opacity: 0;
-  }
-}
-@keyframes move5 {
-  0% {
-    bottom: -200px;
-  }
-  100% {
-    bottom: 120vh;
-    -webkit-transform: translate(1px, 0);
-    transform: translate(1px, 0);
-    opacity: 0;
-  }
-}
-.bubble:nth-child(6) {
-  background: radial-gradient(
-    ellipse at top right,
-    #b8c6c6 0%,
-    #30b3d3 46%,
-    #20628c 100%
-  );
-  width: 100px;
-  height: 100px;
-  left: 80vw;
-  bottom: 100vh;
-  -webkit-animation: move6 infinite 10s;
-  animation: move6 infinite 10s;
-}
-@-webkit-keyframes move6 {
-  0% {
-    bottom: -100px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(-120px, 0);
-    transform: translate(-120px, 0);
-    opacity: 0;
-  }
-}
-@keyframes move6 {
-  0% {
-    bottom: -100px;
-  }
-  100% {
-    bottom: 100vh;
-    -webkit-transform: translate(-120px, 0);
-    transform: translate(-120px, 0);
-    opacity: 0;
-  }
 }
 </style>

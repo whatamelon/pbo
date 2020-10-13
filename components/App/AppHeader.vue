@@ -27,7 +27,7 @@ export default {
             text: "전체 상품",
         }
         ],
-      link:"madeleine://picklingdev.com?pick=1",
+      link:"https://pickling.kr?pick=1",
     }
   },
 

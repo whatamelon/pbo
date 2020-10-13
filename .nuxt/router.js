@@ -6,6 +6,7 @@ import scrollBehavior from './router.scrollBehavior.js'
 const _07879a24 = () => interopDefault(import('../pages/askfollowing/index.vue' /* webpackChunkName: "pages/askfollowing/index" */))
 const _29b2a6a1 = () => interopDefault(import('../pages/changePassword/index.vue' /* webpackChunkName: "pages/changePassword/index" */))
 const _5386e680 = () => interopDefault(import('../pages/contact/index.vue' /* webpackChunkName: "pages/contact/index" */))
+const _2214759e = () => interopDefault(import('../pages/createAccount/index.vue' /* webpackChunkName: "pages/createAccount/index" */))
 const _51bb0ac8 = () => interopDefault(import('../pages/curate/index.vue' /* webpackChunkName: "pages/curate/index" */))
 const _21570b67 = () => interopDefault(import('../pages/follow/index.vue' /* webpackChunkName: "pages/follow/index" */))
 const _3f1f4456 = () => interopDefault(import('../pages/home/index.vue' /* webpackChunkName: "pages/home/index" */))
@@ -15,6 +16,7 @@ const _5ce5ebae = () => interopDefault(import('../pages/order/index.vue' /* webp
 const _7e7c6a28 = () => interopDefault(import('../pages/privacy/index.vue' /* webpackChunkName: "pages/privacy/index" */))
 const _71cdbecf = () => interopDefault(import('../pages/product/index.vue' /* webpackChunkName: "pages/product/index" */))
 const _132d6cc4 = () => interopDefault(import('../pages/qurator/index.vue' /* webpackChunkName: "pages/qurator/index" */))
+const _04036d19 = () => interopDefault(import('../pages/register/index.vue' /* webpackChunkName: "pages/register/index" */))
 const _654ddfa7 = () => interopDefault(import('../pages/saved/index.vue' /* webpackChunkName: "pages/saved/index" */))
 const _400526c4 = () => interopDefault(import('../pages/search/index.vue' /* webpackChunkName: "pages/search/index" */))
 const _f8f00ab2 = () => interopDefault(import('../pages/terms/index.vue' /* webpackChunkName: "pages/terms/index" */))
@@ -52,6 +54,10 @@ export const routerOptions = {
     component: _5386e680,
     name: "contact"
   }, {
+    path: "/createAccount",
+    component: _2214759e,
+    name: "createAccount"
+  }, {
     path: "/curate",
     component: _51bb0ac8,
     name: "curate"
@@ -87,6 +93,10 @@ export const routerOptions = {
     path: "/qurator",
     component: _132d6cc4,
     name: "qurator"
+  }, {
+    path: "/register",
+    component: _04036d19,
+    name: "register"
   }, {
     path: "/saved",
     component: _654ddfa7,

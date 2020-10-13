@@ -1,0 +1,33 @@
+<template>
+    <select
+          :value="value"
+          class="custom-select"
+          @input="clicked"
+    >
+        <option 
+        v-for="item in items" 
+        :value="item.keyword" 
+        :key="item.no">{{ item.keyword }}</option>
+    </select>
+</template>
+
+<script>
+    export default {
+        name: "SelectBox",
+
+        data() {
+            return {
+
+            };
+        },
+
+        props: ['value', 'items', 'input_id'],
+
+        methods: {
+            clicked($event) {
+                this.$emit("input", $event.target.value);
+            }
+        }
+
+    }
+</script>

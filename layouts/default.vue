@@ -40,6 +40,8 @@ export default {
 }
 
 .mobile-container {
+  max-width: 500px;
+  width: 500px;
   width:-webkit-fill-available;
   background-color: white;
   min-height: 100%;

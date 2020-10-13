@@ -24,7 +24,8 @@ export default {};
 }
 
 .mobile-container {
-  width: 100%;
+  max-width: 500px;
+  width: 500px;
   background-color: $primary;
   min-height: 100vh;
   height: 100%;

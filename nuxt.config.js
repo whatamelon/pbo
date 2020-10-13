@@ -152,8 +152,8 @@ module.exports = {
   loading: { color: "#ec3e39" },
 
   css: ["@/assets/main.css", "~assets/app.styl"],
-
   modules: [
+    'vue-daum-postcode/nuxt',
     "bootstrap-vue/nuxt",
     "@nuxtjs/vuetify",
     "@nuxtjs/style-resources",

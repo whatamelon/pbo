@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ax = axios.create({
-  baseURL: "https://admin.pickling.kr"
+  baseURL: "https://restuser.pickling.kr"
 });
 
 ax.defaults.timeout = 12000;
