@@ -38,7 +38,7 @@
 
       <AppAlert
         ref="appAlert"
-        :alert-message="'로그인 실패'"
+        :alert-message="this.alertMsg"
       ></AppAlert>
 
       <div class="button-container">
@@ -54,9 +54,18 @@
       <div class="button-container">
         <button
           class="button2"
-          @click="clickButton2"
+          @click="clickButton2(0)"
         >
           <span>회원가입</span>
+        </button>
+      </div>
+
+      <div class="button-container">
+        <button
+          class="button2"
+          @click="clickButton2(1)"
+        >
+          <span>픽키 등록!</span>
         </button>
       </div>
 
@@ -74,6 +83,7 @@ export default {
   },
   data() {
     return {
+      alertMsg:'',
       loginForm : {
         userId: 'q1@pickling.kr',
         passWd: 'q1234567',
@@ -125,19 +135,34 @@ if(!localStorage.getItem("tokenExpire")) {
   },
   methods: {
     async clickButton() {
-      // this.loginForm.passWd2 = this.loginForm.passWd;
-       await this.$store.dispatch("adminLogin", this.loginForm).then(() => {
-          console.log('22')
+       await this.$store.dispatch("adminLogin", this.loginForm).then((response) => {
+          if(response == 200) {
             location.replace(document.URL + "home");
+          } else if(response == 401) {
+          this.alertMsg = "틀린 비밀번호 입니다.";
+           this.$refs.appAlert.showAlert();
+          } else if(response == 404) {
+          this.alertMsg = "없는 사용자 입니다. 이메일을 확인해주세요.";
+           this.$refs.appAlert.showAlert();
+          }else {
+          this.alertMsg = "네트워크를 확인해주세요.";
+           this.$refs.appAlert.showAlert();
+          }
         })
-        .catch(() => {
-        this.$refs.appAlert.showAlert();
+        .catch((e) => {
+          console.log(e)
+          this.alertMsg = "네트워크를 확인해주세요.";
+           this.$refs.appAlert.showAlert();
         })
   },
 
-    async clickButton2() {
-      this.$router.push("createAccount");
-      console.log('회원가입ㄱ!')
+    async clickButton2(i) {
+      if(i ==0) {
+        this.$router.push("createAccount");
+       console.log('회원가입ㄱ!')
+      } else {
+        this.$router.push('/register');
+      }
   },
   },
   beforeRouteLeave(to, from, next) {

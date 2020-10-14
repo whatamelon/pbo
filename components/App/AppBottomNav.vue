@@ -9,9 +9,9 @@
       @click="goToRoute('/home')"
     >
       <span class="material-icons app-bottom-nav__icon">
-      home
+      person_pin
       </span>
-      <span class="app-bottom-nav__name">홈</span>
+      <span class="app-bottom-nav__name">프로필</span>
     </button>
     
   <button
@@ -24,30 +24,7 @@
       <span class="material-icons app-bottom-nav__icon">
       clear_all
       </span>
-      <span class="app-bottom-nav__name">주문내역</span>
-    </button>
-
-    <button
-      class="app-bottom-nav__button"
-      :class="{ 'app-bottom-nav--active': isActive('/search', CURRENT_ROUTE) }"
-      @click="goToRoute('/search')"
-    >
-      <span class="material-icons app-bottom-nav__icon">
-        backup_table
-      </span>
-      <span class="app-bottom-nav__name">상품</span>
-    </button>
-
-    <button
-      class="app-bottom-nav__button"
-      :class="{ 'app-bottom-nav--active': isActive('/myPage', CURRENT_ROUTE) }"
-      @click="goToRoute('/myPage')"
-    >
-      <span class="material-icons app-bottom-nav__icon">
-        money
-      </span>
-
-      <span class="app-bottom-nav__name">쿠폰</span>
+      <span class="app-bottom-nav__name">컨텐츠</span>
     </button>
   </div>
 </template>
@@ -80,21 +57,6 @@ export default {
         return true;
       }
     },
-
-
-    isMyPageActive() {
-      return this.$route.name.includes("myPage") ||
-        this.$route.name.includes("login") ||
-        this.$route.name.includes("privacy") ||
-        this.$route.name.includes("terms") ||
-        this.$route.name.includes("contact") ||
-        this.$route.name.includes("follow") ||
-        this.$route.name.includes("recentproduct") ||
-        this.$route.name.includes("saved") ||
-        this.$route.name.includes("changePassword")
-        ? true
-        : false;
-    }
   },
   
     created() {
@@ -123,34 +85,10 @@ export default {
       if( currentRoute == null) {
 
       }
-      else if (
-        currentRoute.includes("login") ||
-        currentRoute.includes("privacy") ||
-        currentRoute.includes("terms") ||
-        currentRoute.includes("contact") ||
-        currentRoute.includes("follow")||
-        currentRoute.includes("recentproduct")||
-        currentRoute.includes("saved")||
-        currentRoute.includes("changePassword")
-      ) {
-        currentRoute = "/myPage";
-      }
-
       return currentRoute.includes(route) ? true : false;
     },
 
     goToRoute(path) {
-      if(path == '/home') {
-        this.$amplitude.getInstance().logEvent("click menuHome");
-      }
-      else if(path == '/order') {
-      }
-      else if(path == '/search') {
-        this.$amplitude.getInstance().logEvent("click menuSearch");
-      }
-      else {
-        this.$amplitude.getInstance().logEvent("click menuMypage");
-      }
       this.$store.dispatch("setCurrentRoute", path);
       this.$router.push(path);
     }
@@ -180,6 +118,7 @@ export default {
 }
 
 .app-bottom-nav {
+  max-width: 500px;
   margin: 0;
   border: 0;
   border-radius: 0;

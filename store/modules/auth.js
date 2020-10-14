@@ -1,4 +1,4 @@
-import { signInAPI } from "@/api/auth";
+import { signInAPI , signUpAPI, logoutAPI} from "@/api/auth";
 
 const ADMIN = {
     state() {
@@ -42,8 +42,6 @@ const ADMIN = {
       adminLogin: ({ commit }, payload) =>
         new Promise(async (resolve, reject) => {
           try {
-
-
             function getFormatDate(date){
               var year = date.getFullYear();              //yyyy
               var month = (1 + date.getMonth());          //M
@@ -52,20 +50,57 @@ const ADMIN = {
               day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
               return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
           }
-
             const response = await signInAPI(payload);
             console.log(response.result);
-            commit("SET_ADMIN_ROLE", response.result.role);
-            localStorage.setItem('token', response.result.authToken);
-            var x = new Date();
-            var y = getFormatDate(x);
-            localStorage.setItem('tokenExpire', y);
-            resolve();
-          } catch (error) {
-            reject(error);
+            if (response.status === 200) {
+              commit("SET_ADMIN_ROLE", response.result.role);
+              localStorage.setItem('token', response.result.authToken);
+              var x = new Date();
+              var y = getFormatDate(x);
+              localStorage.setItem('tokenExpire', y);
+            } 
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
           }
         }),
   
+        signup: ({ commit }, payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            function getFormatDate(date){
+              var year = date.getFullYear();              //yyyy
+              var month = (1 + date.getMonth());          //M
+              month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+              var day = date.getDate();                   //d
+              day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+              return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+          }
+            const response = await signUpAPI(payload);
+            console.log(response.result);
+            if (response.status === 200) {
+              commit("SET_ADMIN_ROLE", response.result.role);
+              localStorage.setItem('token', response.result.authToken);
+              var x = new Date();
+              var y = getFormatDate(x);
+              localStorage.setItem('tokenExpire', y);
+            } 
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
+        logout: ({ commit }) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await logoutAPI();
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
         // setUserInfo: ({ commit, dispatch }) =>
         // new Promise(async (resolve, reject) => {
         //   try {

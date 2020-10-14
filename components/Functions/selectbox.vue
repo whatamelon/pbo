@@ -30,4 +30,11 @@
         }
 
     }
+
 </script>
+
+<style lang="scss">
+.custom-select{
+    width: 250px;
+}
+</style>

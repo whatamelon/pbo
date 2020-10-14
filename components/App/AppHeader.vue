@@ -2,13 +2,13 @@
   <div>
     <b-nav class="app-header">
       <img class="logo" src="/p_red_logo.png" @click="goToHome" />
-      <a v-bind:href="link">링크</a>
+      <div class="logout__button" @click="logout">로그아웃</div>
     </b-nav>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";import Vue from 'vue';
 
 export default {
   data() {
@@ -53,6 +53,23 @@ export default {
   },
 
   methods: {
+    async logout() {
+       await this.$store.dispatch("logout").then((response) => {
+          if(response == 200) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('tokenExpire');
+            location.replace(document.URL);
+
+          } else {
+            alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
+          }
+        })
+        .catch((e) => {
+            alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
+        })
+
+    },
     openSearch() {
       this.$router.push("/search");
     },
@@ -153,6 +170,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.logout__button{
+  padding: 3px 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  color: #000;
+  background-color: #fff;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
 .redDot{
   border-radius: 50%;
   width:5px;
@@ -195,11 +222,12 @@ export default {
   overflow: hidden;
   height: 50px;
   width: 100%;
+  max-width: 500px;
   box-shadow: none;
   display: flex;
   align-items: center;
   align-content: center;
-  justify-content: center;
+  justify-content: flex-end;
   transform: translate3d(0,0,0) !important;
   z-index: 103;
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);

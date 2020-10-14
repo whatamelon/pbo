@@ -1,8 +1,8 @@
 <template>
 
-        <div class="model-list" style="background-color:#fff">
+        <div class="model-list" style="background-color:#f2f2f2">
 
-    <div class="step" style="background-color:#fff" v-show="step=='2' || step=='3' || step =='1'">
+    <div class="step" style="background-color:#f2f2f2" v-show="step=='2' || step=='3' || step =='1'">
         <div class="step-indicator">1</div>
         <div class="step-indicator" v-if ="step=='2' || step=='3'">2</div>
         <div class="step-indicator2" v-else>2</div>
@@ -15,11 +15,11 @@
         <span class="select-title1">반갑습니다!</span>
         <span class="select-title1">지금부터 <span class="select-title2">픽키 등록</span>을 시작하겠습니다.</span>
     </div>
-                <div class="input-container">
-                    <div class="input-title">
+                <div class="input-container2">
+                    <div class="input-title2">
                     이름 ( 실명 )
                     </div>
-                    <div class="input">
+                    <div class="input3">
                     <input
                     placeholder="이름"
                         v-model="group1.name"
@@ -33,6 +33,8 @@
                     <div class="input-title">
                     전화번호
                     </div>
+                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">픽키 매니저와 소통할 연락처를 알려주세요:D <br/> (예시: 01059595959)</p>
+
                     <div class="input">
                     <input
                     maxlength="11"
@@ -43,8 +45,6 @@
                     />
                     </div>
                 </div>
-                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">픽키 매니저와 소통할 연락처를 알려주세요:D <br/> (예시: 01059595959)</p>
-
                 <div class="input-container">
                     <div class="input-title">
                     출생연도
@@ -60,7 +60,10 @@
                     </div>
                 </div>
 
-                <div class="input-title2" style="margin-top:10%">
+
+                <div class="input-container">
+
+                <div class="input-title2">
                     SNS 선택 ( 중복 선택 가능 )
                 </div>
                 <div class="logos">
@@ -130,6 +133,7 @@
 
                     </div>
                 </div>
+                </div>
                 
 
                 <!-- <button @click="submit">확인</button> -->
@@ -153,18 +157,21 @@
                 </div>
 
 
-                <div class="input-title2" style="margin-top:10%">
-                    프로필 사진 선택
+                <div class="input-container2">
+                    <div class="input-title2" >
+                        프로필 사진 선택
+                    </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">프로필 페이지에 동그랗게 나오는 프로필 사진이므로 <br/>머리가 잘리지 않은 전체 얼굴 사진으로 선택해주세요!</p>
+
+                    <div style="text-align:center; margin-top:5%;" v-show="defaultImage != ''">
+                        <img :src="defaultImage" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
+                    </div>
+                    
+                    <VueImageUploadCroppie :defaultImage.sync="defaultImage" :height="100" :width="100" :circle="true" :trans="trans"></VueImageUploadCroppie>
                 </div>
-                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">프로필 페이지에 동그랗게 나오는 프로필 사진이므로 <br/>머리가 잘리지 않은 전체 얼굴 사진으로 선택해주세요!</p>
-
-                <div style="text-align:center; margin-top:5%;"><img :src="defaultImage" style="width: 100px;height: 100px"></div>
-                
-                <VueImageUploadCroppie :defaultImage.sync="defaultImage" :height="100" :width="100" :circle="true" :trans="trans"></VueImageUploadCroppie>
-  
 
 
-                <div class="input-title2" style="margin-top:10%; margin-bottom:5%;">
+                <div class="input-title2" style="margin-bottom:5%;">
                     스타일 사진 선택 ( 6장 )
                 </div>
                 <p style="font-size:0.9em; font-weight:400; margin:0 0 4% 7%;"> 내가 가장 좋아하는 나의 베스트 코디 사진을 등록해 주세요!<br/> 되도록이면 셀카 사진이 아닌 다른 사람이 찍어준 사진으로 등록해 주세요~</p>
@@ -174,20 +181,29 @@
                     name="image"
                     ref="pond"
                     label-idle="스타일 사진 가져오기 + "
+                    labelFileProcessing="사진 불러오는 중"
+                    labelTapToCancel="취소하려면 터치하세요"
+                    labelTapToUndo="사진을 삭제하려면 터치하세요"
+                    labelFileProcessingComplete="업로드 완료"
                     allow-multiple="true"
                     max-files="6"
+                    imageResizeTargetWidth= '600'
+                    imageResizeTargetHeight= '600'
                     allowImagePreview="true"
                     allowImageCrop= "true"
                     allowImageTransform="true"
+                    allowImageResize="true"
+                    imageResizeUpscale="false"
+                    imageCropAspectRatio="1:1"
                     allow-revert = "true"
                     accepted-file-types="image/*"
                     :server="{ process }"
                     v-bind:files="myFiles"
                     v-on:init="handleFilePondInit"
                     v-on:processfile="onload"
+                    @updatefiles="updateFiles"
                     />
                 </no-ssr>
-
 
                 <div class="input-container2">
                     <div class="input-title2">
@@ -281,7 +297,7 @@
             <div v-else-if="step == '3'">
 
                 <div class="input-container2">
-                    <div class="input-title2" style="margin-top:5%">
+                    <div class="input-title2">
                         자주 입는 스타일 ( 최대 3개 선택 )
                     </div>
                     <div class="input22" style="display:block; margin-top:3%">
@@ -292,8 +308,8 @@
                         :class="{'__active': item.isActive == true }"
                         > {{ item.name }} </span>
                     </div>
-                </div>
-                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:3%;">
+
+                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
                 <input
                     placeholder="자주 입는 스타일 +"
                     v-model="newLikeStyle"
@@ -302,6 +318,8 @@
                 />
                 <div class="plusButton" @click="plusLikeStyle">추가</div>
                 </div>
+                </div>
+                <br/>
 
                 <div class="input-container2">
                     <div class="input-title2">
@@ -315,8 +333,7 @@
                         :class="{'__dactive': item.isActive == true }"
                         > {{ item.name }} </span>
                     </div>
-                </div>
-                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:3%;">
+                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
                     <input
                         placeholder="절대 안입는 스타일 +"
                         v-model="newDisLikeStyle"
@@ -324,6 +341,7 @@
                         type="text"
                     />
                     <div class="plusButton2" @click="plusDisLikeStyle">추가</div>
+                </div>
                 </div>
 
                 <br/>
@@ -338,8 +356,7 @@
                         @click="clickBrandName(item, index)" 
                         > {{ item }} ✖️ </span>
                     </div>
-                </div>
-                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:5%;">
+                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
                     <input
                         placeholder="좋아하는 브랜드 +"
                         v-model="brandName"
@@ -347,6 +364,7 @@
                         type="text"
                     />
                     <div class="plusButton3" @click="pluslikeBrand">추가</div>
+                </div>
                 </div>
 
                 <br/>
@@ -361,8 +379,7 @@
                         @click="clickMallName(item, index)" 
                         > {{ item }} ✖️ </span>
                     </div>
-                </div>
-                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:5%;">
+                <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
                     <input
                     style="width:150px"
                         placeholder="자주 가는 인터넷 쇼핑몰 +"
@@ -371,6 +388,7 @@
                         type="text"
                     />
                     <div class="plusButton3" @click="plusLikeMall">추가</div>
+                </div>
                 </div>
 
             </div>
@@ -497,7 +515,7 @@ data() {
         trans: { 
             'cropImage': '대표 사진 선택', 
             'chooseImage':'사진 가져오기', 
-            'confirmCutting': '자르기'
+            'confirmCutting': '확인'
         },
         enabled: false,
         myFiles: [],
@@ -506,11 +524,11 @@ data() {
         yout: false,
         currentInstaId :'',
         currentYoutubeId :'',
-        step: 'sellerPicky',
+        step: '2',
         group1 : {
-            name: '',
-            phoneNo: '',
-            year: '',
+            name: '홍승호',
+            phoneNo: '01023980719',
+            year: '1999',
         },
         size:{
             height:'',
@@ -546,8 +564,8 @@ data() {
         checkedNames: [],
         checkSns : [
             {
-                'instagram': false,
-                'id': '',
+                'instagram': true,
+                'id': 'summerclout',
             },
             {
                 'youtube': false,
@@ -742,10 +760,29 @@ data() {
 },
 
   watch: {
-      'defaultImage': function(value) {
+      'defaultImage':async function(value) {
           if (value) {
-              this.image = value;
-            // do whatever you want with image value,(upload ..)
+            this.image = value;
+
+            var binary = atob(value.split(',')[1]);
+            var array = [];
+            for(var i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i));
+            }
+            var blobfile = new Blob([new Uint8Array(array)], {type: 'image/jpg'});
+
+            const formData = new FormData();
+            formData.append('imgFile', blobfile, 'image.jpg');
+            var payload = ['title', formData];
+
+            await this.$store.dispatch("sendUserImage", payload).then((response) => {
+                if(response == 200) {
+                    console.log('잘올라감 : title')
+                } else {
+                    console.log('error')
+                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                }
+            })
           }
       }
   },
@@ -771,6 +808,7 @@ mounted() {
 },
 
 methods: {
+    
     completePostCode(e) {
         console.log(e)
         this.postCodeOpen = false;
@@ -797,7 +835,7 @@ methods: {
         console.log(this.checkSns);
     },
 
-    goAny(i) {
+    async goAny(i) {
         /// 뒤로 가기
         if(i == 0) {
             switch(this.step) {
@@ -816,7 +854,7 @@ methods: {
                                 alert('이름을 입력해주세요.');
                         } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
                                 alert('전화번호를 입력해주세요.');
-                        }else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
+                        } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
                                 alert('날짜를 입력해주세요.');
                         } else if(this.checkedNames.length ==0) {
                                 alert('SNS를 선택해주세요.');
@@ -825,11 +863,37 @@ methods: {
                         } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
                                 alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 입력해주세요.');
                         } else {
-                            window.scrollTo(0,0);
-                            this.step = '2';
+
+                            var params = {
+                                'status': 'req',
+                                'nameReal': this.group1.name,
+                                'mobileNo': this.group1.phoneNo,
+                                'birthYear': this.group1.year,
+                                'isYout': this.checkedNames.includes('yout') ? 'y': 'n',
+                                'youtLink':  this.checkedNames.includes('yout') ? this.checkSns[1].id : '',
+                                'youtIdx':  this.checkedNames.includes('yout') ? Number(this.currentYoutubeId.slice(-1))-1: '',
+                                'isInst': this.checkedNames.includes('inst') ? 'y': 'n',
+                                'instLink': this.checkedNames.includes('inst') ? this.checkSns[0].id  : '',
+                                'instIdx': this.checkedNames.includes('inst') ? Number(this.currentInstaId.slice(-1))-1: '',
+                            }
+
+                            var payload = ['ugr1', params];
+
+                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                                if(response == 200) {
+                                    window.scrollTo(0,0);
+                                    this.step = '2';
+                                } else {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                }
+                            })
+                            .catch((e) => {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            })
                         }
                         break;
                     case '2':
+                        console.log(this.myFiles.length)
                         if (this.myintro.trim() =='' ) {
                                 alert(' 자기소개를 입력해주세요.');
                         } else if(this.image == null) {
@@ -848,8 +912,32 @@ methods: {
                         ) {
                                 alert('체형을 선택 / 입력해주세요.');
                         }  else {
-                            window.scrollTo(0,0);
-                            this.step = '3';
+
+                            var params = {
+                                'status': 'req',
+                                'myExp': this.myintro,
+                                'styleExp': this.bodyIntro,
+                                'sizeHeight': this.size.height,
+                                'sizeTop': this.size.top,
+                                'sizeBottom':  this.size.bottom,
+                                'sizeFoot':  this.size.foot,
+                                'sizeShoulder': this.size.shoulder,
+                                'sizePelvis': this.size.pelvis
+                            }
+
+                            var payload = ['ugr2', params];
+
+                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                                if(response == 200) {
+                                    window.scrollTo(0,0);
+                                    this.step = '3';
+                                } else {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                }
+                            })
+                            .catch((e) => {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            })
                         }
                         break;
                     case '3':
@@ -862,12 +950,34 @@ methods: {
                         } else if( this.mallList.length < 2 || this.mallList.length > 5) {
                                 alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
                         }  else {
-                                window.scrollTo(0,0);
-                             if(this.currentInstaId == 'inst3' || this.currentYoutubeId == 'you3') {
-                                this.step = 'sellerPicky';
-                            }  else {
-                                this.step = 'getNickname';
+
+                            var params = {
+                                'status': 'req',
+                                'styleLike': this.likeList.join(),
+                                'styleDislike': this.dislikeList.join(),
+                                'likeBrand': this.likeBrand.join(),
+                                'likeMall': this.mallList.join(),
                             }
+
+                            var payload = ['ugr3', params];
+
+                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                                if(response == 200) {
+
+                                    if(this.currentInstaId == 'inst3' || this.currentYoutubeId == 'you3') {
+                                        this.step = 'sellerPicky';
+                                    }  else {
+                                        this.step = 'getNickname';
+                                    }
+                                    window.scrollTo(0,0);
+                                } else {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                }
+                            })
+                            .catch((e) => {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            })
+
                         }
                         break;
                 }
@@ -879,7 +989,24 @@ methods: {
         } else if(this.postCode2.trim() == '') {
                 alert(' 상세 주소를 입력해주세요.');
         } else {
-                this.step = 'getNickname';
+
+            var code = {
+                'status': 'req',
+                'addrCode': this.postCode3,
+                'addr0': this.postCode1,
+                'addr1': this.postCode2,
+                'addr2': ''
+            };
+
+            var payload = ['ugr4', code];
+
+        await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                if(response == 200) {
+                    this.step = 'getNickname';
+                } else {
+                     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                }
+            })
         }
         } else {
         /// 다했다! 홈으로 ㄲ
@@ -887,9 +1014,20 @@ methods: {
         if(this.picklingNickname.trim() == '') {
             alert(' 피클링 닉네임을 입력해주세요.');
         } else {
-            console.log('이제 홈으로 가든지 가면됨.')
-            console.log(window.location.origin);
-            location.replace(window.location.origin + "/home");
+                await this.$store.dispatch("sendUserNick", this.picklingNickname).then((response) => {
+                if(response == 200) {
+                    console.log('이제 홈으로 가든지 가면됨.')
+                    console.log(window.location.origin);
+                    location.replace(window.location.origin + "/home");
+                } else if(response == 404){
+                alert('피클링앱에 해당하는 닉네임이 존재하지 않습니다. \n 다시 입력해주세요.');
+                }else {
+                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                }
+            })
+            .catch((e) => {
+                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+            })
         }
         }
     },
@@ -898,8 +1036,20 @@ methods: {
       console.log('FilePond has initialized')
         this.$refs.pond.getFiles();
     },
-    process(fieldName, file, metadata, load) {
-        load(file);
+    async process(fieldName, file, metadata, load, error, progress, abort) {
+        for(var k = 0; k < this.myFiles.length; k++) {
+            const formData = new FormData();
+            formData.append('imgFile', file, file.name);
+            var payload = [k, formData];
+
+            await this.$store.dispatch("sendUserImage", payload).then((response) => {
+                if(response == 200) {
+                    console.log('잘올라감' + k)
+                } else {
+                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                }
+            })
+        }
     },
     onload (e, r) {
         if(e== null) {
@@ -912,6 +1062,9 @@ methods: {
 
             // this.image = URL.createObjectURL(r.file);
         } 
+    },
+    updateFiles(files) {
+        this.myFiles = files;
     },
     clickBrand(item, index){
         console.log(item)
@@ -1072,7 +1225,7 @@ beforeRouteLeave(to, from, next) {
         width:100%;
         display: grid;
         text-align: center;
-        background-color: #fff;
+        background-color: #f2f2f2;
         padding: 10% 0 3% 0;
     }
 
@@ -1125,20 +1278,35 @@ beforeRouteLeave(to, from, next) {
   margin-left: 7%;
 }
 
-.input {
-  align-items: flex-end;
+.input3{
   display: flex;
-  justify-content: center;
-  // padding: 25% 0 0 0;
+  justify-content: start;
+  margin: 7% 0 0 7%;
+  border-radius: 0;
+  color: #000;
+}
+
+.input {
+  display: flex;
+  justify-content: start;
+  margin: 7% 0 0 7%;
   border-radius: 0;
   color: #000;
 &-container{
-  display: flex;
-  margin-top: 5%;
+  display: grid;
+  padding: 5%0;
+  border: 1px solid #000;
+  border-radius: 5px;
+  margin: 5%;
+  background-color: #fff;
 }
 &-container2{
   display: grid;
-  margin-top: 5%;
+  padding: 5%0;
+  border: 1px solid #000;
+  border-radius: 5px;
+  margin: 5%;
+  background-color: #fff;
 }
 
 &-title{
@@ -1160,15 +1328,15 @@ beforeRouteLeave(to, from, next) {
 
   &__bottom {
     border: 0;
-    border-bottom: 5px solid #000;
+    border-bottom: 2px solid #000;
     border-radius: 0;
     padding: 0;
     background: transparent;
     font-weight: 600;
     font-size: 1.3em;
     outline: 0;
-    width: 200px;
-    text-align: center;
+    width: 250px;
+    text-align: start;
     color: #000;
   }
 
@@ -1183,6 +1351,7 @@ beforeRouteLeave(to, from, next) {
     outline: 0;
     width: 93%;
     height: 150px;
+    text-align: start;
     // text-align: center;
     color: #000;
   }

@@ -2,8 +2,16 @@
 
         <div class="model-list" style="background-color:#fff">
             <div class="select-title-container">
+
+                <span class="material-icons" @click="goBack">
+                arrow_back_ios
+                </span>
                 <span class="select-title1">픽키 회원가입</span>
             </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
                 <div class="input-container">
                     <div class="input-title">
                     이메일 
@@ -11,7 +19,7 @@
                     <div class="input">
                     <input
                         placeholder="이메일"
-                        v-model="group1.mail"
+                        v-model="loginForm.mail"
                         class="input__bottom"
                         type="text"
                     />
@@ -24,9 +32,9 @@
                     </div>
                     <div class="input">
                     <input
-                    maxlength="11"
+                    maxlength="20"
                     placeholder="( 8~20자 / 영문 + 숫자 )"
-                        v-model="group1.passWd"
+                        v-model="loginForm.passWd"
                         class="input__bottom"
                         type="text"
                     />
@@ -38,46 +46,48 @@
                     </div>
                     <div class="input">
                     <input
-                    maxlength="4"
+                    maxlength="20"
                     placeholder="비밀번호 확인"
-                        v-model="group1.passWd2"
+                        v-model="loginForm.passWd2"
                         class="input__bottom"
                         type="text"
                     />
                     </div>
                 </div>
+            <br/>
+            <br/>
 
                 <div class="step-buttons">
-                    <button class="step-buttons-container" @click="goAny(1)" >확인</button>
+                    <button class="step-buttons-container" @click="clickButton" >확인</button>
                 </div>
     </div>
 
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import AppAlert from "@/components/App/AppAlert";
 
 export default {
 layout: "blank",
 
 components:{
+    AppAlert
 },
-data() {
-      return{
-        group1 : {
-            mail: '',
-            passWd: '',
-            passWd2: '',
-        },
+
+  data() {
+    return {
+      alertMsg:'',
+      loginForm : {
+        mail: 'q1@pickling.kr',
+        passWd: 'q1234567',
+        passWd2: "",
       }
-},
+    };
+  },
   computed: {
     ...mapGetters([
       "IMAGE_URL",
     ]),
-
-    postCodeBody() {
-        return this.postCode1 == '' ? '주소 입력' : '주소 다시 입력';
-    }
         },
 
 async asyncData({ store }) {
@@ -92,15 +102,45 @@ mounted() {
 },
 
 methods: {
-    goAny(i) {
-        var res = confirm( '픽키 회원가입이 완료되었습니다! \n 바로 픽키 정보등록을 하실래요?' );
 
-        if(res == true) {
-            this.$router.push('/register');
-        } else {
-            location.replace(window.location.origin + "/home");
-        }
+    goBack() {
+        this.$router.go(-1);
     },
+
+    async clickButton() {
+        if(this.loginForm.mail.trim() == '') {
+            alert('이메일을 입력해주세요.');
+        } else if(this.loginForm.passWd.trim().length < 8) {
+            alert('비밀번호는 최소 8자 이상 입력해주세요.');
+        } else if(this.loginForm.passWd2.trim().length < 8) {
+            alert('비밀번호 확인은 최소 8자 이상 입력해주세요.');
+        }else if(this.loginForm.passWd2.trim() != this.loginForm.passWd.trim() ) {
+            alert('비밀번호와 비밀번호확인이 다릅니다. 한 번 더 확인해주세요.');
+        } else {
+        await this.$store.dispatch("signup", this.loginForm).then((response) => {
+            if(response == 200) {
+                    var res = confirm( '픽키 회원가입이 완료되었습니다! \n 바로 픽키 정보등록을 하실래요?' );
+
+                    if(res == true) {
+                        this.$router.push('/register');
+                    } else {
+                        location.replace(window.location.origin + "/home");
+                    }
+            } else if(response == 401) {
+            this.alertMsg = "사용할 수 없는 이메일 입니다. 다른 이메일을 선택해주세요.";
+            this.$refs.appAlert.showAlert();
+            } else {
+            this.alertMsg = "네트워크를 확인해주세요.";
+            this.$refs.appAlert.showAlert();
+            }
+            })
+            .catch((e) => {
+            console.log(e)
+            this.alertMsg = "네트워크를 확인해주세요.";
+            this.$refs.appAlert.showAlert();
+            })
+        }
+  },
 
 },
 
@@ -138,16 +178,16 @@ beforeRouteLeave(to, from, next) {
 .select-title{
     &-container{
         width:100%;
-        display: grid;
-        text-align: center;
+        text-align: start;
         background-color: #fff;
-        padding: 10% 0 3% 0;
+        padding: 10% 0 3% 5%;
     }
 
     &1{
         font-size: 1.8em;
         font-weight: 800;
         color: $primary;
+        margin-left: 20%;
     }
 
     &2{
@@ -209,7 +249,7 @@ beforeRouteLeave(to, from, next) {
 
   &__bottom {
     border: 0;
-    border-bottom: 5px solid #000;
+    border-bottom: 2px solid #000;
     border-radius: 0;
     padding: 0;
     background: transparent;
