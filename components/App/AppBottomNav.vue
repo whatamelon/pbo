@@ -1,7 +1,6 @@
 <template>
 
-  <div class="app-bottom-nav" ref="navButton" id="isNavButton"
-  v-show="isSearching">
+  <div class="app-bottom-nav" ref="navButton" id="isNavButton">
 
     <button
       class="app-bottom-nav__button"
@@ -16,10 +15,8 @@
     
   <button
       class="app-bottom-nav__button"
-      :class="{
-        'app-bottom-nav--active': isActive('/order', CURRENT_ROUTE)
-      }"
-      @click="goToRoute('/order')"
+      :class="{ 'app-bottom-nav--active': isActive('/contents', CURRENT_ROUTE) }"
+      @click="goToRoute('/contents')"
     >
       <span class="material-icons app-bottom-nav__icon">
       clear_all
@@ -35,51 +32,14 @@ import { mapGetters } from "vuex";
 export default {
   
   computed: {
-    ...mapGetters(["CURRENT_ROUTE",
-    "IS_SEARCH"]),
-
-    isSearching() {
-      if(this.$route.name == "search") {
-        if(!this.$store.getters.IS_SEARCH) {
-          return false;
-        }
-        else {
-          return true;
-        }
-      }
-      else if(this.$route.name.includes("curate")) {
-        return false;
-      }
-      else if(this.$route.name == '' || this.$route.name==null) {
-        return true;
-      }
-      else {
-        return true;
-      }
-    },
+    ...mapGetters(["CURRENT_ROUTE"]),
   },
   
     created() {
-     this.bottomNavScroll();
     },
 
   methods: {
 
-    bottomNavScroll() {
-      var lastScrollTop = 0;
-      window.addEventListener("scroll", function(){ 
-          const isNavButton = document.getElementById("isNavButton");
-         var st = window.pageYOffset || document.documentElement.scrollTop; 
-           if (st > lastScrollTop){
-            isNavButton.classList.remove("fadeInNav");
-            isNavButton.classList.add("fadeOutNav");
-        } else {
-            isNavButton.classList.remove("fadeOutNav");
-            isNavButton.classList.add("fadeInNav");
-        }
-        lastScrollTop = st <= 0 ? 0 : st; 
-      }, false);
-    },
 
     isActive(route, currentRoute) {
       if( currentRoute == null) {

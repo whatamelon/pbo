@@ -81,15 +81,9 @@ const navigation = {
   },
 
   actions: {
-    setCurrentRoute: ({ commit }, payload) =>
-      new Promise((resolve, reject) => {
-        try {
-          commit("SET_CURRENT_ROUTE", payload);
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      }),
+    setCurrentRoute ({ commit }, payload) {
+      commit("SET_CURRENT_ROUTE", payload);
+    },
 
     setProductsPage({ commit }, payload) {
       commit("SET_PRODUCTS_PAGE", payload);

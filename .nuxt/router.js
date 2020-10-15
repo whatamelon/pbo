@@ -6,6 +6,7 @@ import scrollBehavior from './router.scrollBehavior.js'
 const _07879a24 = () => interopDefault(import('../pages/askfollowing/index.vue' /* webpackChunkName: "pages/askfollowing/index" */))
 const _29b2a6a1 = () => interopDefault(import('../pages/changePassword/index.vue' /* webpackChunkName: "pages/changePassword/index" */))
 const _5386e680 = () => interopDefault(import('../pages/contact/index.vue' /* webpackChunkName: "pages/contact/index" */))
+const _76c29e60 = () => interopDefault(import('../pages/contents/index.vue' /* webpackChunkName: "pages/contents/index" */))
 const _2214759e = () => interopDefault(import('../pages/createAccount/index.vue' /* webpackChunkName: "pages/createAccount/index" */))
 const _51bb0ac8 = () => interopDefault(import('../pages/curate/index.vue' /* webpackChunkName: "pages/curate/index" */))
 const _21570b67 = () => interopDefault(import('../pages/follow/index.vue' /* webpackChunkName: "pages/follow/index" */))
@@ -53,6 +54,10 @@ export const routerOptions = {
     path: "/contact",
     component: _5386e680,
     name: "contact"
+  }, {
+    path: "/contents",
+    component: _76c29e60,
+    name: "contents"
   }, {
     path: "/createAccount",
     component: _2214759e,

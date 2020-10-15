@@ -15,7 +15,11 @@ export const sendUserInfoAPI = ( step, params ) =>
 
 export const sendUserStyleImagesAPI = ( idx, formData ) =>
  ax.post(
-    `/users/img/${idx}`,formData
+    `/users/img/${idx}`,formData, {
+        headers:{
+            'Content-Type': 'multipart/form-data'
+        }
+    }
 );
 
-export const sendUserNickAPI = nick => ax.put(`/users/nick/${nick}`);
+export const sendUserNickAPI = nick => ax.post(`/users/nick/${nick}`);

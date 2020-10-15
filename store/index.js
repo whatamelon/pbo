@@ -9,6 +9,7 @@ import user from "@/store/modules/user";
 import qurate from "@/store/modules/qurate";
 import auth from "@/store/modules/auth";
 import order from "@/store/modules/order";
+import contents from "@/store/modules/contents";
 
 const store = () => {
   return new Vuex.Store({
@@ -24,7 +25,8 @@ const store = () => {
       user,
       qurate,
       auth,
-      order
+      order,
+      contents
     }
   });
 };

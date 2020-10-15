@@ -33,7 +33,7 @@
                     <div class="input-title">
                     전화번호
                     </div>
-                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">픽키 매니저와 소통할 연락처를 알려주세요:D <br/> (예시: 01059595959)</p>
+                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">담당자와 소통할 연락처를 알려주세요:D <br/> (예시: 01059595959)</p>
 
                     <div class="input">
                     <input
@@ -49,6 +49,7 @@
                     <div class="input-title">
                     출생연도
                     </div>
+                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">스타일 추천 시 활용해요~</p>
                     <div class="input">
                     <input
                     maxlength="4"
@@ -66,6 +67,7 @@
                 <div class="input-title2">
                     SNS 선택 ( 중복 선택 가능 )
                 </div>
+                <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">내가 활동하는 채널을 선택해주세요.~</p>
                 <div class="logos">
                     <div class="logos-checkbox">
                         <input 
@@ -145,6 +147,9 @@
                     <div class="input-title2">
                     자기소개 및 인사
                     </div>
+                    
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">글자수 최소 100자, 최대 200자</p>
+
                     <div class="input22">
                         <textarea 
                         style="resize: none;"
@@ -181,10 +186,6 @@
                     name="image"
                     ref="pond"
                     label-idle="스타일 사진 가져오기 + "
-                    labelFileProcessing="사진 불러오는 중"
-                    labelTapToCancel="취소하려면 터치하세요"
-                    labelTapToUndo="사진을 삭제하려면 터치하세요"
-                    labelFileProcessingComplete="업로드 완료"
                     allow-multiple="true"
                     max-files="6"
                     imageResizeTargetWidth= '600'
@@ -193,12 +194,11 @@
                     allowImageCrop= "true"
                     allowImageTransform="true"
                     allowImageResize="true"
-                    imageResizeUpscale="false"
                     imageCropAspectRatio="1:1"
                     allow-revert = "true"
                     accepted-file-types="image/*"
                     :server="{ process }"
-                    v-bind:files="myFiles"
+                    v-bind:files="fileList"
                     v-on:init="handleFilePondInit"
                     v-on:processfile="onload"
                     @updatefiles="updateFiles"
@@ -209,6 +209,8 @@
                     <div class="input-title2">
                         체형 설명 한 줄
                     </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">글자수 최소 50자, 최대 100자</p>
+
                     <div class="input22">
                         <textarea 
                         style="resize: none; height:75px !important;"
@@ -300,6 +302,7 @@
                     <div class="input-title2">
                         자주 입는 스타일 ( 최대 3개 선택 )
                     </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">내가 너무나 애정하는 스타일을 최대 3개까지만 선택해 주세요~</p>
                     <div class="input22" style="display:block; margin-top:3%">
                         <span 
                         v-for="(item, index) in brandList" 
@@ -325,6 +328,8 @@
                     <div class="input-title2">
                         절대 안입는 스타일 (최소 3개)
                     </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">무슨 일이 있어도 절대 안 입는 스타일 있잖아요?! 그런 스타일을 최소 3개 이상 선택해 주세요!</p>
+                    
                     <div class="input22" style="display:block; margin-top:3%">
                         <span 
                         v-for="(item, index) in brandList2" 
@@ -349,6 +354,8 @@
                     <div class="input-title2">
                         좋아하는 브랜드 <br/>(최소 3개, 최대 10개)
                     </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">스트릿브랜드, 국내브랜드, 명품브랜드 등 내가 특별히 좋아하는 패션 브랜드가 있다면 최대 10개까지 적어주세요~ </p>
+                    
                     <div class="input22" style="display:block; margin-top:5%">
                         <span 
                         v-for="(item, index) in likeBrand" 
@@ -372,6 +379,8 @@
                     <div class="input-title2">
                         자주 가는 인터넷 쇼핑몰<br/>(최소 2개, 최대 5개)
                     </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 7% 0 7%;">자주 방문하는 인터넷(브랜드X)쇼핑몰을 최소 2개 이상 알려주세요~ </p>
+                    
                     <div class="input22" style="display:block; margin-top:5%">
                         <span 
                         v-for="(item, index) in mallList" 
@@ -389,6 +398,56 @@
                     />
                     <div class="plusButton3" @click="plusLikeMall">추가</div>
                 </div>
+                </div>
+
+                <div class="input-container2" v-show ="checkSns[1].id != ''">
+                    <div class="input-title2">
+                        유튜브 컨텐츠 연동 확인
+                    </div>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">유튜브 채널을 운영중이신가요? 그렇다면 픽 등록이 더 쉬워집니다! <br/>내 채널에 등록된 패션하울 영상이 피클링에 연동되어 더 많은 사람들이 나의 패션영상을 볼 수 있게 됩니다. <br/>이렇게 진행을 해드릴까요? </p>
+                    <div class="logos" style="justify-content: start; margin-left:7%" >
+                        <div class="logos-checkbox">
+                            <div class="radios-container">
+                            <div v-for="portal3 in youtubeChk" class="radios">
+                                <input type="radio"
+                                        :id="portal3.id"
+                                        name="portalSelect3"
+                                        v-bind:value="{id: portal3.id, name: portal3.name}"
+                                        v-on:change="showSellers3(portal3.id)"
+                                        :checked="portal3.id == currentYouChk">
+
+                                <label :for="portal3.id">{{portal3.name}}</label>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container2">
+                    <div class="input-title2">
+                        개인정보 처리방침 동의
+                    </div>
+                    <a href="https://pickling.kr/privacy.html" 
+                    target="_blank"
+                    style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;"
+                    >개인정보 처리 방침 링크</a>
+                    <div class="logos" style="justify-content: start; margin-left:7%" >
+                        <div class="logos-checkbox">
+                            <div class="radios-container">
+                            <div v-for="portal4 in myinfoChk" class="radios">
+                                <input type="radio"
+                                        :id="portal4.id"
+                                        name="portalSelect4"
+                                        v-bind:value="{id: portal4.id, name: portal4.name}"
+                                        v-on:change="showSellers4(portal4.id)"
+                                        :checked="portal4.id == currentMyinfoChk">
+
+                                <label :for="portal4.id">{{portal4.name}}</label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -447,6 +506,8 @@
                         type="text"
                     />
                     </div>
+                <span>픽키 등록후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. <br/>아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</span>
+            
             <br/>
             <br/>
             <br/>
@@ -506,6 +567,8 @@ components:{
 },
 data() {
       return{
+        step: '3',
+        imageUploadIdx: 0,
         picklingNickname:'',
         postCodeOpen: false,
         postCode1:'',
@@ -518,13 +581,41 @@ data() {
             'confirmCutting': '확인'
         },
         enabled: false,
-        myFiles: [],
+        uploadFile : false,
+        fileList: [],
+        myFiles: [
+            {
+                'idx': 0,
+                'name': ''
+            },
+            {
+                'idx': 1,
+                'name': ''
+            },
+            {
+                'idx': 2,
+                'name': ''
+            },
+            {
+                'idx': 3,
+                'name': ''
+            },
+            {
+                'idx': 4,
+                'name': ''
+            },
+            {
+                'idx': 5,
+                'name': ''
+            },
+        ],
         image: null,
         inst: false,
         yout: false,
         currentInstaId :'',
         currentYoutubeId :'',
-        step: '2',
+        currentYouChk :'',
+        currentMyinfoChk:'',
         group1 : {
             name: '홍승호',
             phoneNo: '01023980719',
@@ -540,25 +631,40 @@ data() {
         },
         instagram:[
             {
-                'id': 'inst1', 'name': '1000미만'
+                'id': 'inst1', 'name': '1000 이하'
             },
             {
-                'id': 'inst2', 'name': '1000이상 5000미만'
+                'id': 'inst2', 'name': '1001 ~ 5000명 이하'
             },
             {
-                'id': 'inst3', 'name': '5000이상'
+                'id': 'inst3', 'name': '5001명 이상'
             }
         ],
-
         youtube:[
             {
-                'id': 'you1', 'name': '1000미만'
+                'id': 'you1','name': '1000 이하'
             },
             {
-                'id': 'you2', 'name': '1000이상 5000미만'
+                'id': 'you2', 'name': '1001 ~ 5000명 이하'
             },
             {
-                'id': 'you3', 'name': '5000이상'
+                'id': 'you3', 'name': '5001명 이상'
+            }
+        ],
+        youtubeChk:[
+            {
+                'id': 'youChk1','name': '네, 그렇게 해주세요'
+            },
+            {
+                'id': 'youChk2', 'name': '아니요, 연동하지 않을래요.'
+            }
+        ],
+        myinfoChk:[
+            {
+                'id': 'myChk1','name': '동의'
+            },
+            {
+                'id': 'myChk2', 'name': '동의 안 함'
             }
         ],
         checkedNames: [],
@@ -575,22 +681,22 @@ data() {
         myintro: '',
         bodyIntro: '',
         topList: [
-            {'no': 1, 'keyword': '44'},
-            {'no': 2, 'keyword': '44반'},
-            {'no': 3, 'keyword': '55'},
-            {'no': 4, 'keyword': '55반'},
-            {'no': 5, 'keyword': '66'},
-            {'no': 6, 'keyword': '66반'},
-            {'no': 7, 'keyword': '77'},
-            {'no': 8, 'keyword': '77반'},
-            {'no': 9, 'keyword': '88'},
-            {'no': 10, 'keyword': '88반'},
-            {'no': 11, 'keyword': '99'},
-            {'no': 12, 'keyword': '100'},
-            {'no': 13, 'keyword': '110'}
+            {'no': 1, 'keyword': '33반 이하'},
+            {'no': 2, 'keyword': '44'},
+            {'no': 3, 'keyword': '44반'},
+            {'no': 4, 'keyword': '55'},
+            {'no': 5, 'keyword': '55반'},
+            {'no': 6, 'keyword': '66'},
+            {'no': 7, 'keyword': '66반'},
+            {'no': 8, 'keyword': '77'},
+            {'no': 9, 'keyword': '77반'},
+            {'no': 10, 'keyword': '88'},
+            {'no': 11, 'keyword': '88반'},
+            {'no': 12, 'keyword': '99'},
+            {'no': 13, 'keyword': '100 이상'},
         ],
         bottomList: [
-            {'no': 1, 'keyword': '21미만'},
+            {'no': 1, 'keyword': '20 이하'},
             {'no': 2, 'keyword': '21'},
             {'no': 3, 'keyword': '22'},
             {'no': 4, 'keyword': '23'},
@@ -603,20 +709,25 @@ data() {
             {'no': 11, 'keyword': '30'},
             {'no': 12, 'keyword': '31'},
             {'no': 13, 'keyword': '32'},
-            {'no': 14, 'keyword': '32초과'}
+            {'no': 14, 'keyword': '33'},
+            {'no': 14, 'keyword': '34'},
+            {'no': 14, 'keyword': '35'},
+            {'no': 14, 'keyword': '36이상'}
         ],
         footList: [
-            {'no': 1, 'keyword': '220미만'},
-            {'no': 2, 'keyword': '220'},
-            {'no': 3, 'keyword': '225'},
-            {'no': 4, 'keyword': '230'},
-            {'no': 5, 'keyword': '235'},
-            {'no': 6, 'keyword': '240'},
-            {'no': 7, 'keyword': '245'},
-            {'no': 8, 'keyword': '250'},
-            {'no': 9, 'keyword': '255'},
-            {'no': 10, 'keyword': '260'},
-            {'no': 11, 'keyword': '260초과'},
+            {'no': 1, 'keyword': '200이하'},
+            {'no': 2, 'keyword': '205'},
+            {'no': 3, 'keyword': '210'},
+            {'no': 4, 'keyword': '220'},
+            {'no': 5, 'keyword': '225'},
+            {'no': 6, 'keyword': '230'},
+            {'no': 7, 'keyword': '235'},
+            {'no': 8, 'keyword': '240'},
+            {'no': 9, 'keyword': '245'},
+            {'no': 10, 'keyword': '250'},
+            {'no': 11, 'keyword': '255'},
+            {'no': 12, 'keyword': '260'},
+            {'no': 13, 'keyword': '265 이상'},
         ],
         shoulderList: [
             {'no': 1, 'keyword': '매우 좁은편'},
@@ -823,6 +934,14 @@ methods: {
         this.currentYoutubeId = i;
         console.log(i)
     },
+    showSellers3(i) {
+        this.currentYouChk = i;
+        console.log(i)
+    },
+    showSellers4(i) {
+        this.currentMyinfoChk = i;
+        console.log(i)
+    },
     submit() {
         console.log(this.checkedNames);
         if(this.checkedNames.includes('instagram')) {
@@ -861,7 +980,7 @@ methods: {
                         } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
                                 alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
                         } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
-                                alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 입력해주세요.');
+                                alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
                         } else {
 
                             var params = {
@@ -949,7 +1068,11 @@ methods: {
                                 alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
                         } else if( this.mallList.length < 2 || this.mallList.length > 5) {
                                 alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
-                        }  else {
+                        }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
+                                alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
+                        } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
+                                alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
+                        } else {
 
                             var params = {
                                 'status': 'req',
@@ -957,6 +1080,7 @@ methods: {
                                 'styleDislike': this.dislikeList.join(),
                                 'likeBrand': this.likeBrand.join(),
                                 'likeMall': this.mallList.join(),
+                                'youtFlag':  this.currentYouChk == 'youChk1' && this.this.checkSns[1].id != '' ? 'y' : 'n'
                             }
 
                             var payload = ['ugr3', params];
@@ -1036,35 +1160,103 @@ methods: {
       console.log('FilePond has initialized')
         this.$refs.pond.getFiles();
     },
-    async process(fieldName, file, metadata, load, error, progress, abort) {
-        for(var k = 0; k < this.myFiles.length; k++) {
-            const formData = new FormData();
-            formData.append('imgFile', file, file.name);
-            var payload = [k, formData];
+    //   process(fieldName, file, metadata) {
+    //      console.log('isok?');
+    //     for(var k = 0; k < 6; k++) {
+    //         const formData = new FormData();
+    //         formData.append('imgFile', file, file.name);
+    //         var payload = [k, formData];
 
-            await this.$store.dispatch("sendUserImage", payload).then((response) => {
+    //          this.$store.dispatch("sendUserImage", payload).then((response) => {
+    //             if(response == 200) {
+    //                 console.log('잘올라감' + k)
+    //             } else {
+    //                 // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+    //             }
+    //         })
+    //     }
+    // },
+    onload (e, r) {
+        if(this.uploadFile == true) {
+            console.log('load ok?')
+            // var idx = 0;
+            console.log(this.imageUploadIdx)
+            this.imageUploadIdx = this.imageUploadIdx +1;
+
+            if(e== null) {
+                console.log('file object : ' + r.file)
+                console.log('file id : ' + r.id)
+                console.log('file extension : ' + r.fileExtension)
+                console.log('fileSize : ' + r.fileSize)
+                console.log('filename : ' + r.filename)
+            }  else {
+                console.log('error? : ' + e)
+            }
+
+            const formData = new FormData();
+            formData.append('imgFile', r.file, r.file.name);
+            var payload = [ this.imageUploadIdx, formData];
+
+                this.$store.dispatch("sendUserImage", payload).then((response) => {
                 if(response == 200) {
-                    console.log('잘올라감' + k)
+                    console.log('잘올라감' + this.imageUploadIdx)
                 } else {
                     // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                 }
             })
+        } else {
+
         }
     },
-    onload (e, r) {
-        if(e== null) {
-            console.log('file object : ' + r.file)
-            console.log('file id : ' + r.id)
-            console.log('file serverId : ' + r.serverId)
-            console.log('file extension : ' + r.fileExtension)
-            console.log('fileSize : ' + r.fileSize)
-            console.log('filename : ' + r.filename)
-
-            // this.image = URL.createObjectURL(r.file);
-        } 
-    },
     updateFiles(files) {
-        this.myFiles = files;
+        this.fileList = files;
+        console.log(this.fileList.length)
+        console.log(this.myFiles.length)
+
+
+        if(this.fileList.length < this.myFiles.length) {
+            this.uploadFile = false;
+            this.$refs.pond.removeFile();
+            this.fileList = [];
+            console.log('이건 삭제한거임. api 보내면 안됨.')
+        }
+        else if(files.length == 0) {
+            this.uploadFile = false;
+            console.log('no files')
+        } else if (files.length != 6){
+
+            if(this.uploadFile == true) {
+                this.imageUploadIdx = 0;
+                this.uploadFile = true;
+            } 
+            console.log('file length not 6')
+            console.log(files)
+            this.myFiles = [];
+            for(var i =0; i < files.length; i ++) {
+                if(files[i].filename == '') {
+                    console.log('has no file name')      
+                } else {
+                    console.log(files[i].filename)
+                    this.myFiles.push({'idx': i, 'name': files[i].filename});
+                }
+            }
+        } else {
+            if(this.uploadFile == false) {
+                this.imageUploadIdx = 0;
+                this.uploadFile = true;
+            } 
+            console.log('how about update files?')
+            console.log(files)
+            this.myFiles = [];
+            for(var i =0; i < files.length; i ++) {
+                if(files[i].filename == '') {
+                    console.log('has no file name')      
+                } else {
+                    console.log(files[i].filename)
+                    this.myFiles.push({'idx': i, 'name': files[i].filename});
+                }
+            }
+        }
     },
     clickBrand(item, index){
         console.log(item)
