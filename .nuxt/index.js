@@ -28,6 +28,8 @@ import nuxt_plugin_vuetify_d6afc2c2 from 'nuxt_plugin_vuetify_d6afc2c2' // Sourc
 import nuxt_plugin_amplitude_ffbe75ec from 'nuxt_plugin_amplitude_ffbe75ec' // Source: ../plugins/amplitude.js (mode: 'all')
 import nuxt_plugin_vviewer_14000650 from 'nuxt_plugin_vviewer_14000650' // Source: ../plugins/v-viewer.js (mode: 'all')
 import nuxt_plugin_swiper_68e7f06e from 'nuxt_plugin_swiper_68e7f06e' // Source: ../plugins/swiper.js (mode: 'all')
+import nuxt_plugin_vueuploadmultipleimage_26547dea from 'nuxt_plugin_vueuploadmultipleimage_26547dea' // Source: ../plugins/vue-upload-multiple-image.js (mode: 'all')
+import nuxt_plugin_vuedraggable_11e72f9a from 'nuxt_plugin_vuedraggable_11e72f9a' // Source: ../plugins/vuedraggable.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -242,6 +244,14 @@ async function createApp (ssrContext) {
 
   if (typeof nuxt_plugin_swiper_68e7f06e === 'function') {
     await nuxt_plugin_swiper_68e7f06e(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vueuploadmultipleimage_26547dea === 'function') {
+    await nuxt_plugin_vueuploadmultipleimage_26547dea(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vuedraggable_11e72f9a === 'function') {
+    await nuxt_plugin_vuedraggable_11e72f9a(app.context, inject)
   }
 
   // If server-side, wait for async component to be resolved first

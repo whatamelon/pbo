@@ -219,6 +219,11 @@ module.exports = {
     "~/plugins/vuetify.js",
     "~/plugins/amplitude.js",
     "~/plugins/v-viewer.js",
-    "~/plugins/swiper.js"
+    "~/plugins/swiper.js",
+    "~/plugins/vue-upload-multiple-image.js",
+    '~/plugins/vuedraggable.js'
+    // {
+    //   src: "~/plugins/vue-draggable.js", ssr: false
+    // }
   ]
 };

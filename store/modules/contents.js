@@ -12,6 +12,8 @@ const CONTENTS = {
         MC_LIST_CNT:0,
         MC_OFFSET:0,
         MC_LIMIT:30,
+        SELECT_ITEM:{},
+        SELECT_OPTIONS:{},
       };
     },
   
@@ -40,6 +42,14 @@ const CONTENTS = {
         MC_LIMIT: state => {
             return state.MC_LIMIT;
         },
+
+        SELECT_ITEM: state => {
+            return state.SELECT_ITEM;
+        },
+
+        SELECT_OPTIONS: state => {
+            return state.SELECT_OPTIONS;
+        },
     },
   
     mutations: {
@@ -66,6 +76,14 @@ const CONTENTS = {
 
         SET_MC_LIMIT(state, payload) {
             state.MC_LIMIT = payload;
+        },
+
+        SET_SELECT_ITEM(state, payload) {
+            state.SELECT_ITEM = payload;
+        },
+
+        SET_SELECT_OPTIONS(state, payload) {
+            state.SELECT_OPTIONS = payload;
         },
     },
   
@@ -114,6 +132,14 @@ const CONTENTS = {
             reject(e);
           }
         }),
+    
+        setSelectItem({ commit },payload) {
+            commit("SET_SELECT_ITEM", payload);
+        },
+    
+        setSelectOption({ commit },payload) {
+            commit("SET_SELECT_OPTIONS", payload);
+        },
 
     }
   };

@@ -18,7 +18,7 @@
       <v-tabs-items v-else>
           <div class="bcproduct__container"
             v-for="product in BC_PRODUCT_LIST"
-            :key="product.modelId">
+            :key="product.nitemId">
             <div style="display: grid;">
                 <span class="bcproduct__name"> {{ product.name }} </span>
 
@@ -26,7 +26,7 @@
                     <span v-for="option in product.options" class="bcproduct__options">{{ option.replaceAll("@@@", ':') }}</span>
                 </div>
             </div>
-            <div class="bcproduct__button">
+            <div class="bcproduct__button" @click="goToMakeContents(product)">
                 컨텐츠 만들기
             </div>
                 <!-- <img
@@ -115,6 +115,12 @@ methods:{
         } else {
             this.$store.dispatch("getMyContentsList", payload);
         }
+  },
+
+  goToMakeContents(item) {
+    this.$store.dispatch('setSelectItem', item);
+    this.$router.push("/editContents");
+
   }
 
 },

@@ -9,6 +9,7 @@ const _5386e680 = () => interopDefault(import('../pages/contact/index.vue' /* we
 const _76c29e60 = () => interopDefault(import('../pages/contents/index.vue' /* webpackChunkName: "pages/contents/index" */))
 const _2214759e = () => interopDefault(import('../pages/createAccount/index.vue' /* webpackChunkName: "pages/createAccount/index" */))
 const _51bb0ac8 = () => interopDefault(import('../pages/curate/index.vue' /* webpackChunkName: "pages/curate/index" */))
+const _669b26fa = () => interopDefault(import('../pages/editContents/index.vue' /* webpackChunkName: "pages/editContents/index" */))
 const _21570b67 = () => interopDefault(import('../pages/follow/index.vue' /* webpackChunkName: "pages/follow/index" */))
 const _3f1f4456 = () => interopDefault(import('../pages/home/index.vue' /* webpackChunkName: "pages/home/index" */))
 const _f38cec6e = () => interopDefault(import('../pages/model/index.vue' /* webpackChunkName: "pages/model/index" */))
@@ -66,6 +67,10 @@ export const routerOptions = {
     path: "/curate",
     component: _51bb0ac8,
     name: "curate"
+  }, {
+    path: "/editContents",
+    component: _669b26fa,
+    name: "editContents"
   }, {
     path: "/follow",
     component: _21570b67,
