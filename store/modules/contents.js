@@ -1,6 +1,11 @@
 import {
     getMyContentsListAPI,
-    getBeforeContentsListAPI
+    getBeforeContentsListAPI,
+    sendContentsImageAPI,
+    deleteContentsImageAPI,
+    getContentsImageAPI,
+    changeContentsImageIndexAPI,
+    registerContentsAPI
 } from "@/api/contents";
 
 const CONTENTS = {
@@ -14,6 +19,10 @@ const CONTENTS = {
         MC_LIMIT:30,
         SELECT_ITEM:{},
         SELECT_OPTIONS:{},
+        CONTS_IMG_TITLE_LINK:'',
+        CONTS_IMG_DETAIL_LIST:[],
+        CONTS_IMG_FRONT_LIST:[],
+        CONTS_IMG_PART_LIST:[],
       };
     },
   
@@ -50,6 +59,22 @@ const CONTENTS = {
         SELECT_OPTIONS: state => {
             return state.SELECT_OPTIONS;
         },
+
+        CONTS_IMG_TITLE_LINK: state => {
+            return state.CONTS_IMG_TITLE_LINK;
+        },
+
+        CONTS_IMG_DETAIL_LIST: state => {
+            return state.CONTS_IMG_DETAIL_LIST;
+        },
+
+        CONTS_IMG_FRONT_LIST: state => {
+            return state.CONTS_IMG_FRONT_LIST;
+        },
+
+        CONTS_IMG_PART_LIST: state => {
+            return state.CONTS_IMG_PART_LIST;
+        },
     },
   
     mutations: {
@@ -84,6 +109,22 @@ const CONTENTS = {
 
         SET_SELECT_OPTIONS(state, payload) {
             state.SELECT_OPTIONS = payload;
+        },
+
+        SET_CONTS_IMG_TITLE_LINK(state, payload) {
+            state.CONTS_IMG_TITLE_LINK = payload;
+        },
+
+        SET_CONTS_IMG_DETAIL_LIST(state, payload) {
+            state.CONTS_IMG_DETAIL_LIST = payload;
+        },
+
+        SET_CONTS_IMG_FRONT_LIST(state, payload) {
+            state.CONTS_IMG_FRONT_LIST = payload;
+        },
+
+        SET_CONTS_IMG_PART_LIST(state, payload) {
+            state.CONTS_IMG_PART_LIST = payload;
         },
     },
   
@@ -133,6 +174,70 @@ const CONTENTS = {
           }
         }),
     
+
+        sendContentsImage: ({ commit }, payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            console.log('3')
+            console.log(payload)
+            const response = await sendContentsImageAPI(payload[0], payload[1], payload[2]);
+            console.log(response.result);
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
+        deleteContentsImage: ({ commit }, payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await deleteContentsImageAPI(payload[0], payload[1], payload[2]);
+            console.log(response.result);
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
+        getContentsImage: ({ commit }, payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await getContentsImageAPI(payload);
+            console.log(response.result);
+            if (response.status === 200) {
+              commit("SET_CONTS_IMG_TITLE_LINK", response.result.imgLinkTitle);
+              commit("SET_CONTS_IMG_DETAIL_LIST", response.result.imgListDetail);
+              commit("SET_CONTS_IMG_FRONT_LIST", response.result.imgListFront);
+              commit("SET_CONTS_IMG_PART_LIST", response.result.imgListPart);
+            } 
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
+        changeContentsImageIndex: ({ commit }, payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await changeContentsImageIndexAPI(payload[0], payload[1], payload[2]);
+            console.log(response.result);
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
+        registerContents: ({ commit }, payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await registerContentsAPI(payload);
+            console.log(response.result);
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
         setSelectItem({ commit },payload) {
             commit("SET_SELECT_ITEM", payload);
         },
