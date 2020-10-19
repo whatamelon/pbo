@@ -3,8 +3,12 @@
 
     <main class="size-input">
 
-    <div class="hello">
+    <!-- <div class="hello">
       반가워요!👋 <br/> 피클링 픽키센터 입니다!
+    </div> -->
+    <div class="hello">
+       <img class="logos-icon" src="/p_red_logo.png" />
+      피클링 픽키센터
     </div>
 
       <div class="input-container">
@@ -174,9 +178,11 @@ if(!localStorage.getItem("tokenExpire")) {
 <style lang="scss" scoped>
 .hello{
   text-align: center;
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: 900;
   margin-bottom: 15%;
+  display: grid;
+  margin: 0 auto 50px auto;
 }
 
 .size-input {
@@ -217,30 +223,32 @@ if(!localStorage.getItem("tokenExpire")) {
   border-radius: 0;
   color: #000;
 &-container{
-  display: flex;
+  display: grid;
   margin-top: 5%;
+  margin-bottom: 20px;
 }
 
 &-title{
   margin-left: 10%;
   margin-right: 10px;
-  font-size: 1.5em;
+  font-size: 1.3em;
   font-weight: 800;
   width: 100px;
+  margin-bottom: 20px;
   // text-align:center;
 }
 
   &__bottom {
     border: 0;
-    border-bottom: 5px solid #000;
+    border-bottom: 1px solid #000;
     border-radius: 0;
     padding: 0;
     background: transparent;
     font-weight: 600;
     font-size: 1.1em;
     outline: 0;
-    width: 200px;
-    text-align: center;
+    width: 300px;
+    text-align: left;
     color: #000;
   }
   &__cm {
@@ -266,7 +274,7 @@ if(!localStorage.getItem("tokenExpire")) {
   font-weight: 600;
   height: 50px;
   color: #fff;
-  margin-top:30%;
+  margin-top:10%;
   background-color: #000;
   &--active {
     border: 0;
@@ -284,7 +292,7 @@ if(!localStorage.getItem("tokenExpire")) {
   font-weight: 600;
   height: 50px;
   color: $primary;
-  margin-top:10%;
+  margin-top:5%;
   border: 3px solid $primary;
   background-color: #fff;
   &--active {
@@ -302,5 +310,10 @@ if(!localStorage.getItem("tokenExpire")) {
 .image {
   width: 100%;
   opacity: 0.5;
+}
+
+.logos-icon {
+  width: 200px;
+  margin-bottom: 20px;
 }
 </style>

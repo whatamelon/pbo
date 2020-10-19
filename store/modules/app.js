@@ -2,6 +2,7 @@ const app = {
   state() {
     return {
       IMAGE_URL: "https://s3.ap-northeast-2.amazonaws.com/image.fitchoo",
+      YOUTUBE_KEY: "AIzaSyDtTuarkPKVdydjAaL0jI9m5iUZ0qwVLoM",
       IS_LOADING: false,
       IS_WAIT: false,
       SHOW_MODAL: false,
@@ -35,6 +36,10 @@ const app = {
   getters: {
     IMAGE_URL: state => {
       return state.IMAGE_URL;
+    },
+
+    YOUTUBE_KEY: state => {
+      return state.YOUTUBE_KEY;
     },
 
     IS_LOADING: state => {

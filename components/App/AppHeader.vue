@@ -56,18 +56,18 @@ export default {
     async logout() {
        await this.$store.dispatch("logout").then((response) => {
           if(response == 200) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('tokenExpire');
-            location.replace(document.URL);
 
           } else {
-            alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
+            // alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
           }
         })
         .catch((e) => {
-            alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
+            // alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
         })
+
+            localStorage.removeItem('token');
+            localStorage.removeItem('tokenExpire');
+            location.replace(document.URL);
 
     },
     openSearch() {

@@ -5,7 +5,9 @@ import {
     deleteContentsImageAPI,
     getContentsImageAPI,
     changeContentsImageIndexAPI,
-    registerContentsAPI
+    registerContentsAPI,
+    changeContentsAPI,
+    sendConfirmRequireAPI
 } from "@/api/contents";
 
 const CONTENTS = {
@@ -23,6 +25,8 @@ const CONTENTS = {
         CONTS_IMG_DETAIL_LIST:[],
         CONTS_IMG_FRONT_LIST:[],
         CONTS_IMG_PART_LIST:[],
+        NCONTS_ID:'',
+        CONTENTS_STATUS:'',
       };
     },
   
@@ -75,6 +79,14 @@ const CONTENTS = {
         CONTS_IMG_PART_LIST: state => {
             return state.CONTS_IMG_PART_LIST;
         },
+
+        NCONTS_ID: state => {
+            return state.NCONTS_ID;
+        },
+
+        CONTENTS_STATUS: state => {
+            return state.CONTENTS_STATUS;
+        },
     },
   
     mutations: {
@@ -126,6 +138,14 @@ const CONTENTS = {
         SET_CONTS_IMG_PART_LIST(state, payload) {
             state.CONTS_IMG_PART_LIST = payload;
         },
+
+        SET_NCONTS_ID(state, payload) {
+            state.NCONTS_ID = payload;
+        },
+
+        SET_CONTENTS_STATUS(state, payload) {
+            state.CONTENTS_STATUS = payload;
+        },
     },
   
     actions: {
@@ -144,6 +164,22 @@ const CONTENTS = {
     
         resetMcProductList({ commit }) {
             commit("SET_MC_PRODUCT_LIST", []);
+        },
+
+        setNcontsID({ commit }, id) {
+            commit("SET_NCONTS_ID", id);
+        },
+
+        setContentsStatus({ commit }, status) {
+            commit("SET_CONTENTS_STATUS", status);
+        },
+
+        setSelectItem({ commit },payload) {
+            commit("SET_SELECT_ITEM", payload);
+        },
+    
+        setSelectOption({ commit },payload) {
+            commit("SET_SELECT_OPTIONS", payload);
         },
 
         getMyContentsList: ({ commit }, payload) =>
@@ -232,19 +268,37 @@ const CONTENTS = {
           try {
             const response = await registerContentsAPI(payload);
             console.log(response.result);
+            if (response.status === 200) {
+              commit("SET_NCONTS_ID", response.result);
+            }
             resolve(response.status);
           } catch (e) {
             reject(e);
           }
         }),
 
-        setSelectItem({ commit },payload) {
-            commit("SET_SELECT_ITEM", payload);
-        },
-    
-        setSelectOption({ commit },payload) {
-            commit("SET_SELECT_OPTIONS", payload);
-        },
+        changeContents: ({ commit },payload) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            console.log(payload)
+            const response = await changeContentsAPI(payload[0], payload[1]);
+            console.log(response.result);
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
+
+        sendConfirmRequire: ({ commit }, id) =>
+        new Promise(async (resolve, reject) => {
+          try {
+            const response = await sendConfirmRequireAPI(id);
+            console.log(response.result);
+            resolve(response.status);
+          } catch (e) {
+            reject(e);
+          }
+        }),
 
     }
   };

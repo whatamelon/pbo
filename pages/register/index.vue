@@ -181,29 +181,23 @@
                 </div>
                 <p style="font-size:0.9em; font-weight:400; margin:0 0 4% 7%;"> 내가 가장 좋아하는 나의 베스트 코디 사진을 등록해 주세요!<br/> 되도록이면 셀카 사진이 아닌 다른 사람이 찍어준 사진으로 등록해 주세요~</p>
 
-                <no-ssr>
-                    <file-pond
-                    name="image"
-                    ref="pond"
-                    label-idle="스타일 사진 가져오기 + "
-                    allow-multiple="true"
-                    max-files="6"
-                    imageResizeTargetWidth= '600'
-                    imageResizeTargetHeight= '600'
-                    allowImagePreview="true"
-                    allowImageCrop= "true"
-                    allowImageTransform="true"
-                    allowImageResize="true"
-                    imageCropAspectRatio="1:1"
-                    allow-revert = "true"
-                    accepted-file-types="image/*"
-                    :server="{ process }"
-                    v-bind:files="fileList"
-                    v-on:init="handleFilePondInit"
-                    v-on:processfile="onload"
-                    @updatefiles="updateFiles"
-                    />
-                </no-ssr>
+                  <label class="file-select">
+                    <div class="select-button">
+                    <span>사진 업로드</span>
+                    </div>
+                    <input  type="file" name="photo1" accept="image/*" @change="setPhotoFiles2($event.target.name, $event.target.files)" multiple>
+                </label>
+                <div v-show="showImages2.length !=0" style="margin:8% 0 0 5%">
+                    <draggable v-model="showImages2"  handle=".handle1" >
+                        <div class="handle1" v-for="(image, index) in showImages2">
+                            <img :src="image" width="100" height="100" class="image2"/>
+                            <span class="material-icons imageClose" @click="deleteImage2(index)">
+                            highlight_off
+                            </span>
+                            <div class="image__index">{{ index + 1}}</div>
+                        </div>
+                    </draggable>
+                </div>
 
                 <div class="input-container2">
                     <div class="input-title2">
@@ -213,7 +207,7 @@
 
                     <div class="input22">
                         <textarea 
-                        style="resize: none; height:75px !important;"
+                        style="resize: none; height:95px !important;"
                         v-model="bodyIntro"
                         class="input__bottom2"
                         placeholder="(예시: '저는 전체적으로 체구가 작고 어깨도 많이 좁은편입니다. 반면 다리는 조금 튼실한 편이라서 너무 스키니한 핏의 바지는 안 좋아해요.) ">
@@ -223,7 +217,7 @@
                 </div>
 
 
-                <div class="input-container" style="margin-top:10%;">
+                <div class="input-container">
                     <div class="input-title" style="width:120px;">
                     신장
                     </div>
@@ -273,7 +267,7 @@
                 </div>
                 <div class="input-container">
                     <div class="input-title" style="width:120px;">
-                     어깨 사이즈
+                     어깨 너비
                     </div>
                     <div class="input">
                         <SelectBox
@@ -284,7 +278,7 @@
                 </div>
                 <div class="input-container">
                     <div class="input-title" style="width:120px;">
-                     골반 사이즈
+                     골반 너비
                     </div>
                     <div class="input">
                         <SelectBox
@@ -313,8 +307,9 @@
                     </div>
 
                 <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
+                    <span>기타 : </span>
                 <input
-                    placeholder="자주 입는 스타일 +"
+                    placeholder="ex) 백예린st."
                     v-model="newLikeStyle"
                     class="input2__bottom"
                     type="text"
@@ -339,8 +334,9 @@
                         > {{ item.name }} </span>
                     </div>
                 <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
+                    <span>기타 : </span>
                     <input
-                        placeholder="절대 안입는 스타일 +"
+                        placeholder="ex) 백예린st."
                         v-model="newDisLikeStyle"
                         class="input2__bottom"
                         type="text"
@@ -365,7 +361,7 @@
                     </div>
                 <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
                     <input
-                        placeholder="좋아하는 브랜드 +"
+                        placeholder="ex) 키르시, 샤넬, 나이키"
                         v-model="brandName"
                         class="input2__bottom"
                         type="text"
@@ -391,7 +387,7 @@
                 <div class="input2" style="justify-content:start; align-items:start; margin-left:7%; margin-top:7%;">
                     <input
                     style="width:150px"
-                        placeholder="자주 가는 인터넷 쇼핑몰 +"
+                        placeholder="ex) 오러블리, 코코스토어"
                         v-model="mallName"
                         class="input2__bottom"
                         type="text"
@@ -431,7 +427,7 @@
                     <a href="https://pickling.kr/privacy.html" 
                     target="_blank"
                     style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;"
-                    >개인정보 처리 방침 링크</a>
+                    >개인정보 처리 방침 확인하기</a>
                     <div class="logos" style="justify-content: start; margin-left:7%" >
                         <div class="logos-checkbox">
                             <div class="radios-container">
@@ -498,21 +494,24 @@
             <br/>
             <br/>
 
-                    <div class="input">
+                    <div style="padding-left: 7%;">
+                    <div class="input-title3">
+                    피클링 닉네임
+                    </div>
                     <input
-                    placeholder="피클링 닉네임"
+                    placeholder=""
                         v-model="picklingNickname"
                         class="input__bottom"
                         type="text"
                     />
                     </div>
-                <span>픽키 등록후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. <br/>아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</span>
+                <p class="lastPicky">픽키 등록후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. 아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</p>
             
             <br/>
             <br/>
             <br/>
             <br/>
-            <button class="step-buttons-container2" @click="goAny(3)" >픽키 등록을 끝냈어요!</button>
+            <button class="step-buttons-container2" @click="goAny(3)" >프로필 승인 신청하기</button>
 
             </div>
             <div v-else>
@@ -567,7 +566,7 @@ components:{
 },
 data() {
       return{
-        step: '3',
+        step: 'getNickname',
         imageUploadIdx: 0,
         picklingNickname:'',
         postCodeOpen: false,
@@ -866,7 +865,9 @@ data() {
         likeList:[],
         dislikeList:[],
         likeBrand:[],
-        mallList:[]
+        mallList:[],
+        showImages2 : [],
+        images2 : [],
       }
 },
 
@@ -874,6 +875,7 @@ data() {
       'defaultImage':async function(value) {
           if (value) {
             this.image = value;
+            console.log(this.image)
 
             var binary = atob(value.split(',')[1]);
             var array = [];
@@ -881,6 +883,8 @@ data() {
                 array.push(binary.charCodeAt(i));
             }
             var blobfile = new Blob([new Uint8Array(array)], {type: 'image/jpg'});
+
+            // if(blobfile.size ==)
 
             const formData = new FormData();
             formData.append('imgFile', blobfile, 'image.jpg');
@@ -1013,51 +1017,69 @@ methods: {
                         break;
                     case '2':
                         console.log(this.myFiles.length)
-                        if (this.myintro.trim() =='' ) {
-                                alert(' 자기소개를 입력해주세요.');
-                        } else if(this.image == null) {
-                                alert('대표 사진을 업로드해주세요..');
-                        }else if( this.myFiles.length != 6) {
-                                alert('스타일 사진을 6장 업로드해주세요.');
-                        } else if(this.bodyIntro.trim() == '') {
-                                alert('체형 설명을 입력해주세요.');
-                        } else if(
-                            this.size.height.trim() == '' || 
-                            this.size.top.trim() == '' || 
-                            this.size.bottom.trim() == '' || 
-                            this.size.foot.trim() == '' || 
-                            this.size.shoulder.trim() == '' || 
-                            this.size.pelvis.trim() == '' 
-                        ) {
-                                alert('체형을 선택 / 입력해주세요.');
-                        }  else {
 
-                            var params = {
-                                'status': 'req',
-                                'myExp': this.myintro,
-                                'styleExp': this.bodyIntro,
-                                'sizeHeight': this.size.height,
-                                'sizeTop': this.size.top,
-                                'sizeBottom':  this.size.bottom,
-                                'sizeFoot':  this.size.foot,
-                                'sizeShoulder': this.size.shoulder,
-                                'sizePelvis': this.size.pelvis
-                            }
+                        for(var idxFile = 0; idxFile < 6; idxFile++) {
+                            // console.log(this.imageUploadIdx)
+                            // this.imageUploadIdx = this.imageUploadIdx +1;
 
-                            var payload = ['ugr2', params];
+                            var blobfile = this.images2[idxFile];
+                            const formData = new FormData();
+                            formData.append('imgFile', blobfile, 'image.jpg');
+                            var payload = [ idxFile+1, formData];
 
-                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                                this.$store.dispatch("sendUserImage", payload).then((response) => {
                                 if(response == 200) {
-                                    window.scrollTo(0,0);
-                                    this.step = '3';
+                                    console.log('잘올라감' + this.imageUploadIdx)
                                 } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                                 }
                             })
-                            .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            })
                         }
+                        // if (this.myintro.trim() =='' ) {
+                        //         alert(' 자기소개를 입력해주세요.');
+                        // } else if(this.image == null) {
+                        //         alert('대표 사진을 업로드해주세요..');
+                        // }else if( this.myFiles.length != 6) {
+                        //         alert('스타일 사진을 6장 업로드해주세요.');
+                        // } else if(this.bodyIntro.trim() == '') {
+                        //         alert('체형 설명을 입력해주세요.');
+                        // } else if(
+                        //     this.size.height.trim() == '' || 
+                        //     this.size.top.trim() == '' || 
+                        //     this.size.bottom.trim() == '' || 
+                        //     this.size.foot.trim() == '' || 
+                        //     this.size.shoulder.trim() == '' || 
+                        //     this.size.pelvis.trim() == '' 
+                        // ) {
+                        //         alert('체형을 선택 / 입력해주세요.');
+                        // }  else {
+
+                            // var params = {
+                            //     'status': 'req',
+                            //     'myExp': this.myintro,
+                            //     'styleExp': this.bodyIntro,
+                            //     'sizeHeight': this.size.height,
+                            //     'sizeTop': this.size.top,
+                            //     'sizeBottom':  this.size.bottom,
+                            //     'sizeFoot':  this.size.foot,
+                            //     'sizeShoulder': this.size.shoulder,
+                            //     'sizePelvis': this.size.pelvis
+                            // }
+
+                            // var payload = ['ugr2', params];
+
+                            //  await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                            //     if(response == 200) {
+                            //         window.scrollTo(0,0);
+                            //         this.step = '3';
+                            //     } else {
+                            //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            //     }
+                            // })
+                            // .catch((e) => {
+                            //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            // })
+                        // }
                         break;
                     case '3':
                         if (this.likeList.length < 1) {
@@ -1155,27 +1177,82 @@ methods: {
         }
         }
     },
+    deleteImage2(idx) {
+         this.showImages2.splice(idx,1);
+    },
+
+    setPhotoFiles2 (fieldName, fileList) {
+        // if(fileList.length > 30) {
+        //     alert('업로드한 이미지가 30개를 초과했습니다.');
+        // }else if (fileList.length < 14) {
+        //     alert('업로드한 이미지가 14개 미만입니다.');
+        // } else {
+            this.showImages2 = [];
+            this.images2 = [];
+            for(var i = 0; i < fileList.length; i ++) {
+                console.log(fileList[i])
+                 var image = this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 600
+                });
+
+                console.log('image  : ' + image)
+                this.images2.push(image);
+                this.showImages2.push(URL.createObjectURL(fileList[i]));
+            }
+        // }
+     },
+
+
+     resizeImage (settings) {
+      console.log('setting!!! ' + settings)
+      var file = settings.file;
+      var maxSize = settings.maxSize;
+      var reader = new FileReader();
+      var image = new Image();
+      var canvas = document.createElement('canvas');
+      var dataURItoBlob = function (dataURI) {
+          var bytes = dataURI.split(',')[0].indexOf('base64') >= 0 ?
+              atob(dataURI.split(',')[1]) :
+              unescape(dataURI.split(',')[1]);
+          var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+          var max = bytes.length;
+          var ia = new Uint8Array(max);
+          for (var i = 0; i < max; i++)
+              ia[i] = bytes.charCodeAt(i);
+
+
+              console.log('ia!' + ia)
+          return new Blob([ia], { type: mime });
+      };
+      var resize = function () {
+          var width = image.width;
+          var height = image.height;
+          if (width > height) {
+              if (width > maxSize) {
+                  height *= (maxSize / width).toFixed(2);
+                  width = maxSize;
+              }
+          } else {
+              if (height > maxSize) {
+                  width *= (maxSize / height).toFixed(2);
+                  height = maxSize;
+              }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+          var dataUrl = canvas.toDataURL('image/jpeg');
+          console.log('dataUrl!!! ' + dataUrl)
+          return dataURItoBlob(dataUrl);
+      };
+      return  resize();
+},
 
     handleFilePondInit () {
       console.log('FilePond has initialized')
         this.$refs.pond.getFiles();
     },
-    //   process(fieldName, file, metadata) {
-    //      console.log('isok?');
-    //     for(var k = 0; k < 6; k++) {
-    //         const formData = new FormData();
-    //         formData.append('imgFile', file, file.name);
-    //         var payload = [k, formData];
-
-    //          this.$store.dispatch("sendUserImage", payload).then((response) => {
-    //             if(response == 200) {
-    //                 console.log('잘올라감' + k)
-    //             } else {
-    //                 // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-    //             }
-    //         })
-    //     }
-    // },
     onload (e, r) {
         if(this.uploadFile == true) {
             console.log('load ok?')
@@ -1223,8 +1300,7 @@ methods: {
         else if(files.length == 0) {
             this.uploadFile = false;
             console.log('no files')
-        } else if (files.length != 6){
-
+        } else if (files.length != 6) {
             if(this.uploadFile == true) {
                 this.imageUploadIdx = 0;
                 this.uploadFile = true;
@@ -1487,7 +1563,7 @@ beforeRouteLeave(to, from, next) {
 &-container{
   display: grid;
   padding: 5%0;
-  border: 1px solid #000;
+  border: 1px solid #cccccc;
   border-radius: 5px;
   margin: 5%;
   background-color: #fff;
@@ -1495,7 +1571,7 @@ beforeRouteLeave(to, from, next) {
 &-container2{
   display: grid;
   padding: 5%0;
-  border: 1px solid #000;
+  border: 1px solid #cccccc;
   border-radius: 5px;
   margin: 5%;
   background-color: #fff;
@@ -1517,24 +1593,32 @@ beforeRouteLeave(to, from, next) {
   width: 300px;
   // text-align:center;
 }
+&-title3{
+  margin-left: 0;
+  margin-right: 10px;
+  font-size: 1.5em;
+  font-weight: 800;
+  width: 160px;
+  // text-align:center;
+}
 
   &__bottom {
     border: 0;
-    border-bottom: 2px solid #000;
+    border-bottom: 1px solid #ececec;
     border-radius: 0;
     padding: 0;
     background: transparent;
     font-weight: 600;
     font-size: 1.3em;
     outline: 0;
-    width: 250px;
+    width: 90%;
     text-align: start;
     color: #000;
   }
 
   &__bottom2 {
       margin-top: 4% !important;
-    border: 2px solid #000;
+    border: 1px solid #ececec;
     border-radius: 5px;
     padding: 2%;
     background: transparent;
@@ -1560,14 +1644,14 @@ beforeRouteLeave(to, from, next) {
 
   &__bottom {
     border: 0;
-    border-bottom: 2px solid #000;
+    border-bottom: 1px solid #ececec;
     border-radius: 0;
     padding: 0;
     background: transparent;
     font-weight: 600;
     font-size:0.9em;
     outline: 0;
-    width: 120px;
+    width: 140px;
     text-align: center;
     color: #000;
   }
@@ -1591,14 +1675,14 @@ beforeRouteLeave(to, from, next) {
 
     &-option{
         display: inline-block;
-        margin-bottom: 10%;
+        margin-bottom: 20%;
         margin-left: 15px;
     }
 }
 .radios{
     &-container{
         justify-content: space-around;
-        margin-top: 5%;
+        margin-top: 15%;
         display: grid;
     }
 }
@@ -1678,5 +1762,39 @@ beforeRouteLeave(to, from, next) {
         margin: 3% 0;
     }
 
+}
+
+
+.file-select > .select-button {
+
+  color: white;
+  background-color: #03a9f4;
+  border: 1px solid #03a9f4;
+  width: 117px;
+  padding: 4px 15px;
+
+  border-radius: 3px;
+
+  text-align: center;
+}
+
+/* Don't forget to hide the original file input! */
+.file-select > input[type="file"] {
+  display: none;
+}
+.file-select {
+    display: inline-block;
+    margin: 0 35%;
+}
+
+.handle1, .handle2, .handle3, .handleTitle {
+    position: relative;
+    margin: 2%;
+    display: inline-block;
+}
+.lastPicky{
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
 }
 </style>

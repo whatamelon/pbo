@@ -12,6 +12,7 @@ const _51bb0ac8 = () => interopDefault(import('../pages/curate/index.vue' /* web
 const _669b26fa = () => interopDefault(import('../pages/editContents/index.vue' /* webpackChunkName: "pages/editContents/index" */))
 const _21570b67 = () => interopDefault(import('../pages/follow/index.vue' /* webpackChunkName: "pages/follow/index" */))
 const _3f1f4456 = () => interopDefault(import('../pages/home/index.vue' /* webpackChunkName: "pages/home/index" */))
+const _37460dde = () => interopDefault(import('../pages/makeContents/index.vue' /* webpackChunkName: "pages/makeContents/index" */))
 const _f38cec6e = () => interopDefault(import('../pages/model/index.vue' /* webpackChunkName: "pages/model/index" */))
 const _25613191 = () => interopDefault(import('../pages/myPage/index.vue' /* webpackChunkName: "pages/myPage/index" */))
 const _5ce5ebae = () => interopDefault(import('../pages/order/index.vue' /* webpackChunkName: "pages/order/index" */))
@@ -79,6 +80,10 @@ export const routerOptions = {
     path: "/home",
     component: _3f1f4456,
     name: "home"
+  }, {
+    path: "/makeContents",
+    component: _37460dde,
+    name: "makeContents"
   }, {
     path: "/model",
     component: _f38cec6e,

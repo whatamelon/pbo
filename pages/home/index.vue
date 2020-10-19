@@ -14,12 +14,90 @@
     <div v-else>
       <p class="infoN__title" style="margin-top:30px">반갑습니다! {{ this.$store.getters.USER_GRP1.nameReal }}님 👋</p>
       <p class="infoN__title">{{ this.hello }}</p>
+
+              <div class="qI-head">
+            <div class="qI-head1">
+                <div class="qI-headContainer">
+                    <img class="qI-headImage" :src="IMAGE_URL + USER_GRP5.imgLinkTitle" />
+                    <!-- <div class="qI-headInfo">
+                        <span class="qI-name">{{ USER_NICKNAME }}</span>
+                        <div v-for="sns in Q_USER_SNS" class="ql-sns">
+                            <img class="qI-instar" src="/app/color_insta.png"  
+                            v-if="sns.snsType == 'inst'" @click="goToSNS('inst', sns.snsLink)"/>
+                            <img class="qI-instar" src="/app/youtube_icon.png"
+                              v-else @click="goToSNS('yout', sns.snsLink)"/>
+                        </div>
+                    </div>
+                    <span class="qI-curator">{{ Q_USER_DEPARTMENT }}</span>
+                    <div class="qI-headTag-container">
+                        <div v-for="tag in Q_USER_TAG_LIST" class="qI-headTags">#{{ tag }}</div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="qI-head2">
+                <div class="qI-bodyInfo">
+                    <!-- <div class="qI-bodyInfo-index" v-for="info in Q_USER_INFO">
+                        <div class="qI-bodyInfo-value" >
+                            <span v-html="info.value"></span>
+                        </div>
+                        <div class="qI-bodyInfo-key"><span>{{ info.key }}</span></div>
+                    </div> -->
+                </div>
+                <div class="qI-subtitle">{{ USER_GRP2.myExp }}</div>
+            </div>
+        </div>
+
+        <div class="qI-middle">
+            <span class="photo-title">사진</span>
+            <span class="photo-info">{{ USER_GRP2.styleExp }}</span>
+
+            <div class="styling-images-container">
+                <div ref="vueViewer" v-viewer class="styling-images" @click="clickViewer">
+                    <img v-for="img in USER_GRP5.imgLink" :src="IMAGE_URL + img"/>
+                </div>
+            </div>
+
+            <div class="tag-container">
+                <div class="tag-title">자주 입는 스타일</div>
+                <div class="tags">
+                    <div class="tag"
+                    v-for='style1 in splitLikeBrand(USER_GRP3.styleLike)' 
+                    >{{ style1 }}</div>
+                </div>
+
+            <div class="tag-title">절대 안 입는 스타일</div>
+            <div class="tags">
+                <div class="tag"
+                v-for='style2 in splitLikeBrand(USER_GRP3.styleDislike)' 
+               >{{ style2 }}</div>
+            </div>
+
+            <div class="tag-title">좋아하는 브랜드</div>
+            <div class="tags">
+                <div class="tag"
+                 v-for='brand in splitLikeBrand(USER_GRP3.likeBrand)' 
+                 :style="{color:'#888888', backgroundColor:'#ececec'}">{{ brand }}</div>
+            </div>
+            <div class="tag-title">자주 가는 쇼핑몰</div>
+            <div class="tags">
+                <div class="tag" 
+                v-for='brand in splitLikeBrand(USER_GRP3.likeMall)'
+                 :style="{color:'#888888', backgroundColor:'#ececec'}">{{ brand }}</div>
+            </div>
+
+        </div>
+        </div>
+
+
     </div>
+
+    <!-- <div @click="getChannelID">api 가져오기</div> -->
 
     </main>
 </template>
 
 <script>
+import axios from "axios";
 import { mapGetters, mapActions } from "vuex";
 import HomeList from "@/components/Home/HomeList";
 import HomeCard from "@/components/Home/HomeCard";
@@ -68,6 +146,7 @@ export default {
       "USER_GRP4",
       "USER_GRP5",
       "IMAGE_URL",
+      "YOUTUBE_KEY"
     ]),
 
     hello() {
@@ -111,14 +190,75 @@ created() {
 mounted() {
     this.$store.dispatch("setLogo","hasLogo");
     localStorage.removeItem("backButton");
+        const viewerFooter = this.$refs.vueViewer;
 },
 
 methods:{
 
   goRegister() {
         this.$router.push('/register');
-  }
+  },
 
+    splitLikeBrand(brand) {
+        var names = brand;
+        var nameArr = names.split(',');
+        return nameArr;
+    },
+    goToSNS(i, link) {
+        if(i == 'inst') {
+            this.$amplitude.getInstance().logEvent("click sns", {curatorName: '민송', snsKind:'인스타그램'});
+            window.open("https://www.instagram.com/"+link+"/");
+        } else {
+            this.$amplitude.getInstance().logEvent("click sns", {curatorName: '민송', snsKind:'유튜브'});
+            window.open("https://www.youtube.com/channel/"+link);
+        }
+    },
+
+        goBack() {
+            const historyArr = this.$store.getters.QURATE_HISTORY_LIST;
+            if(historyArr.length ==0 ){
+            } else {
+                this.$store.dispatch("setQPageInfo", historyArr[historyArr.length-1]);
+            }
+
+            localStorage.setItem("backButton","1");
+            this.$router.go(-1);
+        },
+
+        clickViewer() {
+            console.log("viewer clicked");
+            const viewerFooter = this.$refs.vueViewer;
+
+            console.log(viewerFooter);
+
+            setTimeout(() => {
+                const viewerTitle = document.getElementsByClassName("viewer-title")[0];
+                const viewerToolbar = document.getElementsByClassName(
+                "viewer-toolbar"
+                )[0];
+
+                console.log(document.getElementsByClassName("viewer-footer"));
+                viewerTitle.style.display = "none";
+                viewerToolbar.style.display = "none";
+            }, 50);
+        },
+
+  // getChannelID() {
+
+  //       var ax = axios.create();
+
+  //       ax.defaults.timeout = 12000;
+  //       var returns = ax.get(`https://www.googleapis.com/youtube/v3/channels/`, { 
+  //         'part': 'snippet, id',                              
+  //         'forUsername': '옥개 나라',                         
+  //         'key': 'AIzaSyDtTuarkPKVdydjAaL0jI9m5iUZ0qwVLoM'
+  //         }
+  //     );
+
+  //         console.log(returns);
+  // },
+
+  
 },
 
   beforeRouteLeave(to, from, next) {
@@ -160,5 +300,224 @@ methods:{
   }
 }
 
+.qI {
+    &-head{
+
+    }
+    &-head1{
+        display: flex;
+    }
+
+    &-backButton-container{
+        position: fixed;
+        border-radius: 50%;
+        width: 30px;
+        height:30px;
+        background-color: #ffffff;
+        margin: 8% 0 0 15px;
+        box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+    }
+
+    &-backButton{
+        margin: 3px 0 0 7px;
+        width:10px;
+        height:20px;
+        position: relative;
+    }
+
+    &-headContainer{
+        display: grid;
+        justify-content: center;
+        text-align: center;
+        margin:5% auto;
+    }
+
+    &-headImage{
+        margin:0 auto 5% auto;
+        width:160px;
+        height:auto;
+    }
+
+    &-headInfo{
+        margin: 0 auto 3% auto;
+        display: flex;
+        line-height: 1.1;
+    }
+
+    &-name{
+        font-size: 1.5em;
+        font-weight: 800;
+        position: relative;
+        margin-right: 5%;
+    }
+
+    &-sns{
+        display: flex;
+    }
+
+    &-instar{
+        width: 25px;
+        height:25px;
+        margin: 0 5%;
+    }
+
+    &-curator{
+        font-size: 0.9em;
+        font-weight: 500;
+        color: #a9a9a9;
+        margin-bottom: 7%;
+    }
+
+    &-headTag-container{
+        display: flex;
+        margin:0 auto 5% auto;
+    }
+
+    &-headTags{
+        margin: 0 5px;
+        border-radius: 10px;
+        background-color: #ececec;
+        padding: 5px 9px;
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+
+
+    &-head2{
+        display: grid;
+    }
+
+    &-bodyInfo{
+        display: flex;
+        margin:0;
+        justify-content: space-between;
+    }
+
+    &-bodyInfo-index{
+        margin: 0 5px;
+        text-align: center;
+    }
+
+    &-bodyInfo-value{
+        width:50px;
+        height:50px;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    &-bodyInfo-value > span {
+        font-size: 1.3em;
+        font-weight: 800;
+    }
+
+    &-bodyInfo-key{
+        font-size: 0.9em;
+        font-weight: 600;
+        color:#a9a9a9;
+    }
+
+    &-subtitle{
+        padding: 7% 3% 5% 3%;
+        font-size: 1em;
+        font-weight: 500;
+        color:#a9a9a9;
+        border-bottom: 1px solid #ececec;;
+    }
+
+    &-middle{
+        padding: 5% 3%;
+        display: grid;
+        border-bottom: 1px solid #ececec;
+    }
+}
+
+.qI-bodyInfo-index:nth-child(5) > .qI-bodyInfo-value > span {
+    font-size: 0.9em;
+    line-break: strict;
+    font-weight: 800;
+    vertical-align: middle;
+    line-height: 145%;
+    display: block;
+}
+.qI-bodyInfo-index:nth-child(6) > .qI-bodyInfo-value > span {
+    font-size: 0.9em;
+    line-break: strict;
+    font-weight: 800;
+    vertical-align: middle;
+    line-height: 145%;
+    display: block;
+}
+
+.photo {
+    &-title{
+        font-size: 1.2em;
+        font-weight: 800;
+        margin: 0 0 3% 0;
+    }
+
+    &-info{
+        font-size: 1em;
+        font-weight: 500;
+        color:#a9a9a9;
+    }
+}
+
+.styling-images {
+    display: block;
+
+    &-container{
+        margin-top: 3%;
+    }
+
+  img {
+    margin: 1.5% 1.5% 1.5% 0.5%;
+    width: 30.5%;
+    height:110px;
+    object-fit: cover;
+    border-radius: 8px;
+    z-index: 1;
+    position : relative;
+  }
+}
+
+.tag{
+    display: inline-block;
+    margin: 0 2% 2% 0;
+    border-radius: 7px;
+    padding: 5px 9px;
+    font-weight: 500;
+    font-size: 0.9em;
+
+    &-container {
+        margin: 5% 0;
+    }
+
+    &-title {
+        font-size: 1.2em;
+        font-weight: 800;
+        margin: 3% 0 3% 0;
+    }
+
+    &s{
+        margin: 0 0 8% 0;
+    }
+}
+
+.qu{
+    &-container{
+        margin: 5% 3% 10% 3%
+    }
+
+    &-title{
+        font-size: 1.5em;
+        font-weight: 800;
+        margin-bottom: 5%;
+    }
+
+    &-qurations{
+
+    }
+    }
 
 </style>

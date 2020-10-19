@@ -4,7 +4,24 @@
             <div class="appbar">
                 {{ itemTitle }}
             </div>
+        <div v-if="this.step=='option'">
 
+            <div class="appbar2">
+                옵션 선택
+            </div>
+            <div class="option__container">
+                <div v-for="(opt, index) in this.options" class="option__div">
+                    <span> {{ options[index][0]['title'] }} </span>
+                <SelectBox
+                    v-model="optionModels[index]"
+                    :items="opt"
+                ></SelectBox>
+                </div>
+            </div>
+
+        </div>
+
+        <div v-else>
             <div class="appbar2">
                 제목
             </div>
@@ -114,6 +131,7 @@
                         </div>
                     </draggable>
                 </div>
+        </div>
 
         <div class="button_container">
             <div class="button_contents" @click="goTo(0)"> {{ this.bn }} </div>
@@ -138,6 +156,9 @@ layout: "blank",
   data() {
     return {
         step:'option',
+        // itemTitle: this.$store.getters.SELECT_ITEM.name,
+        // bn: '나가기',
+        // nn: '컨텐츠 작성하기',
         contents:{
             'title': '승호 테스트입니다!',
             'exp': '승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 '
@@ -160,15 +181,15 @@ layout: "blank",
     ]),
 
     bn () {
-      return '나가기';
+      return this.step == 'contents' ?'이전': '나가기';
     },
 
     nn () {
-      return  '수정';
+      return this.step == 'contents' ? '확인' : '컨텐츠 작성하기';
     },
 
     itemTitle() {
-      return '컨텐츠 수정';
+      return this.$store.getters.SELECT_ITEM.name;
     },
 
   },
@@ -178,8 +199,35 @@ layout: "blank",
 
      var payload = {'offset':0};
 
-    store.dispatch("setCurrentRoute", "/editContents");
+    store.dispatch("setCurrentRoute", "/makeContents");
 
+    var optionList = store.getters.SELECT_ITEM.options;
+    var optionModel = [];
+    var options = [];
+
+    for(var idx = 0; idx < optionList.length; idx++) {
+        var obj = new Object();
+        obj['option'] = '';
+        optionModel.push(obj);
+
+        var objSelect = optionList[idx].split("@@@");
+        var objValue = objSelect[1].split(",");
+        console.log(objSelect[0])
+
+        var list = new Array();
+        for(var k = 0; k < objValue.length; k++) {
+            list.push({'no':k, 'keyword': objValue[k], 'title': objSelect[0]});
+        }
+        options.push(list);
+        // options.push(objSelect);
+    }
+
+    console.log(options[0][0]['title'])
+
+    return {
+        optionModels: optionModel,
+        options: options
+    };
   },
 
 created() {
@@ -195,8 +243,28 @@ mounted() {
 
 methods:{
     async goTo(i) {
+        if(this.step == 'option') {
             if(i == 0) {
                 this.$router.go(-1);
+            } else {
+                var so = true;
+                for(var j = 0; j < this.optionModels.length; j++) {
+                    if(this.optionModels[j]['option'] == '') {
+                        so = false;
+                         break;
+                    }
+                }
+                console.log(this.optionModels)
+                console.log(so)
+                if(so == false) {
+                    alert('옵션을 선택해주세요.');
+                } else {
+                    this.step = 'contents';
+                }
+            }
+        } else {
+            if(i == 0) {
+                this.step = 'option';
             } else {
               if(this.contents.title.trim() == '') {
                 alert('제목을 입력해주세요.');
@@ -218,62 +286,128 @@ methods:{
               // } 
               else {
                 console.log('1')
-                console.log(this.$store.getters.SELECT_ITEM.options)
-                console.log(this.$store.getters.SELECT_ITEM.ncontId)
+                console.log(this.imagesTitle.length)
 
-                var payload1 = {
-                  'nitemId': '',
+                var payload = {
+                  'nitemId': this.$store.getters.SELECT_ITEM.nitemId,
                   'title' : this.contents.title,
                   'exp' : this.contents.exp,
-                  'options' : this.$store.getters.SELECT_ITEM.options,
+                  'options' : this.optionModels.join(),
                 };
-
-                var payload = [this.$store.getters.SELECT_ITEM.ncontId,payload1];
-                   await this.$store.dispatch("changeContents", payload).then((response) => {
+                   await this.$store.dispatch("registerContents", payload).then((response) => {
+                       var errorLog = 1;
                       if(response == 200) {
                           console.log('잘올라감 : title')
 
-                        // for(var titleIdx = 0; titleIdx < this.imagesTitle.length; titleIdx ++) {
-                        // console.log('2')
+                        for(var titleIdx = 0; titleIdx < this.imagesTitle.length; titleIdx ++) {
+                        console.log('2')
 
-                        // var blobfile = this.imagesTitle[titleIdx];
-                        // const formData = new FormData();
-                        // formData.append('imgFile', blobfile, 'image.jpg');
-                        // var payload = [this.$store.getters.NCONTS_ID, 'title', formData];
+                        var blobfile = this.imagesTitle[titleIdx];
+                        const formData = new FormData();
+                        formData.append('imgFile', blobfile, 'image.jpg');
+                        var payload = [this.$store.getters.NCONTS_ID, 'title', formData];
 
-                        // console.log('3')
-                        //  this.$store.dispatch("sendContentsImage", payload).then((response) => {
-                        //     if(response == 200) {
-                        //         console.log('잘올라감 : title')
-                        //     } else {
-                        //         console.log('error')
-                        //         // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                        //     }
-                        // })
-                        // }
+                        console.log('3')
+                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                            if(response == 200) {
+                                console.log('잘올라감 : title')
+                            } else {
+                                console.log('error')
+                                errorLog = 0;
+                            }
+                        })
+                        }
+
+                        for(var idx1 = 0; idx1 < this.images1.length; idx1 ++) {
+                        console.log('2')
+
+                        var blobfile = this.images1[idx1];
+                        const formData = new FormData();
+                        formData.append('imgFile', blobfile, 'image.jpg');
+                        var payload = [this.$store.getters.NCONTS_ID, 'detail', formData];
+
+                        console.log('3')
+                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                            if(response == 200) {
+                                console.log('잘올라감 : title')
+                            } else {
+                                console.log('error')
+                                errorLog = 0;
+                            }
+                        })
+                        }
+                        for(var idx2 = 0; idx2 < this.images2.length; idx2 ++) {
+                        console.log('2')
+
+                        var blobfile = this.images2[idx2];
+                        const formData = new FormData();
+                        formData.append('imgFile', blobfile, 'image.jpg');
+                        var payload = [this.$store.getters.NCONTS_ID, 'front', formData];
+
+                        console.log('3')
+                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                            if(response == 200) {
+                                console.log('잘올라감 : title')
+                            } else {
+                                console.log('error')
+                                errorLog = 0;
+                            }
+                        })
+                        }
+                        for(var idx3 = 0; idx3 < this.images3.length; idx3 ++) {
+                        console.log('2')
+
+                        var blobfile = this.images3[idx3];
+                        const formData = new FormData();
+                        formData.append('imgFile', blobfile, 'image.jpg');
+                        var payload = [this.$store.getters.NCONTS_ID, 'part', formData];
+
+                        console.log('3')
+                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                            if(response == 200) {
+                                console.log('잘올라감 : title')
+                            } else {
+                                console.log('error')
+                                errorLog = 0;
+                            }
+                        })
+                        }
                       } else {
                           console.log('error')
-                          // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                          errorLog = 0;
+                      }
+
+                      if(errorLog == 0) {
+                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                       }
                   })
 
 
+              }
             }
         }
     },
 
     setPhotoFiles1 (fieldName, fileList) {
-        if(fileList.length > 30) {
-            alert('업로드한 이미지가 30개를 초과했습니다.');
-        }else if (fileList.length < 14) {
-            alert('업로드한 이미지가 14개 미만입니다.');
-        } else {
-            this.images1 = fileList;
+        // if(fileList.length > 30) {
+        //     alert('업로드한 이미지가 30개를 초과했습니다.');
+        // }else if (fileList.length < 14) {
+        //     alert('업로드한 이미지가 14개 미만입니다.');
+        // } else {
+            this.showImages1 = [];
+            this.images1 = [];
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
+                 var image = this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 500
+                });
+
+                console.log('image  : ' + image)
+                this.images1.push(image);
                 this.showImages1.push(URL.createObjectURL(fileList[i]));
             }
-        }
+        // }
      },
     deleteImage1(idx) {
          this.showImages1.splice(idx,1);
@@ -285,9 +419,17 @@ methods:{
         } else if (fileList.length < 2) {
             alert('업로드한 이미지가 2개 미만입니다.');
         } else {
-            this.images2 = fileList;
+            this.showImages2 = [];
+            this.images2 = [];
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
+                 var image = this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 500
+                });
+
+                console.log('image  : ' + image)
+                this.images2.push(image);
                 this.showImages2.push(URL.createObjectURL(fileList[i]));
             }
         }
@@ -302,9 +444,19 @@ methods:{
         } else if (fileList.length < 2) {
             alert('업로드한 이미지가 2개 미만입니다.');
         } else {
-            this.images3 = fileList;
+            this.showImages3 = [];
+            this.images3 = [];
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
+
+                 var image = this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 500
+                });
+
+                console.log('image  : ' + image)
+                this.images3.push(image);
+ 
                 this.showImages3.push(URL.createObjectURL(fileList[i]));
             }
         }
@@ -366,12 +518,12 @@ methods:{
           var height = image.height;
           if (width > height) {
               if (width > maxSize) {
-                  height *= maxSize / width;
+                  height *= (maxSize / width).toFixed(2);
                   width = maxSize;
               }
           } else {
               if (height > maxSize) {
-                  width *= maxSize / height;
+                  width *= (maxSize / height).toFixed(2);
                   height = maxSize;
               }
           }
@@ -600,6 +752,7 @@ a {
     margin: 2%;
     display: inline-block;
 }
+
 .image2{
     position: relative;
      z-index: 1;

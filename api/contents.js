@@ -34,3 +34,9 @@ ax.put(`/nconts/img/${id}/${type}`,params);
 
 export const registerContentsAPI = params=>
 ax.post(`/nconts`,params);
+
+export const changeContentsAPI = (id , params)=>
+ax.put(`/nconts/${id}`,params);
+
+export const sendConfirmRequireAPI = id =>
+ax.post(`/nconts/${id}`);

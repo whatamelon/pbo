@@ -196,6 +196,8 @@ const USER = {
               commit("SET_USER_GRP4", response.result.ugr4);
               commit("SET_USER_GRP5", response.result.ugr5);
 
+              console.log(response.result);
+
             } else {
               commit("SET_IS_INFO", response.result.isInfo);
             }
