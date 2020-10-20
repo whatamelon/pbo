@@ -19,29 +19,41 @@
             <div class="qI-head1">
                 <div class="qI-headContainer">
                     <img class="qI-headImage" :src="IMAGE_URL + USER_GRP5.imgLinkTitle" />
-                    <!-- <div class="qI-headInfo">
-                        <span class="qI-name">{{ USER_NICKNAME }}</span>
-                        <div v-for="sns in Q_USER_SNS" class="ql-sns">
-                            <img class="qI-instar" src="/app/color_insta.png"  
-                            v-if="sns.snsType == 'inst'" @click="goToSNS('inst', sns.snsLink)"/>
-                            <img class="qI-instar" src="/app/youtube_icon.png"
-                              v-else @click="goToSNS('yout', sns.snsLink)"/>
+                    <div class="qI-headInfo">
+                        <p class="qI-name">{{ USER_NICKNAME }}</p>
+                        <div class="ql-sns">
+                            <img class="qI-instar" src="/app/color_insta.png"  v-show="USER_GRP1.isInst == 'y'"/>
+                            <img class="qI-instar" src="/app/youtube_icon.png"v-show="USER_GRP1.isYout == 'y'"/>
                         </div>
                     </div>
-                    <span class="qI-curator">{{ Q_USER_DEPARTMENT }}</span>
-                    <div class="qI-headTag-container">
-                        <div v-for="tag in Q_USER_TAG_LIST" class="qI-headTags">#{{ tag }}</div>
-                    </div> -->
                 </div>
             </div>
             <div class="qI-head2">
                 <div class="qI-bodyInfo">
-                    <!-- <div class="qI-bodyInfo-index" v-for="info in Q_USER_INFO">
-                        <div class="qI-bodyInfo-value" >
-                            <span v-html="info.value"></span>
-                        </div>
-                        <div class="qI-bodyInfo-key"><span>{{ info.key }}</span></div>
-                    </div> -->
+                    <div class="bodyInfo__container">
+                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeHeight }}</span>
+                        <span class="bodyInfo__key">키</span>
+                    </div>
+                    <div class="bodyInfo__container">
+                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeTop }}</span>
+                        <span class="bodyInfo__key">상의</span>
+                    </div>
+                    <div class="bodyInfo__container">
+                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeBottom }}</span>
+                        <span class="bodyInfo__key">하의</span>
+                    </div>
+                    <div class="bodyInfo__container">
+                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeFoot }}</span>
+                        <span class="bodyInfo__key">신발</span>
+                    </div>
+                    <div class="bodyInfo__container">
+                        <span class="bodyInfo__value2">{{ USER_GRP2.sizeShoulder }}</span>
+                        <span class="bodyInfo__key">어깨</span>
+                    </div>
+                    <div class="bodyInfo__container">
+                        <span class="bodyInfo__value2">{{ USER_GRP2.sizePelvis }}</span>
+                        <span class="bodyInfo__key">골반</span>
+                    </div>
                 </div>
                 <div class="qI-subtitle">{{ USER_GRP2.myExp }}</div>
             </div>
@@ -60,14 +72,14 @@
             <div class="tag-container">
                 <div class="tag-title">자주 입는 스타일</div>
                 <div class="tags">
-                    <div class="tag"
+                    <div class="tag" style="background-color:#0091ff; color: #fff;"
                     v-for='style1 in splitLikeBrand(USER_GRP3.styleLike)' 
                     >{{ style1 }}</div>
                 </div>
 
             <div class="tag-title">절대 안 입는 스타일</div>
             <div class="tags">
-                <div class="tag"
+                <div class="tag"style="background-color:#ff4866; color: #fff;"
                 v-for='style2 in splitLikeBrand(USER_GRP3.styleDislike)' 
                >{{ style2 }}</div>
             </div>
@@ -86,6 +98,10 @@
             </div>
 
         </div>
+        </div>
+
+        <div class="changeProfileButton" @click="goToChangeProfile">
+            프로필 수정하기
         </div>
 
 
@@ -204,26 +220,6 @@ methods:{
         var nameArr = names.split(',');
         return nameArr;
     },
-    goToSNS(i, link) {
-        if(i == 'inst') {
-            this.$amplitude.getInstance().logEvent("click sns", {curatorName: '민송', snsKind:'인스타그램'});
-            window.open("https://www.instagram.com/"+link+"/");
-        } else {
-            this.$amplitude.getInstance().logEvent("click sns", {curatorName: '민송', snsKind:'유튜브'});
-            window.open("https://www.youtube.com/channel/"+link);
-        }
-    },
-
-        goBack() {
-            const historyArr = this.$store.getters.QURATE_HISTORY_LIST;
-            if(historyArr.length ==0 ){
-            } else {
-                this.$store.dispatch("setQPageInfo", historyArr[historyArr.length-1]);
-            }
-
-            localStorage.setItem("backButton","1");
-            this.$router.go(-1);
-        },
 
         clickViewer() {
             console.log("viewer clicked");
@@ -242,6 +238,10 @@ methods:{
                 viewerToolbar.style.display = "none";
             }, 50);
         },
+
+        goToChangeProfile() {
+            this.$router.push('/editProfile');
+        }
 
   // getChannelID() {
 
@@ -341,7 +341,7 @@ methods:{
 
     &-headInfo{
         margin: 0 auto 3% auto;
-        display: flex;
+        display: grid;
         line-height: 1.1;
     }
 
@@ -518,6 +518,50 @@ methods:{
     &-qurations{
 
     }
+}
+
+.bodyInfo{
+    &__container{
+        display: grid;
+        width: 15%;
     }
+
+    &__value1{
+        font-size: 1.4em;
+        font-weight: 800;
+        text-align: center;
+        height:40px;
+    }
+
+    &__value2{
+        font-size: 0.9em;
+        font-weight: 800;
+        text-align: center;
+        height:40px;
+    }
+
+
+    &__key{
+        margin-top: 10px;
+        font-size: 0.9em;
+        font-weight: 500;
+        color:grey;
+        text-align: center;
+    }
+}
+
+.changeProfileButton{
+    margin-top: 30px;
+    margin-left: 7%;
+    width: 86%;
+    max-width: 500px;
+    text-align: center;
+    padding: 3% 0;
+    font-size: 1.1em;
+    font-weight: 800;
+    background-color: #000;
+    color:#fff;
+    border-radius: 10px;
+}
 
 </style>

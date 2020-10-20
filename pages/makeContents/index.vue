@@ -290,11 +290,12 @@ methods:{
 
                 var payload = {
                   'nitemId': this.$store.getters.SELECT_ITEM.nitemId,
+                  'nitemName':this.$store.getters.SELECT_ITEM.name,
                   'title' : this.contents.title,
                   'exp' : this.contents.exp,
                   'options' : this.optionModels.join(),
                 };
-                   await this.$store.dispatch("registerContents", payload).then((response) => {
+                   await this.$store.dispatch("registerContents", payload).then(async(response) => {
                        var errorLog = 1;
                       if(response == 200) {
                           console.log('잘올라감 : title')
@@ -305,10 +306,10 @@ methods:{
                         var blobfile = this.imagesTitle[titleIdx];
                         const formData = new FormData();
                         formData.append('imgFile', blobfile, 'image.jpg');
-                        var payload = [this.$store.getters.NCONTS_ID, 'title', formData];
+                        var payload = [this.$store.getters.NCONTS_ID, 'title', titleIdx, formData];
 
                         console.log('3')
-                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                         await this.$store.dispatch("sendContentsImage", payload).then((response) => {
                             if(response == 200) {
                                 console.log('잘올라감 : title')
                             } else {
@@ -324,10 +325,10 @@ methods:{
                         var blobfile = this.images1[idx1];
                         const formData = new FormData();
                         formData.append('imgFile', blobfile, 'image.jpg');
-                        var payload = [this.$store.getters.NCONTS_ID, 'detail', formData];
+                        var payload = [this.$store.getters.NCONTS_ID, 'detail' , idx1 ,formData];
 
                         console.log('3')
-                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                        await this.$store.dispatch("sendContentsImage", payload).then((response) => {
                             if(response == 200) {
                                 console.log('잘올라감 : title')
                             } else {
@@ -342,10 +343,10 @@ methods:{
                         var blobfile = this.images2[idx2];
                         const formData = new FormData();
                         formData.append('imgFile', blobfile, 'image.jpg');
-                        var payload = [this.$store.getters.NCONTS_ID, 'front', formData];
+                        var payload = [this.$store.getters.NCONTS_ID, 'front', idx2 , formData];
 
                         console.log('3')
-                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                        await  this.$store.dispatch("sendContentsImage", payload).then((response) => {
                             if(response == 200) {
                                 console.log('잘올라감 : title')
                             } else {
@@ -360,10 +361,10 @@ methods:{
                         var blobfile = this.images3[idx3];
                         const formData = new FormData();
                         formData.append('imgFile', blobfile, 'image.jpg');
-                        var payload = [this.$store.getters.NCONTS_ID, 'part', formData];
+                        var payload = [this.$store.getters.NCONTS_ID, 'part', idx3 , formData];
 
                         console.log('3')
-                         this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                         await this.$store.dispatch("sendContentsImage", payload).then((response) => {
                             if(response == 200) {
                                 console.log('잘올라감 : title')
                             } else {
@@ -388,7 +389,7 @@ methods:{
         }
     },
 
-    setPhotoFiles1 (fieldName, fileList) {
+    async setPhotoFiles1 (fieldName, fileList) {
         // if(fileList.length > 30) {
         //     alert('업로드한 이미지가 30개를 초과했습니다.');
         // }else if (fileList.length < 14) {
@@ -398,7 +399,7 @@ methods:{
             this.images1 = [];
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
-                 var image = this.resizeImage({
+                 var image = await this.resizeImage({
                     file: fileList[i],
                     maxSize: 500
                 });
@@ -410,10 +411,11 @@ methods:{
         // }
      },
     deleteImage1(idx) {
+        this.images1.splice(idx,1);
          this.showImages1.splice(idx,1);
     },
 
-    setPhotoFiles2 (fieldName, fileList) {
+   async setPhotoFiles2 (fieldName, fileList) {
         if(fileList.length > 3) {
             alert('업로드한 이미지가 3개를 초과했습니다.');
         } else if (fileList.length < 2) {
@@ -423,7 +425,7 @@ methods:{
             this.images2 = [];
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
-                 var image = this.resizeImage({
+                 var image = await this.resizeImage({
                     file: fileList[i],
                     maxSize: 500
                 });
@@ -435,10 +437,11 @@ methods:{
         }
      },
     deleteImage2(idx) {
+        this.images2.splice(idx,1);
          this.showImages2.splice(idx,1);
     },
 
-    setPhotoFiles3 (fieldName, fileList) {
+   async setPhotoFiles3 (fieldName, fileList) {
         if(fileList.length > 30) {
             alert('업로드한 이미지가 3개를 초과했습니다.');
         } else if (fileList.length < 2) {
@@ -449,7 +452,7 @@ methods:{
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
 
-                 var image = this.resizeImage({
+                 var image = await this.resizeImage({
                     file: fileList[i],
                     maxSize: 500
                 });
@@ -462,10 +465,11 @@ methods:{
         }
      },
     deleteImage3(idx) {
+        this.images3.splice(idx,1);
          this.showImages3.splice(idx,1);
     },
 
-     setPhotoFilesTitle (fieldName, fileList) {
+    async setPhotoFilesTitle (fieldName, fileList) {
       console.log('fileList!!! ' + fileList)
        this.showImagesTitle = [];
        this.imagesTitle = [];
@@ -479,7 +483,7 @@ methods:{
                 console.log(fileList[i])
                 console.log('idx!!!22222 '  + i)
                 
-                 var image = this.resizeImage({
+                 var image = await this.resizeImage({
                     file: fileList[i],
                     maxSize: 500
                 });
@@ -506,38 +510,41 @@ methods:{
           var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
           var max = bytes.length;
           var ia = new Uint8Array(max);
-          for (var i = 0; i < max; i++)
+          for (var i = 0; i < max; i++) {
               ia[i] = bytes.charCodeAt(i);
-
-
+          }
               console.log('ia!' + ia)
           return new Blob([ia], { type: mime });
       };
       var resize = function () {
           var width = image.width;
           var height = image.height;
-          if (width > height) {
-              if (width > maxSize) {
-                  height *= (maxSize / width).toFixed(2);
-                  width = maxSize;
-              }
-          } else {
-              if (height > maxSize) {
-                  width *= (maxSize / height).toFixed(2);
-                  height = maxSize;
-              }
-          }
+          
+          height *= (maxSize / width).toFixed(2);
+          width = maxSize;
           canvas.width = width;
           canvas.height = height;
+          console.log('image!!! ' + image)
           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-          var dataUrl = canvas.toDataURL('image/jpeg');
+          var dataUrl = canvas.toDataURL('image/jpg');
           console.log('dataUrl!!! ' + dataUrl)
           return dataURItoBlob(dataUrl);
       };
-      return  resize();
+      return new Promise(function (ok, no) {
+        if (!file.type.match(/image.*/)) {
+            no(new Error("Not an image"));
+            return;
+        }
+        reader.onload = function (readerEvent) {
+            image.onload = function () { return ok(resize()); };
+            image.src = readerEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
 },
 
     deleteImageTitle(idx) {
+        this.imagesTitle.splice(idx,1);
          this.showImagesTitle.splice(idx,1);
     },
 

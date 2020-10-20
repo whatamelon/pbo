@@ -16,8 +16,8 @@ ax.get(`/nconts/nitem`,{
   }
 });
 
-export const sendContentsImageAPI = (id, type, formData) =>
-ax.post(`/nconts/img/${id}/${type}`,formData, {
+export const sendContentsImageAPI = (id, type, idx, formData) =>
+ax.post(`/nconts/img/${id}/${type}/${idx}`,formData, {
   headers:{
       'Content-Type': 'multipart/form-data'
   }

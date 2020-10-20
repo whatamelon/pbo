@@ -216,7 +216,7 @@ const CONTENTS = {
           try {
             console.log('3')
             console.log(payload)
-            const response = await sendContentsImageAPI(payload[0], payload[1], payload[2]);
+            const response = await sendContentsImageAPI(payload[0], payload[1], payload[2], payload[3]);
             console.log(response.result);
             resolve(response.status);
           } catch (e) {

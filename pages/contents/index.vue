@@ -31,6 +31,9 @@
                   <span class="bcproduct__name"> {{ product2.title }} </span>
 
                   <div class="bcproduct__optionContainer">
+                     이름 :  {{ product2.nitemName }}
+                  </div>
+                  <div class="bcproduct__optionContainer">
                     옵션 :  {{ product2.options.replaceAll(",", " | ") }}
                   </div>
                 </div>

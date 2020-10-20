@@ -2,19 +2,13 @@
 
         <div class="model-list" style="background-color:#f2f2f2">
 
-    <div class="step" style="background-color:#f2f2f2" v-show="step=='2' || step=='3' || step =='1'">
-        <div class="step-indicator">1</div>
-        <div class="step-indicator" v-if ="step=='2' || step=='3'">2</div>
-        <div class="step-indicator2" v-else>2</div>
-        <div class="step-indicator" v-if ="step=='3'">3</div>
-        <div class="step-indicator2" v-else>3</div>
-    </div>
-            <div v-if="step == '1'"> 
+            <div class="title__container">
+                <span class="title__t">프로필 수정</span>
+                <span class="title__b" @click="goOut">나가기</span>
+            </div>
 
-    <div class="select-title-container">
-        <span class="select-title1">반갑습니다!</span>
-        <span class="select-title1">지금부터 <span class="select-title2">픽키 등록</span>을 시작하겠습니다.</span>
-    </div>
+            <div class="stepName"> 1단계</div>
+
                 <div class="input-container2">
                     <div class="input-title2">
                     이름 ( 실명 )
@@ -75,7 +69,7 @@
                         id="instagram"
                          class="logos-checkboxes" 
                          value="inst" 
-                         v-model="checkedNames"
+                         v-model="checkedInst"
                          >
                         <label for="instagram" class="logos-option"> <img class="logos-icon" src="/app/instagram.png" /> Instagram</label>
 
@@ -108,7 +102,7 @@
                         id="youtube" 
                          class="logos-checkboxes" 
                          value="yout" 
-                         v-model="checkedNames"
+                         v-model="checkedYout"
                          >
                         <label for="youtube" class="logos-option"><img class="logos-icon" src="/app/youtube_icon.png" /> Youtube</label>
 
@@ -136,13 +130,15 @@
                     </div>
                 </div>
                 </div>
-                
 
-                <!-- <button @click="submit">확인</button> -->
+            <br/>
+            <button class="step-buttons-container2" @click="goAny(3)" >1번 단계 수정</button>
 
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
 
-            </div>
-            <div v-else-if="step == '2'">
+            <div class="stepName"> 2단계</div>
                 <div class="input-container2">
                     <div class="input-title2">
                     자기소개 및 인사
@@ -167,8 +163,12 @@
                         프로필 사진 선택
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">프로필 페이지에 동그랗게 나오는 프로필 사진이므로 <br/>머리가 잘리지 않은 전체 얼굴 사진으로 선택해주세요!</p>
-
+                    <div style="text-align:center; margin-top:5%;" v-show="defaultImage == ''">
+                        <img :src="IMAGE_URL + USER_GRP5.imgLinkTitle" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
+                    </div>
                     <div style="text-align:center; margin-top:5%;" v-show="defaultImage != ''">
+                    <img :src="IMAGE_URL + USER_GRP5.imgLinkTitle" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
+                    
                         <img :src="defaultImage" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
                     </div>
                     
@@ -182,22 +182,27 @@
                 </div>
                 <p style="font-size:0.9em; font-weight:400; margin:0 7% 4% 7%;"> 내가 가장 좋아하는 나의 베스트 코디 사진을 등록해 주세요!<br/> 되도록이면 셀카 사진이 아닌 다른 사람이 찍어준 사진으로 등록해 주세요~</p>
 
-                  <label class="file-select">
-                    <div class="select-button">
-                    <span>사진 업로드</span>
-                    </div>
-                    <input  type="file" name="photo1" accept="image/*" @change="setPhotoFiles2($event.target.name, $event.target.files)" multiple>
-                </label>
-                <div v-show="showImages2.length !=0" style="margin:8% 0 0 5%">
-                    <draggable v-model="showImages2"  handle=".handle1" >
-                        <div class="handle1" v-for="(image, index) in showImages2">
+                <div style="margin:8% 0 0 5%">
+                    <div class="handle1"v-for="(image, index) in sixImages">
+                        <label v-if="image == ''" class="zeroImage">
+                            <img src="/app/plzUI.png"  class="image2"/> 
+                            <input  style="display: none;" type="file" name="photo" accept="image/*" @change="setPhotoFilesEdit($event.target.name, $event.target.files, index)">
+                        </label>
+                        <div v-else-if="image.slice(0,7) != '/stages'" >
                             <img :src="image"  class="image2"/>
-                            <span class="material-icons imageClose" @click="deleteImage2(index)">
+                            <span class="material-icons imageClose" @click="deleteImage1(index)">
                             highlight_off
                             </span>
                             <div class="image__index">{{ index + 1}}</div>
                         </div>
-                    </draggable>
+                        <div v-else>
+                            <img :src="IMAGE_URL + image"  class="image2"/>
+                            <span class="material-icons imageClose" @click="deleteImage1(index)">
+                            highlight_off
+                            </span>
+                            <div class="image__index">{{ index + 1}}</div>
+                        </div>
+                    </div>
                 </div>
                 </div>
 
@@ -214,7 +219,6 @@
                         class="input__bottom2"
                         placeholder="(예시: '저는 전체적으로 체구가 작고 어깨도 많이 좁은편입니다. 반면 다리는 조금 튼실한 편이라서 너무 스키니한 핏의 바지는 안 좋아해요.) ">
                         </textarea> 
-
                     </div>
                 </div>
 
@@ -290,10 +294,13 @@
                     </div>
                 </div>
 
+            <br/>
+            <button class="step-buttons-container2" @click="goAny(2)" >2번 단계 수정</button>
 
-            </div>
-            <div v-else-if="step == '3'">
-
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
+            <div class="stepName"> 3단계</div>
                 <div class="input-container2">
                     <div class="input-title2">
                         자주 입는 스타일 <br/><p class="select__range">(최대 3개)</p>
@@ -422,44 +429,15 @@
                     </div>
                 </div>
 
-                <div class="input-container2">
-                    <div class="input-title2">
-                        개인정보 처리방침 동의
-                    </div>
-                    <a href="https://pickling.kr/privacy.html" 
-                    target="_blank"
-                    style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;"
-                    >개인정보 처리 방침 확인하기</a>
-                    <div class="logos" style="justify-content: start; margin-left:7%" >
-                        <div class="logos-checkbox">
-                            <div class="radios-container">
-                            <div v-for="portal4 in myinfoChk" class="radios">
-                                <input type="radio"
-                                        :id="portal4.id"
-                                        name="portalSelect4"
-                                        v-bind:value="{id: portal4.id, name: portal4.name}"
-                                        v-on:change="showSellers4(portal4.id)"
-                                        :checked="portal4.id == currentMyinfoChk">
+            <br/>
+            <button class="step-buttons-container2" @click="goAny(3)" >3번 단계 수정</button>
 
-                                <label :for="portal4.id">{{portal4.name}}</label>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+            <div v-show="USER_GRP4 != null">
 
-            </div>
-            <div v-else-if="step == 'sellerPicky'">
-
-            <div class="select-title-container">
-                <span class="select-title1">축하합니다!</span>
-                <span class="select-title1">픽키님은 <span class="select-title2">셀러픽키</span>입니다!</span>
-            </div>
-
-            <div style="text-align:start; font-size:1.0em; font-weight:500; margin: 5%">
-                <span>셀러픽키는 원하시는 상품 2개를 선택하시면 저희가 상품을 드리고 상품이 도착하면 상품 입고 홍보 하시면 됩니당</span>
-            </div>
-
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
+            <div class="stepName"> 셀러픽키 주소</div>
             <br/>
             <div style="text-align:center; justify-content:center; margin: 3% auto; display:flex">
                 <div @click ="postCodeOpen = true" class="postcodeButton">
@@ -481,47 +459,12 @@
                     />
             </div>
             <br/>
-            <br/>
-            <button class="step-buttons-container2" @click="goAny(2)" >마지막 단계로 꼬우!</button>
+            <button class="step-buttons-container2" @click="goAny(2)" >주소 수정</button>
                 
             </div>
-
-            <div v-else-if="step == 'getNickname'">
-
-            <div class="select-title-container">
-                <span class="select-title1">정말 마지막이에요!</span>
-                <span class="select-title1">픽키님의 <span class="select-title2">피클링 닉네임</span>을 알려주세요!</span>
-            </div>
-
-            <br/>
-            <br/>
-
-                    <div style="padding-left: 7%;">
-                    <div class="input-title3">
-                    피클링 닉네임
-                    </div>
-                    <input
-                    placeholder=""
-                        v-model="picklingNickname"
-                        class="input__bottom"
-                        type="text"
-                    />
-                    </div>
-                <p class="lastPicky">픽키 등록후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. 아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</p>
             
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <button class="step-buttons-container2" @click="goAny(3)" >프로필 승인 신청하기</button>
+            <p class="lastPicky">수정 후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. 아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</p>
 
-            </div>
-            <div v-else>
-            </div>
-                <div class="step-buttons">
-                    <button class="step-buttons-container" @click="goAny(0)" v-if="step == '2' || step == '3'">이전</button>
-                    <button class="step-buttons-container" @click="goAny(1)"  v-if="step == '1' || step == '2'|| step == '3'">다음</button>
-                </div>
         </div>
 
 </template>
@@ -570,7 +513,6 @@ data() {
       return{
         step: '2',
         imageUploadIdx: 0,
-        picklingNickname:'',
         postCodeOpen: false,
         postCode1:'',
         postCode2:'',
@@ -613,22 +555,22 @@ data() {
         image: null,
         inst: false,
         yout: false,
-        currentInstaId :'',
-        currentYoutubeId :'',
+        currentInstaId : this.$store.getters.USER_GRP1.instIdx == null ? '':  this.$store.getters.USER_GRP1.instIdx ,
+        currentYoutubeId :this.$store.getters.USER_GRP1.youtIdx == null ? '':  this.$store.getters.USER_GRP1.youtIdx ,
         currentYouChk :'',
         currentMyinfoChk:'',
         group1 : {
-            name: '홍승호',
-            phoneNo: '01023980719',
-            year: '1999',
+            name: this.$store.getters.USER_GRP1.nameReal,
+            phoneNo: this.$store.getters.USER_GRP1.mobileNo,
+            year: this.$store.getters.USER_GRP1.birthYear,
         },
         size:{
-            height:'',
-            top:'',
-            bottom:'',
-            foot:'',
-            shoulder:'',
-            pelvis:''
+            height:this.$store.getters.USER_GRP2.sizeHeight,
+            top: this.$store.getters.USER_GRP2.sizeTop,
+            bottom: this.$store.getters.USER_GRP2.sizeBottom,
+            foot: this.$store.getters.USER_GRP2.sizeFoot,
+            shoulder: this.$store.getters.USER_GRP2.sizeShoulder,
+            pelvis: this.$store.getters.USER_GRP2.sizePelvis,
         },
         instagram:[
             {
@@ -668,19 +610,21 @@ data() {
                 'id': 'myChk2', 'name': '동의 안 함'
             }
         ],
-        checkedNames: [],
+        checkedInst : this.$store.getters.USER_GRP1.isInst == 'y'  ? true: false,
+        checkedYout : this.$store.getters.USER_GRP1.isYout == 'y'  ? true: false,
         checkSns : [
             {
-                'instagram': true,
-                'id': 'summerclout',
+                'instagram': false,
+                'id': this.$store.getters.USER_GRP1.instLink == null? '' :this.$store.getters.USER_GRP1.instLink ,
             },
             {
                 'youtube': false,
-                'id': '',
+                'id': this.$store.getters.USER_GRP1.youtLink == null? '' :this.$store.getters.USER_GRP1.youtLink ,
             },
         ],
-        myintro: '',
-        bodyIntro: '',
+        checkedNames:[],
+        myintro: this.$store.getters.USER_GRP2.myExp,
+        bodyIntro: this.$store.getters.USER_GRP2.styleExp,
         topList: [
             {'no': 1, 'keyword': '33반 이하'},
             {'no': 2, 'keyword': '44'},
@@ -748,128 +692,11 @@ data() {
         newDisLikeStyle:'',
         brandName:'',
         mallName: '',
-        brandList:[
-            {
-                'name':'페미닌',
-                'isActive': false
-            },
-            {
-                'name':'모던시크',
-                'isActive': false
-            },
-            {
-                'name':'심플베이직',
-                'isActive': false
-            },
-            {
-                'name':'러블리',
-                'isActive': false
-            },
-            {
-                'name':'유니크',
-                'isActive': false
-            },
-            {
-                'name':'캠퍼스룩',
-                'isActive': false
-            },
-            {
-                'name':'빈티지',
-                'isActive': false
-            },
-            {
-                'name':'섹시글램',
-                'isActive': false
-            },
-            {
-                'name':'스쿨룩',
-                'isActive': false
-            },
-            {
-                'name':'로맨틱',
-                'isActive': false
-            },
-            {
-                'name':'오피스룩',
-                'isActive': false
-            },
-            {
-                'name':'럭셔리',
-                'isActive': false
-            },
-            {
-                'name':'스트릿',
-                'isActive': false
-            },
-            {
-                'name':'데일리',
-                'isActive': false
-            }
-        ],
-        brandList2:[
-            {
-                'name':'페미닌',
-                'isActive': false
-            },
-            {
-                'name':'모던시크',
-                'isActive': false
-            },
-            {
-                'name':'심플베이직',
-                'isActive': false
-            },
-            {
-                'name':'러블리',
-                'isActive': false
-            },
-            {
-                'name':'유니크',
-                'isActive': false
-            },
-            {
-                'name':'캠퍼스룩',
-                'isActive': false
-            },
-            {
-                'name':'빈티지',
-                'isActive': false
-            },
-            {
-                'name':'섹시글램',
-                'isActive': false
-            },
-            {
-                'name':'스쿨룩',
-                'isActive': false
-            },
-            {
-                'name':'로맨틱',
-                'isActive': false
-            },
-            {
-                'name':'오피스룩',
-                'isActive': false
-            },
-            {
-                'name':'럭셔리',
-                'isActive': false
-            },
-            {
-                'name':'스트릿',
-                'isActive': false
-            },
-            {
-                'name':'데일리',
-                'isActive': false
-            }
-        ],
-        likeList:[],
-        dislikeList:[],
-        likeBrand:[],
-        mallList:[],
         showImages2 : [],
         images2 : [],
+        sixImages: this.$store.getters.USER_GRP5.imgLink,
+        allImageDel: false,
+        replacedImages:[]
       }
 },
 
@@ -906,14 +733,91 @@ data() {
   computed: {
     ...mapGetters([
       "IMAGE_URL",
+      "IS_INFO",
+      "USER_NICKNAME",
+      "USER_GRP1",
+      "USER_GRP2",
+      "USER_GRP3",
+      "USER_GRP4",
+      "USER_GRP5",
     ]),
 
     postCodeBody() {
         return this.postCode1 == '' ? '주소 입력' : '주소 다시 입력';
     }
-        },
+},
 
 async asyncData({ store }) {
+
+        var styleListEx=[
+            { 'name':'페미닌', 'isActive': false},
+            { 'name':'모던시크',  'isActive': false },
+            {  'name':'심플베이직',  'isActive': false },
+            {'name':'러블리', 'isActive': false },
+            {'name':'유니크','isActive': false},
+            { 'name':'캠퍼스룩','isActive': false},
+            { 'name':'빈티지','isActive': false },
+            { 'name':'섹시글램', 'isActive': false},
+            { 'name':'스쿨룩','isActive': false},
+            {'name':'로맨틱','isActive': false},
+            { 'name':'오피스룩','isActive': false},
+            {'name':'럭셔리','isActive': false},
+            { 'name':'스트릿', 'isActive': false},
+            {'name':'데일리', 'isActive': false}
+        ];
+        var styleListEx2=[
+            { 'name':'페미닌', 'isActive': false},
+            { 'name':'모던시크',  'isActive': false },
+            {  'name':'심플베이직',  'isActive': false },
+            {'name':'러블리', 'isActive': false },
+            {'name':'유니크','isActive': false},
+            { 'name':'캠퍼스룩','isActive': false},
+            { 'name':'빈티지','isActive': false },
+            { 'name':'섹시글램', 'isActive': false},
+            { 'name':'스쿨룩','isActive': false},
+            {'name':'로맨틱','isActive': false},
+            { 'name':'오피스룩','isActive': false},
+            {'name':'럭셔리','isActive': false},
+            { 'name':'스트릿', 'isActive': false},
+            {'name':'데일리', 'isActive': false}
+        ];
+        var list1 = styleListEx;
+        var list2 = styleListEx2;
+
+        var userLst = store.getters.USER_GRP3.styleLike.split(',');
+        var userDLst = store.getters.USER_GRP3.styleDislike.split(',');
+
+        for(var i = 0; i < list1.length; i++) {
+            for(var j = 0; j < userLst.length; j++) {
+                if(list1[i].name == userLst[j]) {
+                    list1[i].isActive = true;
+                    console.log(list1[i])
+                } 
+            }
+        }
+
+        console.log(list1)
+
+        for(var k = 0; k < list2.length; k++) {
+            for(var p = 0; p < userDLst.length; p++) {
+                if(list2[k].name == userDLst[p]) {
+                    list2[k].isActive = true;
+                    console.log(list2[k])
+                } 
+            }
+        }
+        console.log(list2)
+
+
+    return {
+        brandList: list1,
+        brandList2: list2,
+        likeList:userLst,
+        dislikeList:userDLst,
+        likeBrand:store.getters.USER_GRP3.likeBrand.split(','),
+        mallList:store.getters.USER_GRP3.likeMall.split(','),
+    };
+
 },
 
 created() {
@@ -921,7 +825,7 @@ created() {
 },
 
 mounted() {
-
+    console.log(this.sixImages);
 },
 
 methods: {
@@ -961,73 +865,15 @@ methods: {
     },
 
     async goAny(i) {
-        /// 뒤로 가기
-        if(i == 0) {
-            switch(this.step) {
-                    case '2':
-                        this.step = '1';
-                        break;
-                    case '3':
-                        this.step = '2';
-                        break;
-                }
-        } else if(i==1) {
-        /// 앞으로 ㄲ 
-                switch(this.step) {
-                    case '1':
-                        if (this.group1.name.trim() =='' ) {
-                                alert('이름을 입력해주세요.');
-                        } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
-                                alert('전화번호를 입력해주세요.');
-                        } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
-                                alert('날짜를 입력해주세요.');
-                        } else if(this.checkedNames.length ==0) {
-                                alert('SNS를 선택해주세요.');
-                        } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
-                                alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
-                        } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
-                                alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
-                        } else {
 
-                            var params = {
-                                'status': 'req',
-                                'nameReal': this.group1.name,
-                                'mobileNo': this.group1.phoneNo,
-                                'birthYear': this.group1.year,
-                                'isYout': this.checkedNames.includes('yout') ? 'y': 'n',
-                                'youtLink':  this.checkedNames.includes('yout') ? this.checkSns[1].id : '',
-                                'youtIdx':  this.checkedNames.includes('yout') ? Number(this.currentYoutubeId.slice(-1))-1: '',
-                                'isInst': this.checkedNames.includes('inst') ? 'y': 'n',
-                                'instLink': this.checkedNames.includes('inst') ? this.checkSns[0].id  : '',
-                                'instIdx': this.checkedNames.includes('inst') ? Number(this.currentInstaId.slice(-1))-1: '',
-                            }
-
-                            var payload = ['ugr1', params];
-
-                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-                                if(response == 200) {
-                                    window.scrollTo(0,0);
-                                    this.step = '2';
-                                } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                                }
-                            })
-                            .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            })
-                        }
-                        break;
-                    case '2':
-                        console.log(this.myFiles.length)
-
-                        for(var idxFile = 0; idxFile < 6; idxFile++) {
+                        for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
                             // console.log(this.imageUploadIdx)
                             // this.imageUploadIdx = this.imageUploadIdx +1;
 
-                            var blobfile = this.images2[idxFile];
+                            var blobfile = this.replacedImages[idxFile].file;
                             const formData = new FormData();
                             formData.append('imgFile', blobfile, 'image.jpg');
-                            var payload = [ idxFile, formData];
+                            var payload = [ this.replacedImages[idxFile].index, formData];
 
                                 this.$store.dispatch("sendUserImage", payload).then((response) => {
                                 if(response == 200) {
@@ -1037,172 +883,257 @@ methods: {
                                 }
                             })
                         }
-                        // if (this.myintro.trim() =='' ) {
-                        //         alert(' 자기소개를 입력해주세요.');
-                        // } else if(this.image == null) {
-                        //         alert('대표 사진을 업로드해주세요..');
-                        // }else if( this.myFiles.length != 6) {
-                        //         alert('스타일 사진을 6장 업로드해주세요.');
-                        // } else if(this.bodyIntro.trim() == '') {
-                        //         alert('체형 설명을 입력해주세요.');
-                        // } else if(
-                        //     this.size.height.trim() == '' || 
-                        //     this.size.top.trim() == '' || 
-                        //     this.size.bottom.trim() == '' || 
-                        //     this.size.foot.trim() == '' || 
-                        //     this.size.shoulder.trim() == '' || 
-                        //     this.size.pelvis.trim() == '' 
-                        // ) {
-                        //         alert('체형을 선택 / 입력해주세요.');
-                        // }  else {
+        /// 뒤로 가기
+        // if(i == 0) {
+        //     switch(this.step) {
+        //             case '2':
+        //                 this.step = '1';
+        //                 break;
+        //             case '3':
+        //                 this.step = '2';
+        //                 break;
+        //         }
+        // } else if(i==1) {
+        // /// 앞으로 ㄲ 
+        //         switch(this.step) {
+        //             case '1':
+        //                 if (this.group1.name.trim() =='' ) {
+        //                         alert('이름을 입력해주세요.');
+        //                 } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
+        //                         alert('전화번호를 입력해주세요.');
+        //                 } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
+        //                         alert('날짜를 입력해주세요.');
+        //                 } else if(this.checkedNames.length ==0) {
+        //                         alert('SNS를 선택해주세요.');
+        //                 } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
+        //                         alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
+        //                 } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
+        //                         alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
+        //                 } else {
 
-                            // var params = {
-                            //     'status': 'req',
-                            //     'myExp': this.myintro,
-                            //     'styleExp': this.bodyIntro,
-                            //     'sizeHeight': this.size.height,
-                            //     'sizeTop': this.size.top,
-                            //     'sizeBottom':  this.size.bottom,
-                            //     'sizeFoot':  this.size.foot,
-                            //     'sizeShoulder': this.size.shoulder,
-                            //     'sizePelvis': this.size.pelvis
-                            // }
+        //                     var params = {
+        //                         'status': 'req',
+        //                         'nameReal': this.group1.name,
+        //                         'mobileNo': this.group1.phoneNo,
+        //                         'birthYear': this.group1.year,
+        //                         'isYout': this.checkedNames.includes('yout') ? 'y': 'n',
+        //                         'youtLink':  this.checkedNames.includes('yout') ? this.checkSns[1].id : '',
+        //                         'youtIdx':  this.checkedNames.includes('yout') ? Number(this.currentYoutubeId.slice(-1))-1: '',
+        //                         'isInst': this.checkedNames.includes('inst') ? 'y': 'n',
+        //                         'instLink': this.checkedNames.includes('inst') ? this.checkSns[0].id  : '',
+        //                         'instIdx': this.checkedNames.includes('inst') ? Number(this.currentInstaId.slice(-1))-1: '',
+        //                     }
 
-                            // var payload = ['ugr2', params];
+        //                     var payload = ['ugr1', params];
 
-                            //  await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-                            //     if(response == 200) {
-                            //         window.scrollTo(0,0);
-                            //         this.step = '3';
-                            //     } else {
-                            //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            //     }
-                            // })
-                            // .catch((e) => {
-                            //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            // })
-                        // }
-                        break;
-                    case '3':
-                        if (this.likeList.length < 1) {
-                                alert(' 자주 입는 스타일을 최소 1개 선택해주세요.');
-                        } else if(this.dislikeList.length < 3) {
-                                alert(' 절대 안 입는 스타일을 최소 3개 선택해주세요.');
-                        }else if( this.likeBrand.length < 3 || this.likeBrand.length > 10) {
-                                alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
-                        } else if( this.mallList.length < 2 || this.mallList.length > 5) {
-                                alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
-                        }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
-                                alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
-                        } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
-                                alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
-                        } else {
+        //                      await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+        //                         if(response == 200) {
+        //                             window.scrollTo(0,0);
+        //                             this.step = '2';
+        //                         } else {
+        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                         }
+        //                     })
+        //                     .catch((e) => {
+        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                     })
+        //                 }
+        //                 break;
+        //             case '2':
+        //                 console.log(this.myFiles.length)
 
-                            var params = {
-                                'status': 'req',
-                                'styleLike': this.likeList.join(),
-                                'styleDislike': this.dislikeList.join(),
-                                'likeBrand': this.likeBrand.join(),
-                                'likeMall': this.mallList.join(),
-                                'youtFlag':  this.currentYouChk == 'youChk1' && this.this.checkSns[1].id != '' ? 'y' : 'n'
-                            }
+        //                 for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
+        //                     // console.log(this.imageUploadIdx)
+        //                     // this.imageUploadIdx = this.imageUploadIdx +1;
 
-                            var payload = ['ugr3', params];
+        //                     var blobfile = this.replacedImages[idxFile].file;
+        //                     const formData = new FormData();
+        //                     formData.append('imgFile', blobfile, 'image.jpg');
+        //                     var payload = [ this.replacedImages[idxFile].index, formData];
 
-                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-                                if(response == 200) {
+        //                         this.$store.dispatch("sendUserImage", payload).then((response) => {
+        //                         if(response == 200) {
+        //                             console.log('잘올라감' + this.imageUploadIdx)
+        //                         } else {
+        //                             // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                         }
+        //                     })
+        //                 }
+        //                 // if (this.myintro.trim() =='' ) {
+        //                 //         alert(' 자기소개를 입력해주세요.');
+        //                 // } else if(this.image == null) {
+        //                 //         alert('대표 사진을 업로드해주세요..');
+        //                 // }else if( this.myFiles.length != 6) {
+        //                 //         alert('스타일 사진을 6장 업로드해주세요.');
+        //                 // } else if(this.bodyIntro.trim() == '') {
+        //                 //         alert('체형 설명을 입력해주세요.');
+        //                 // } else if(
+        //                 //     this.size.height.trim() == '' || 
+        //                 //     this.size.top.trim() == '' || 
+        //                 //     this.size.bottom.trim() == '' || 
+        //                 //     this.size.foot.trim() == '' || 
+        //                 //     this.size.shoulder.trim() == '' || 
+        //                 //     this.size.pelvis.trim() == '' 
+        //                 // ) {
+        //                 //         alert('체형을 선택 / 입력해주세요.');
+        //                 // }  else {
 
-                                    if(this.currentInstaId == 'inst3' || this.currentYoutubeId == 'you3') {
-                                        this.step = 'sellerPicky';
-                                    }  else {
-                                        this.step = 'getNickname';
-                                    }
-                                    window.scrollTo(0,0);
-                                } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                                }
-                            })
-                            .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            })
+        //                     // var params = {
+        //                     //     'status': 'req',
+        //                     //     'myExp': this.myintro,
+        //                     //     'styleExp': this.bodyIntro,
+        //                     //     'sizeHeight': this.size.height,
+        //                     //     'sizeTop': this.size.top,
+        //                     //     'sizeBottom':  this.size.bottom,
+        //                     //     'sizeFoot':  this.size.foot,
+        //                     //     'sizeShoulder': this.size.shoulder,
+        //                     //     'sizePelvis': this.size.pelvis
+        //                     // }
 
-                        }
-                        break;
-                }
-        } else if(i ==2) {
-        /// 셀러픽키에서 닉네임 받는 부분으로 ㄲ
+        //                     // var payload = ['ugr2', params];
 
-         if (this.postCode1.trim() == '') {
-                alert(' 주소를 입력해주세요.');
-        } else if(this.postCode2.trim() == '') {
-                alert(' 상세 주소를 입력해주세요.');
-        } else {
+        //                     //  await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+        //                     //     if(response == 200) {
+        //                     //         window.scrollTo(0,0);
+        //                     //         this.step = '3';
+        //                     //     } else {
+        //                     //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                     //     }
+        //                     // })
+        //                     // .catch((e) => {
+        //                     //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                     // })
+        //                 // }
+        //                 break;
+        //             case '3':
+        //                 if (this.likeList.length < 1) {
+        //                         alert(' 자주 입는 스타일을 최소 1개 선택해주세요.');
+        //                 } else if(this.dislikeList.length < 3) {
+        //                         alert(' 절대 안 입는 스타일을 최소 3개 선택해주세요.');
+        //                 }else if( this.likeBrand.length < 3 || this.likeBrand.length > 10) {
+        //                         alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
+        //                 } else if( this.mallList.length < 2 || this.mallList.length > 5) {
+        //                         alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
+        //                 }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
+        //                         alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
+        //                 } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
+        //                         alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
+        //                 } else {
 
-            var code = {
-                'status': 'req',
-                'addrCode': this.postCode3,
-                'addr0': this.postCode1,
-                'addr1': this.postCode2,
-                'addr2': ''
-            };
+        //                     var params = {
+        //                         'status': 'req',
+        //                         'styleLike': this.likeList.join(),
+        //                         'styleDislike': this.dislikeList.join(),
+        //                         'likeBrand': this.likeBrand.join(),
+        //                         'likeMall': this.mallList.join(),
+        //                         'youtFlag':  this.currentYouChk == 'youChk1' && this.this.checkSns[1].id != '' ? 'y' : 'n'
+        //                     }
 
-            var payload = ['ugr4', code];
+        //                     var payload = ['ugr3', params];
 
-        await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-                if(response == 200) {
-                    this.step = 'getNickname';
-                } else {
-                     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                }
-            })
-        }
-        } else {
-        /// 다했다! 홈으로 ㄲ
+        //                      await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+        //                         if(response == 200) {
 
-        if(this.picklingNickname.trim() == '') {
-            alert(' 피클링 닉네임을 입력해주세요.');
-        } else {
-                await this.$store.dispatch("sendUserNick", this.picklingNickname).then((response) => {
-                if(response == 200) {
-                    console.log('이제 홈으로 가든지 가면됨.')
-                    console.log(window.location.origin);
-                    location.replace(window.location.origin + "/home");
-                } else if(response == 404){
-                alert('피클링앱에 해당하는 닉네임이 존재하지 않습니다. \n 다시 입력해주세요.');
-                }else {
-                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                }
-            })
-            .catch((e) => {
-                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-            })
-        }
-        }
+        //                             if(this.currentInstaId == 'inst3' || this.currentYoutubeId == 'you3') {
+        //                                 this.step = 'sellerPicky';
+        //                             }  else {
+        //                                 this.step = 'getNickname';
+        //                             }
+        //                             window.scrollTo(0,0);
+        //                         } else {
+        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                         }
+        //                     })
+        //                     .catch((e) => {
+        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //                     })
+
+        //                 }
+        //                 break;
+        //         }
+        // } else if(i ==2) {
+        // /// 셀러픽키에서 닉네임 받는 부분으로 ㄲ
+
+        //  if (this.postCode1.trim() == '') {
+        //         alert(' 주소를 입력해주세요.');
+        // } else if(this.postCode2.trim() == '') {
+        //         alert(' 상세 주소를 입력해주세요.');
+        // } else {
+
+        //     var code = {
+        //         'status': 'req',
+        //         'addrCode': this.postCode3,
+        //         'addr0': this.postCode1,
+        //         'addr1': this.postCode2,
+        //         'addr2': ''
+        //     };
+
+        //     var payload = ['ugr4', code];
+
+        // await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+        //         if(response == 200) {
+        //             this.step = 'getNickname';
+        //         } else {
+        //              alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //         }
+        //     })
+        // }
+        // } else {
+        // /// 다했다! 홈으로 ㄲ
+
+        // if(this.picklingNickname.trim() == '') {
+        //     alert(' 피클링 닉네임을 입력해주세요.');
+        // } else {
+        //         await this.$store.dispatch("sendUserNick", this.picklingNickname).then((response) => {
+        //         if(response == 200) {
+        //             console.log('이제 홈으로 가든지 가면됨.')
+        //             console.log(window.location.origin);
+        //             location.replace(window.location.origin + "/home");
+        //         } else if(response == 404){
+        //         alert('피클링앱에 해당하는 닉네임이 존재하지 않습니다. \n 다시 입력해주세요.');
+        //         }else {
+        //         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //         }
+        //     })
+        //     .catch((e) => {
+        //         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        //     })
+        // }
+        // }
     },
-    deleteImage2(idx) {
-        this.images2.splice(idx,1);
-         this.showImages2.splice(idx,1);
+    deleteImage1(idx) {
+        console.log(idx)
+        this.sixImages[idx] = '';
+        console.log(this.sixImages);
+        this.sixImages = this.sixImages.slice();
     },
 
-    async setPhotoFiles2 (fieldName, fileList) {
+    async setPhotoFilesEdit (fieldName, fileList, index) {
         // if(fileList.length > 30) {
         //     alert('업로드한 이미지가 30개를 초과했습니다.');
         // }else if (fileList.length < 14) {
         //     alert('업로드한 이미지가 14개 미만입니다.');
         // } else {
-            this.showImages2 = [];
-            this.images2 = [];
-            for(var i = 0; i < fileList.length; i ++) {
-                console.log(fileList[i])
                  var image = await this.resizeImage({
-                    file: fileList[i],
+                    file: fileList[0],
                     maxSize: 500
                 });
+                this.sixImages[index] = URL.createObjectURL(fileList[0]);
+                this.sixImages = this.sixImages.slice();
 
-                console.log('image  : ' + image)
-                this.images2.push(image);
-                this.showImages2.push(URL.createObjectURL(fileList[i]));
-            }
+                const isAlreayExist = (element) => element.index == index;
+
+                var isExist = this.replacedImages.findIndex(isAlreayExist);
+
+                if(isExist == -1) {
+                    this.replacedImages.push({'index': index, 'file': image});
+                } else {
+                    this.replacedImages[isExist] = {'index': index, 'file': image};
+                }
+
+
+                console.log(this.replacedImages);
+
         // }
      },
 
@@ -1424,6 +1355,9 @@ methods: {
             this.mallList.push(this.mallName.trim());
             this.mallName = '';
         }
+    },
+    goOut() {
+        this.$router.go(-1);
     }
 },
 
@@ -1437,6 +1371,12 @@ beforeRouteLeave(to, from, next) {
     display: flex;
     justify-content: space-around;
     margin-top: 5%;
+    &Name{
+        font-size: 1.5em;
+        font-weight: 800;
+        margin-left: 7%;
+    }
+
     &-indicator{
         margin: 0 10px;
         width: 40px;
@@ -1479,7 +1419,7 @@ beforeRouteLeave(to, from, next) {
         }
         &-container2{
             border-radius: 5px;
-            margin: 0 10px;
+            margin: 10% 25%;
             width: 200px;
             height: 40px;
             border: 2px solid #000;
@@ -1488,9 +1428,6 @@ beforeRouteLeave(to, from, next) {
             font-size: 1.2em;
             text-align: center;
             padding: 5px 0;
-            left:20%;
-            bottom:10%;
-            position: fixed;
         }
     }
 }
@@ -1843,6 +1780,38 @@ beforeRouteLeave(to, from, next) {
 .select__range{
     font-size: 0.7em;
     font-weight: 400;
+}
+
+.title{
+    &__container{
+        margin: 10% 7% 10% 7%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__t{
+        font-size: 1.5em;
+        font-weight: 800;
+
+    }
+
+    &__b{
+        font-size: 1.0em;
+        font-weight: 800;
+        margin-top: 9px;
+    }
+}
+.handle1, .handle2, .handle3, .handleTitle {
+    position: relative;
+    margin: 2%;
+    display: inline-block;
+}
+
+.zeroImage{
+    width: 90px;
+    height:90px;
+    border-radius: 5px;
+    border: 1px solid #ececec;    
 }
 
 </style>
