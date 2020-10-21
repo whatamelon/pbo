@@ -618,9 +618,9 @@ data() {
         currentYouChk :'',
         currentMyinfoChk:'',
         group1 : {
-            name: '홍승호',
-            phoneNo: '01023980719',
-            year: '1999',
+            name: '',
+            phoneNo: '',
+            year: '',
         },
         size:{
             height:'',
@@ -671,8 +671,8 @@ data() {
         checkedNames: [],
         checkSns : [
             {
-                'instagram': true,
-                'id': 'summerclout',
+                'instagram': false,
+                'id': '',
             },
             {
                 'youtube': false,

@@ -64,14 +64,14 @@
         </button>
       </div>
 
-      <div class="button-container">
+      <!-- <div class="button-container">
         <button
           class="button2"
           @click="clickButton2(1)"
         >
           <span>픽키 등록!</span>
         </button>
-      </div>
+      </div> -->
 
     </main>
   </main>
