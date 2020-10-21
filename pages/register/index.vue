@@ -568,7 +568,7 @@ components:{
 },
 data() {
       return{
-        step: '2',
+        step: '1',
         imageUploadIdx: 0,
         picklingNickname:'',
         postCodeOpen: false,
@@ -1033,55 +1033,55 @@ methods: {
                                 if(response == 200) {
                                     console.log('잘올라감' + this.imageUploadIdx)
                                 } else {
-                                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                    alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                                 }
                             })
                         }
-                        // if (this.myintro.trim() =='' ) {
-                        //         alert(' 자기소개를 입력해주세요.');
-                        // } else if(this.image == null) {
-                        //         alert('대표 사진을 업로드해주세요..');
-                        // }else if( this.myFiles.length != 6) {
-                        //         alert('스타일 사진을 6장 업로드해주세요.');
-                        // } else if(this.bodyIntro.trim() == '') {
-                        //         alert('체형 설명을 입력해주세요.');
-                        // } else if(
-                        //     this.size.height.trim() == '' || 
-                        //     this.size.top.trim() == '' || 
-                        //     this.size.bottom.trim() == '' || 
-                        //     this.size.foot.trim() == '' || 
-                        //     this.size.shoulder.trim() == '' || 
-                        //     this.size.pelvis.trim() == '' 
-                        // ) {
-                        //         alert('체형을 선택 / 입력해주세요.');
-                        // }  else {
+                        if (this.myintro.trim() =='' ) {
+                                alert(' 자기소개를 입력해주세요.');
+                        } else if(this.image == null) {
+                                alert('대표 사진을 업로드해주세요..');
+                        }else if( this.myFiles.length != 6) {
+                                alert('스타일 사진을 6장 업로드해주세요.');
+                        } else if(this.bodyIntro.trim() == '') {
+                                alert('체형 설명을 입력해주세요.');
+                        } else if(
+                            this.size.height.trim() == '' || 
+                            this.size.top.trim() == '' || 
+                            this.size.bottom.trim() == '' || 
+                            this.size.foot.trim() == '' || 
+                            this.size.shoulder.trim() == '' || 
+                            this.size.pelvis.trim() == '' 
+                        ) {
+                                alert('체형을 선택 / 입력해주세요.');
+                        }  else {
 
-                            // var params = {
-                            //     'status': 'req',
-                            //     'myExp': this.myintro,
-                            //     'styleExp': this.bodyIntro,
-                            //     'sizeHeight': this.size.height,
-                            //     'sizeTop': this.size.top,
-                            //     'sizeBottom':  this.size.bottom,
-                            //     'sizeFoot':  this.size.foot,
-                            //     'sizeShoulder': this.size.shoulder,
-                            //     'sizePelvis': this.size.pelvis
-                            // }
+                            var params = {
+                                'status': 'req',
+                                'myExp': this.myintro,
+                                'styleExp': this.bodyIntro,
+                                'sizeHeight': this.size.height,
+                                'sizeTop': this.size.top,
+                                'sizeBottom':  this.size.bottom,
+                                'sizeFoot':  this.size.foot,
+                                'sizeShoulder': this.size.shoulder,
+                                'sizePelvis': this.size.pelvis
+                            }
 
-                            // var payload = ['ugr2', params];
+                            var payload = ['ugr2', params];
 
-                            //  await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-                            //     if(response == 200) {
-                            //         window.scrollTo(0,0);
-                            //         this.step = '3';
-                            //     } else {
-                            //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            //     }
-                            // })
-                            // .catch((e) => {
-                            //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            // })
-                        // }
+                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                                if(response == 200) {
+                                    window.scrollTo(0,0);
+                                    this.step = '3';
+                                } else {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                }
+                            })
+                            .catch((e) => {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            })
+                        }
                         break;
                     case '3':
                         if (this.likeList.length < 1) {
@@ -1185,11 +1185,11 @@ methods: {
     },
 
     async setPhotoFiles2 (fieldName, fileList) {
-        // if(fileList.length > 30) {
-        //     alert('업로드한 이미지가 30개를 초과했습니다.');
-        // }else if (fileList.length < 14) {
-        //     alert('업로드한 이미지가 14개 미만입니다.');
-        // } else {
+        if(fileList.length > 30) {
+            alert('업로드한 이미지가 30개를 초과했습니다.');
+        }else if (fileList.length < 14) {
+            alert('업로드한 이미지가 14개 미만입니다.');
+        } else {
             this.showImages2 = [];
             this.images2 = [];
             for(var i = 0; i < fileList.length; i ++) {
@@ -1203,7 +1203,7 @@ methods: {
                 this.images2.push(image);
                 this.showImages2.push(URL.createObjectURL(fileList[i]));
             }
-        // }
+        }
      },
 
 

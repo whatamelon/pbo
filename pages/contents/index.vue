@@ -14,7 +14,8 @@
           <div class="mcproduct__container"
             v-for="product2 in MC_PRODUCT_LIST"
             :key="product2.nitemId" 
-            v-if="MC_PRODUCT_LIST.length !=0">
+            v-if="MC_PRODUCT_LIST.length !=0"
+             @click="goToEditContents(product2)">
             <div class="mcproduct__status"
             :class="{
                     'mcproduct__status-req': product2.status == 'req',
@@ -28,23 +29,20 @@
                   대표 이미지가 <br/>없습니다.
                 </div>
                 <div class="mcproduct__option__container">
-                  <span class="bcproduct__name"> {{ product2.title }} </span>
+                  <span class="mcproduct__name"> {{ product2.title }} </span>
 
-                  <div class="bcproduct__optionContainer">
+                  <div class="mcproduct__optionContainer">
                      이름 :  {{ product2.nitemName }}
                   </div>
-                  <div class="bcproduct__optionContainer">
+                  <div class="mcproduct__optionContainer">
                     옵션 :  {{ product2.options.replaceAll(",", " | ") }}
                   </div>
                 </div>
-                <div class="mcproduct__button__container">
+                <!-- <div class="mcproduct__button__container">
                   <div class="mcproduct__button__edit" @click="goToEditContents(product2)">
                       수정
                   </div>
-                  <div class="mcproduct__button__remove" @click="removeContents(product2)">
-                      삭제
-                  </div>
-                </div>
+                </div> -->
             </div>
           </div>
           <div class="noContents" v-else>
@@ -275,8 +273,28 @@ methods:{
       &__container{
           display: grid; 
           margin-right:20px;
-          width: 130px;
+          width: 200px;
+          text-align: start;
       }
+    }
+    &__name{
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      width:200px;
+      font-size: 1.1em;
+      font-weight: 800;
+      text-align: start;
+    }
+
+    &__optionContainer{
+      width:200px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      display: grid;
+      margin-top: 7px;
+      text-align: start;
     }
 
   &__status{
@@ -341,6 +359,8 @@ methods:{
   padding-top: 27px;
   text-align: center;
   margin-right: 10px;
+  border: 1px solid #ececec;
+  border-radius: 5px;
 }
 
 .noContents{

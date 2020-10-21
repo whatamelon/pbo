@@ -132,7 +132,7 @@
                 </div>
 
             <br/>
-            <button class="step-buttons-container2" @click="goAny(3)" >1번 단계 수정</button>
+            <button class="step-buttons-container2" @click="editProfile(1)" >1번 단계 수정</button>
 
             <br/>
             <div style="border-top: 7px solid #ececec;"></div>
@@ -295,7 +295,7 @@
                 </div>
 
             <br/>
-            <button class="step-buttons-container2" @click="goAny(2)" >2번 단계 수정</button>
+            <button class="step-buttons-container2" @click="editProfile(2)" >2번 단계 수정</button>
 
             <br/>
             <div style="border-top: 7px solid #ececec;"></div>
@@ -430,7 +430,7 @@
                 </div>
 
             <br/>
-            <button class="step-buttons-container2" @click="goAny(3)" >3번 단계 수정</button>
+            <button class="step-buttons-container2" @click="editProfile(3)" >3번 단계 수정</button>
 
             <div v-show="USER_GRP4 != null">
 
@@ -459,7 +459,7 @@
                     />
             </div>
             <br/>
-            <button class="step-buttons-container2" @click="goAny(2)" >주소 수정</button>
+            <button class="step-buttons-container2" @click="editProfile(4)" >주소 수정</button>
                 
             </div>
             
@@ -864,243 +864,174 @@ methods: {
         console.log(this.checkSns);
     },
 
-    async goAny(i) {
+    async editProfile(stepID) {
+         switch(this.step) {
+            case '1':
+                if (this.group1.name.trim() =='' ) {
+                        alert('이름을 입력해주세요.');
+                } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
+                        alert('전화번호를 입력해주세요.');
+                } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
+                        alert('날짜를 입력해주세요.');
+                } else if(this.checkedNames.length ==0) {
+                        alert('SNS를 선택해주세요.');
+                } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
+                        alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
+                } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
+                        alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
+                } else {
 
-                        for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
-                            // console.log(this.imageUploadIdx)
-                            // this.imageUploadIdx = this.imageUploadIdx +1;
+                    var params = {
+                        'status': 'req',
+                        'nameReal': this.group1.name,
+                        'mobileNo': this.group1.phoneNo,
+                        'birthYear': this.group1.year,
+                        'isYout': this.checkedNames.includes('yout') ? 'y': 'n',
+                        'youtLink':  this.checkedNames.includes('yout') ? this.checkSns[1].id : '',
+                        'youtIdx':  this.checkedNames.includes('yout') ? Number(this.currentYoutubeId.slice(-1))-1: '',
+                        'isInst': this.checkedNames.includes('inst') ? 'y': 'n',
+                        'instLink': this.checkedNames.includes('inst') ? this.checkSns[0].id  : '',
+                        'instIdx': this.checkedNames.includes('inst') ? Number(this.currentInstaId.slice(-1))-1: '',
+                    }
 
-                            var blobfile = this.replacedImages[idxFile].file;
-                            const formData = new FormData();
-                            formData.append('imgFile', blobfile, 'image.jpg');
-                            var payload = [ this.replacedImages[idxFile].index, formData];
+                    var payload = ['ugr1', params];
 
-                                this.$store.dispatch("sendUserImage", payload).then((response) => {
+                        await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                        if(response == 200) {
+                        } else {
+                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                        }
+                    })
+                    .catch((e) => {
+                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                    })
+                }
+                break;
+                case '2':
+                    for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
+
+                        var blobfile = this.replacedImages[idxFile].file;
+                        const formData = new FormData();
+                        formData.append('imgFile', blobfile, 'image.jpg');
+                        var payload = [ this.replacedImages[idxFile].index, formData];
+
+                            this.$store.dispatch("sendUserImage", payload).then((response) => {
+                            if(response == 200) {
+                                console.log('잘올라감' + this.imageUploadIdx)
+                            } else {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            }
+                        })
+                    }    
+                    if (this.myintro.trim() =='' ) {
+                            alert(' 자기소개를 입력해주세요.');
+                    } else if(this.image == null) {
+                            alert('대표 사진을 업로드해주세요..');
+                    }else if( this.myFiles.length != 6) {
+                            alert('스타일 사진을 6장 업로드해주세요.');
+                    } else if(this.bodyIntro.trim() == '') {
+                            alert('체형 설명을 입력해주세요.');
+                    } else if(
+                        this.size.height.trim() == '' || 
+                        this.size.top.trim() == '' || 
+                        this.size.bottom.trim() == '' || 
+                        this.size.foot.trim() == '' || 
+                        this.size.shoulder.trim() == '' || 
+                        this.size.pelvis.trim() == '' 
+                    ) {
+                            alert('체형을 선택 / 입력해주세요.');
+                    }  else {
+
+                        var params = {
+                            'status': 'req',
+                            'myExp': this.myintro,
+                            'styleExp': this.bodyIntro,
+                            'sizeHeight': this.size.height,
+                            'sizeTop': this.size.top,
+                            'sizeBottom':  this.size.bottom,
+                            'sizeFoot':  this.size.foot,
+                            'sizeShoulder': this.size.shoulder,
+                            'sizePelvis': this.size.pelvis
+                        }
+
+                        var payload = ['ugr2', params];
+
+                            await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                            if(response == 200) {
+                            } else {
+                            alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            }
+                        })
+                        .catch((e) => {
+                            alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                        })
+                    }
+                    break;
+                    case '3':
+                        if (this.likeList.length < 1) {
+                                alert(' 자주 입는 스타일을 최소 1개 선택해주세요.');
+                        } else if(this.dislikeList.length < 3) {
+                                alert(' 절대 안 입는 스타일을 최소 3개 선택해주세요.');
+                        }else if( this.likeBrand.length < 3 || this.likeBrand.length > 10) {
+                                alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
+                        } else if( this.mallList.length < 2 || this.mallList.length > 5) {
+                                alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
+                        }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
+                                alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
+                        } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
+                                alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
+                        } else {
+
+                            var params = {
+                                'status': 'req',
+                                'styleLike': this.likeList.join(),
+                                'styleDislike': this.dislikeList.join(),
+                                'likeBrand': this.likeBrand.join(),
+                                'likeMall': this.mallList.join(),
+                                'youtFlag':  this.currentYouChk == 'youChk1' && this.this.checkSns[1].id != '' ? 'y' : 'n'
+                            }
+
+                            var payload = ['ugr3', params];
+
+                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
                                 if(response == 200) {
-                                    console.log('잘올라감' + this.imageUploadIdx)
                                 } else {
-                                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                                 }
                             })
+                            .catch((e) => {
+                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            })
+
                         }
-        /// 뒤로 가기
-        // if(i == 0) {
-        //     switch(this.step) {
-        //             case '2':
-        //                 this.step = '1';
-        //                 break;
-        //             case '3':
-        //                 this.step = '2';
-        //                 break;
-        //         }
-        // } else if(i==1) {
-        // /// 앞으로 ㄲ 
-        //         switch(this.step) {
-        //             case '1':
-        //                 if (this.group1.name.trim() =='' ) {
-        //                         alert('이름을 입력해주세요.');
-        //                 } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
-        //                         alert('전화번호를 입력해주세요.');
-        //                 } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
-        //                         alert('날짜를 입력해주세요.');
-        //                 } else if(this.checkedNames.length ==0) {
-        //                         alert('SNS를 선택해주세요.');
-        //                 } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
-        //                         alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
-        //                 } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
-        //                         alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
-        //                 } else {
+                        break;
+                        case '4':
+                             if (this.postCode1.trim() == '') {
+                                    alert(' 주소를 입력해주세요.');
+                            } else if(this.postCode2.trim() == '') {
+                                    alert(' 상세 주소를 입력해주세요.');
+                            } else {
 
-        //                     var params = {
-        //                         'status': 'req',
-        //                         'nameReal': this.group1.name,
-        //                         'mobileNo': this.group1.phoneNo,
-        //                         'birthYear': this.group1.year,
-        //                         'isYout': this.checkedNames.includes('yout') ? 'y': 'n',
-        //                         'youtLink':  this.checkedNames.includes('yout') ? this.checkSns[1].id : '',
-        //                         'youtIdx':  this.checkedNames.includes('yout') ? Number(this.currentYoutubeId.slice(-1))-1: '',
-        //                         'isInst': this.checkedNames.includes('inst') ? 'y': 'n',
-        //                         'instLink': this.checkedNames.includes('inst') ? this.checkSns[0].id  : '',
-        //                         'instIdx': this.checkedNames.includes('inst') ? Number(this.currentInstaId.slice(-1))-1: '',
-        //                     }
+                                var code = {
+                                    'status': 'req',
+                                    'addrCode': this.postCode3,
+                                    'addr0': this.postCode1,
+                                    'addr1': this.postCode2,
+                                    'addr2': ''
+                                };
 
-        //                     var payload = ['ugr1', params];
+                                var payload = ['ugr4', code];
 
-        //                      await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-        //                         if(response == 200) {
-        //                             window.scrollTo(0,0);
-        //                             this.step = '2';
-        //                         } else {
-        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                         }
-        //                     })
-        //                     .catch((e) => {
-        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                     })
-        //                 }
-        //                 break;
-        //             case '2':
-        //                 console.log(this.myFiles.length)
-
-        //                 for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
-        //                     // console.log(this.imageUploadIdx)
-        //                     // this.imageUploadIdx = this.imageUploadIdx +1;
-
-        //                     var blobfile = this.replacedImages[idxFile].file;
-        //                     const formData = new FormData();
-        //                     formData.append('imgFile', blobfile, 'image.jpg');
-        //                     var payload = [ this.replacedImages[idxFile].index, formData];
-
-        //                         this.$store.dispatch("sendUserImage", payload).then((response) => {
-        //                         if(response == 200) {
-        //                             console.log('잘올라감' + this.imageUploadIdx)
-        //                         } else {
-        //                             // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                         }
-        //                     })
-        //                 }
-        //                 // if (this.myintro.trim() =='' ) {
-        //                 //         alert(' 자기소개를 입력해주세요.');
-        //                 // } else if(this.image == null) {
-        //                 //         alert('대표 사진을 업로드해주세요..');
-        //                 // }else if( this.myFiles.length != 6) {
-        //                 //         alert('스타일 사진을 6장 업로드해주세요.');
-        //                 // } else if(this.bodyIntro.trim() == '') {
-        //                 //         alert('체형 설명을 입력해주세요.');
-        //                 // } else if(
-        //                 //     this.size.height.trim() == '' || 
-        //                 //     this.size.top.trim() == '' || 
-        //                 //     this.size.bottom.trim() == '' || 
-        //                 //     this.size.foot.trim() == '' || 
-        //                 //     this.size.shoulder.trim() == '' || 
-        //                 //     this.size.pelvis.trim() == '' 
-        //                 // ) {
-        //                 //         alert('체형을 선택 / 입력해주세요.');
-        //                 // }  else {
-
-        //                     // var params = {
-        //                     //     'status': 'req',
-        //                     //     'myExp': this.myintro,
-        //                     //     'styleExp': this.bodyIntro,
-        //                     //     'sizeHeight': this.size.height,
-        //                     //     'sizeTop': this.size.top,
-        //                     //     'sizeBottom':  this.size.bottom,
-        //                     //     'sizeFoot':  this.size.foot,
-        //                     //     'sizeShoulder': this.size.shoulder,
-        //                     //     'sizePelvis': this.size.pelvis
-        //                     // }
-
-        //                     // var payload = ['ugr2', params];
-
-        //                     //  await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-        //                     //     if(response == 200) {
-        //                     //         window.scrollTo(0,0);
-        //                     //         this.step = '3';
-        //                     //     } else {
-        //                     //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                     //     }
-        //                     // })
-        //                     // .catch((e) => {
-        //                     //     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                     // })
-        //                 // }
-        //                 break;
-        //             case '3':
-        //                 if (this.likeList.length < 1) {
-        //                         alert(' 자주 입는 스타일을 최소 1개 선택해주세요.');
-        //                 } else if(this.dislikeList.length < 3) {
-        //                         alert(' 절대 안 입는 스타일을 최소 3개 선택해주세요.');
-        //                 }else if( this.likeBrand.length < 3 || this.likeBrand.length > 10) {
-        //                         alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
-        //                 } else if( this.mallList.length < 2 || this.mallList.length > 5) {
-        //                         alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
-        //                 }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
-        //                         alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
-        //                 } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
-        //                         alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
-        //                 } else {
-
-        //                     var params = {
-        //                         'status': 'req',
-        //                         'styleLike': this.likeList.join(),
-        //                         'styleDislike': this.dislikeList.join(),
-        //                         'likeBrand': this.likeBrand.join(),
-        //                         'likeMall': this.mallList.join(),
-        //                         'youtFlag':  this.currentYouChk == 'youChk1' && this.this.checkSns[1].id != '' ? 'y' : 'n'
-        //                     }
-
-        //                     var payload = ['ugr3', params];
-
-        //                      await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-        //                         if(response == 200) {
-
-        //                             if(this.currentInstaId == 'inst3' || this.currentYoutubeId == 'you3') {
-        //                                 this.step = 'sellerPicky';
-        //                             }  else {
-        //                                 this.step = 'getNickname';
-        //                             }
-        //                             window.scrollTo(0,0);
-        //                         } else {
-        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                         }
-        //                     })
-        //                     .catch((e) => {
-        //                         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //                     })
-
-        //                 }
-        //                 break;
-        //         }
-        // } else if(i ==2) {
-        // /// 셀러픽키에서 닉네임 받는 부분으로 ㄲ
-
-        //  if (this.postCode1.trim() == '') {
-        //         alert(' 주소를 입력해주세요.');
-        // } else if(this.postCode2.trim() == '') {
-        //         alert(' 상세 주소를 입력해주세요.');
-        // } else {
-
-        //     var code = {
-        //         'status': 'req',
-        //         'addrCode': this.postCode3,
-        //         'addr0': this.postCode1,
-        //         'addr1': this.postCode2,
-        //         'addr2': ''
-        //     };
-
-        //     var payload = ['ugr4', code];
-
-        // await this.$store.dispatch("sendUserInfo", payload).then((response) => {
-        //         if(response == 200) {
-        //             this.step = 'getNickname';
-        //         } else {
-        //              alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //         }
-        //     })
-        // }
-        // } else {
-        // /// 다했다! 홈으로 ㄲ
-
-        // if(this.picklingNickname.trim() == '') {
-        //     alert(' 피클링 닉네임을 입력해주세요.');
-        // } else {
-        //         await this.$store.dispatch("sendUserNick", this.picklingNickname).then((response) => {
-        //         if(response == 200) {
-        //             console.log('이제 홈으로 가든지 가면됨.')
-        //             console.log(window.location.origin);
-        //             location.replace(window.location.origin + "/home");
-        //         } else if(response == 404){
-        //         alert('피클링앱에 해당하는 닉네임이 존재하지 않습니다. \n 다시 입력해주세요.');
-        //         }else {
-        //         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //         }
-        //     })
-        //     .catch((e) => {
-        //         alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-        //     })
-        // }
-        // }
+                            await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                                    if(response == 200) {
+                                    } else {
+                                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                                    }
+                                })}
+                            break;
+        }
     },
+
     deleteImage1(idx) {
         console.log(idx)
         this.sixImages[idx] = '';
@@ -1109,11 +1040,11 @@ methods: {
     },
 
     async setPhotoFilesEdit (fieldName, fileList, index) {
-        // if(fileList.length > 30) {
-        //     alert('업로드한 이미지가 30개를 초과했습니다.');
-        // }else if (fileList.length < 14) {
-        //     alert('업로드한 이미지가 14개 미만입니다.');
-        // } else {
+        if(fileList.length > 30) {
+            alert('업로드한 이미지가 30개를 초과했습니다.');
+        }else if (fileList.length < 14) {
+            alert('업로드한 이미지가 14개 미만입니다.');
+        } else {
                  var image = await this.resizeImage({
                     file: fileList[0],
                     maxSize: 500
@@ -1134,7 +1065,7 @@ methods: {
 
                 console.log(this.replacedImages);
 
-        // }
+        }
      },
 
 

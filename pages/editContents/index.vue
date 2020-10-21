@@ -1,9 +1,12 @@
 <template>
 
     <main class="home-container">
-            <div class="appbar">
-                {{ itemTitle }}
+
+            <div class="title__container">
+                <span class="title__t"> {{ itemTitle }}</span>
+                <span class="title__b" @click="goOut">나가기</span>
             </div>
+
 
             <div class="appbar2">
                 제목
@@ -30,96 +33,112 @@
                 </textarea> 
 
             </div>
+        <div class="button_container" @click="goTo(1)">
+             {{ this.nn }} 
+        </div>
 
             <div class="appbar2">
                 대표사진 ( 1장 )
             </div>
-                  <label class="file-select">
-                    <div class="select-button">
-                    <span>사진 업로드</span>
-                    </div>
-                    <input  type="file" name="photo1" accept="image/*" @change="setPhotoFilesTitle($event.target.name, $event.target.files)" />
-                </label>
-                <div v-show="showImagesTitle.length !=0" style="margin:8% 0 0 5%">
-                    <draggable v-model="showImagesTitle"  handle=".handleTitle" >
-                        <div class="handleTitle" v-for="(image, index) in showImagesTitle">
-                            <img :src="image" width="100" height="100" class="image2"/>
-                            <span class="material-icons imageClose" @click="deleteImageTitle(index)">
-                            highlight_off
-                            </span>
-                        </div>
-                    </draggable>
+                <div v-show="titleImages != null" style="margin:8% 0 0 5%">
+                    <img :src="IMAGE_URL + titleImages"  class="image2"/>
                 </div>
+
+                <div class="image__button__container">
+                    <label class="plusImage">
+                        <div class="image__button1">대표 사진 추가</div>
+                        <input  style="display: none;" type="file" name="photo1" accept="image/*" @change="plusTitleFiles($event.target.name, $event.target.files)" />
+                    </label>
+                    <div class="image__button2" @click="deleteImage('title')">대표 사진 삭제</div>
+                </div>
+
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
 
             <div class="appbar2">
                 상세사진 ( 14장 ~ 30장 )
             </div>
-                  <label class="file-select">
-                    <div class="select-button">
-                    <span>사진 업로드</span>
+            <div class="changeIndexSum">
+                드래그 앤 드롭후 '순서변경' 버튼을 누르시면, 순서가 변경됩니다.
+            </div>
+                <div v-show="detailImages.length !=0" style="margin:8% 0 0 5%">
+                    <draggable v-model="detailImages"  handle=".handle1" >
+                    <div class="handle1"v-for="(image, index) in detailImages" :key="image.imgIdx">
+                        <img :src="IMAGE_URL + image.imgLink"  class="image2"/>
+                            <input type="checkbox"  :value="image.imgIdx" v-model="checkedDetails" class="imageClose">
+                        <div class="image__index">{{ index + 1}}</div>
                     </div>
-                    <input  type="file" name="photo1" accept="image/*" @change="setPhotoFiles1($event.target.name, $event.target.files)" multiple>
-                </label>
-                <div v-show="showImages1.length !=0" style="margin:8% 0 0 5%">
-                    <draggable v-model="showImages1"  handle=".handle1" >
-                        <div class="handle1" v-for="(image, index) in showImages1">
-                            <img :src="image" width="100" height="100" class="image2"/>
-                            <span class="material-icons imageClose" @click="deleteImage1(index)">
-                            highlight_off
-                            </span>
-                            <div class="image__index">{{ index + 1}}</div>
-                        </div>
                     </draggable>
                 </div>
+
+                <div class="image__button__container">
+                    <label class="plusImage">
+                        <div class="image__button1">사진 추가</div>
+                        <input  style="display: none;" type="file" name="photo1" accept="image/*" @change="plusDetailFiles($event.target.name, $event.target.files)" multiple>
+                    </label>
+                    <div class="image__button2" @click="deleteImage('detail')">선택 사진 삭제</div>
+                    <div class="image__button3" @click="changeIndex('detail')">순서변경</div>
+                </div>
+
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
 
             <div class="appbar2">
                 정자세 사진 ( 2장 - 3장 )
             </div>
-                  <label class="file-select">
-                    <div class="select-button">
-                    <span>사진 업로드</span>
+            <div class="changeIndexSum">
+                드래그 앤 드롭후 '순서변경' 버튼을 누르시면, 순서가 변경됩니다.
+            </div>
+                <div v-show="frontImages.length !=0" style="margin:8% 0 0 5%">
+                    <draggable v-model="frontImages"  handle=".handle2" >
+                    <div class="handle2"v-for="(image, index) in frontImages" :key="image.imgIdx">
+                        <img :src="IMAGE_URL + image.imgLink"  class="image2"/>
+                            <input type="checkbox"  :value="image.imgIdx" v-model="checkedFront" class="imageClose">
+                        <div class="image__index">{{ index + 1}}</div>
                     </div>
-                    <input  type="file" name="photo2" accept="image/*" @change="setPhotoFiles2($event.target.name, $event.target.files)" multiple>
-                </label>
-                <div v-show="showImages2.length !=0" style="margin:8% 0 0 5%">
-                    <draggable v-model="showImages2"  handle=".handle2" >
-                        <div class="handle2" v-for="(image, index) in showImages2">
-                            <img :src="image" width="100" height="100" class="image2"/>
-                            <span class="material-icons imageClose" @click="deleteImage2(index)">
-                            highlight_off
-                            </span>
-                            <div class="image__index">{{ index + 1}}</div>
-                        </div>
                     </draggable>
                 </div>
+
+                <div class="image__button__container">
+                    <label class="plusImage">
+                        <div class="image__button1">사진 추가</div>
+                        <input  style="display: none;" type="file" name="photo2" accept="image/*" @change="plusFrontFiles($event.target.name, $event.target.files)" multiple>
+                    </label>
+                    <div class="image__button2" @click="deleteImage('front')">선택 사진 삭제</div>
+                    <div class="image__button3" @click="changeIndex('front')">순서변경</div>
+                </div>
+
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
 
 
             <div class="appbar2">
                 부분 확대 사진 ( 2장 - 3장 )
             </div>
-                  <label class="file-select">
-                    <div class="select-button">
-                    <span>사진 업로드</span>
+            <div class="changeIndexSum">
+                드래그 앤 드롭후 '순서변경' 버튼을 누르시면, 순서가 변경됩니다.
+            </div>
+                <div v-show="partImages.length !=0" style="margin:8% 0 0 5%">
+                    <draggable v-model="partImages"  handle=".handle3" >
+                    <div class="handle3"v-for="(image, index) in partImages" :key="image.imgIdx">
+                        <img :src="IMAGE_URL + image.imgLink"  class="image2"/>
+                            <input type="checkbox"  :value="image.imgIdx" v-model="checkedParts" class="imageClose">
+                        <div class="image__index">{{ index + 1}}</div>
                     </div>
-                    <input  type="file" name="photo3" accept="image/*" @change="setPhotoFiles3($event.target.name, $event.target.files)" multiple>
-                </label>
-                <div v-show="showImages3.length !=0" style="margin:8% 0 0 5%">
-                    <draggable v-model="showImages3"  handle=".handle3" >
-                        <div class="handle3" v-for="(image, index) in showImages3">
-                            <img :src="image" width="100" height="100" class="image2"/>
-                            <span class="material-icons imageClose" @click="deleteImage3(index)">
-                            highlight_off
-                            </span>
-                            <div class="image__index">{{ index + 1}}</div>
-                        </div>
                     </draggable>
                 </div>
 
-        <div class="button_container">
-            <div class="button_contents" @click="goTo(0)"> {{ this.bn }} </div>
-            <div class="button_divider">|</div>
-            <div class="button_contents" @click="goTo(1)"> {{ this.nn }}  </div>
-        </div>
+                <div class="image__button__container">
+                    <label class="plusImage">
+                        <div class="image__button1">사진 추가</div>
+                        <input  style="display: none;" type="file" name="photo3" accept="image/*" @change="plusPartFiles($event.target.name, $event.target.files)" multiple>
+                    </label>
+                    <div class="image__button2" @click="deleteImage('part')">선택 사진 삭제</div>
+                    <div class="image__button3" @click="changeIndex('part')">순서변경</div>
+                </div>
     </main>
 </template>
 
@@ -139,24 +158,38 @@ layout: "blank",
     return {
         step:'option',
         contents:{
-            'title': '승호 테스트입니다!',
-            'exp': '승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 '
+            'title': this.$store.getters.SELECT_ITEM.title,
+            'exp': this.$store.getters.SELECT_ITEM.exp,
         },
-        showImages1 : [],
-        showImages2 : [],
-        showImages3 : [],
-        showImagesTitle : [],
+        showImagesTitle:[],
+        showImages1:[],
+        showImages2:[],
+        showImages3:[],
         images1 : [],
         images2 : [],
         images3 : [],
         imagesTitle : [],
+        titleImages: this.$store.getters.CONTS_IMG_TITLE_LINK,
+        detailImages: this.$store.getters.CONTS_IMG_DETAIL_LIST,
+        frontImages: this.$store.getters.CONTS_IMG_FRONT_LIST,
+        partImages: this.$store.getters.CONTS_IMG_PART_LIST,
+        plusDetailImages:[],
+        checkedDetails:[],
+        plusFrontImages:[],
+        checkedFronts:[],
+        plusPartImages:[],
+        checkedParts:[],
     };
   },
 
    computed: {
     ...mapGetters([
       "IMAGE_URL",
-      "NCONTS_ID"
+      "NCONTS_ID",
+      "CONTS_IMG_TITLE_LINK",
+      "CONTS_IMG_DETAIL_LIST",
+      "CONTS_IMG_FRONT_LIST",
+      "CONTS_IMG_PART_LIST",
     ]),
 
     bn () {
@@ -164,7 +197,7 @@ layout: "blank",
     },
 
     nn () {
-      return  '수정';
+      return  '제목, 설명 수정';
     },
 
     itemTitle() {
@@ -177,12 +210,29 @@ layout: "blank",
   async asyncData({ store, to }) {
 
      var payload = {'offset':0};
+     console.log('이거 실행된거임?');
 
     store.dispatch("setCurrentRoute", "/editContents");
+    if(store.getters.SELECT_ITEM.ncontId == undefined || store.getters.SELECT_ITEM.ncontId == null) {
+        await store.dispatch("getContentsImage", localStorage.getItem('thisImageId'));
+    } else {
+        await store.dispatch("getContentsImage", store.getters.SELECT_ITEM.ncontId);
+        localStorage.setItem('thisImageId', store.getters.SELECT_ITEM.ncontId)
+    }
+
 
   },
 
 created() {
+    this.detailImages.sort(function(a,b) {
+        return a.orderIdx - b.orderIdx;
+    });
+    this.frontImages.sort(function(a,b) {
+        return a.orderIdx - b.orderIdx;
+    });
+    this.partImages.sort(function(a,b) {
+        return a.orderIdx - b.orderIdx;
+    });
 },
 
   beforeMount() {
@@ -194,28 +244,33 @@ mounted() {
 },
 
 methods:{
+
+    goOut() {
+        this.$router.push('/contents');
+    },
+
     async goTo(i) {
             if(i == 0) {
-                this.$router.go(-1);
+                this.$router.push('/contents');
             } else {
               if(this.contents.title.trim() == '') {
                 alert('제목을 입력해주세요.');
               } 
-              // else if( this.contents.title.length  > 20) {
-              //   alert('제목이 20자를 초과했습니다.');
-              // } else if( this.contents.exp.trim() == '') {
-              //   alert('상세 설명을 입력해주세요.');
-              // } else if( this.contents.exp.length  > 150) {
-              //   alert('상세 설명이 150자를 초과했습니다.');
-              // } else if(this.imagesTitle.length == 0) {
-              //   alert('대표 사진을 업로드 해주세요.');
-              // } else if(this.images1.length == 0) {
-              //   alert('상세 사진을 업로드 해주세요.');
-              // } else if(this.images2.length == 0) {
-              //   alert('정자세 사진을 업로드 해주세요.');
-              // } else if(this.images3.length == 0) {
-              //   alert('부분 확대 사진을 업로드 해주세요.');
-              // } 
+              else if( this.contents.title.length  > 20) {
+                alert('제목이 20자를 초과했습니다.');
+              } else if( this.contents.exp.trim() == '') {
+                alert('상세 설명을 입력해주세요.');
+              } else if( this.contents.exp.length  > 150) {
+                alert('상세 설명이 150자를 초과했습니다.');
+              } else if(this.imagesTitle.length == 0) {
+                alert('대표 사진을 업로드 해주세요.');
+              } else if(this.images1.length == 0) {
+                alert('상세 사진을 업로드 해주세요.');
+              } else if(this.images2.length == 0) {
+                alert('정자세 사진을 업로드 해주세요.');
+              } else if(this.images3.length == 0) {
+                alert('부분 확대 사진을 업로드 해주세요.');
+              } 
               else {
                 console.log('1')
                 console.log(this.$store.getters.SELECT_ITEM.options)
@@ -232,85 +287,13 @@ methods:{
                    await this.$store.dispatch("changeContents", payload).then((response) => {
                       if(response == 200) {
                           console.log('잘올라감 : title')
-
-                        // for(var titleIdx = 0; titleIdx < this.imagesTitle.length; titleIdx ++) {
-                        // console.log('2')
-
-                        // var blobfile = this.imagesTitle[titleIdx];
-                        // const formData = new FormData();
-                        // formData.append('imgFile', blobfile, 'image.jpg');
-                        // var payload = [this.$store.getters.NCONTS_ID, 'title', formData];
-
-                        // console.log('3')
-                        //  this.$store.dispatch("sendContentsImage", payload).then((response) => {
-                        //     if(response == 200) {
-                        //         console.log('잘올라감 : title')
-                        //     } else {
-                        //         console.log('error')
-                        //         // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                        //     }
-                        // })
-                        // }
                       } else {
                           console.log('error')
                           // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                       }
                   })
-
-
             }
         }
-    },
-
-    setPhotoFiles1 (fieldName, fileList) {
-        if(fileList.length > 30) {
-            alert('업로드한 이미지가 30개를 초과했습니다.');
-        }else if (fileList.length < 14) {
-            alert('업로드한 이미지가 14개 미만입니다.');
-        } else {
-            this.images1 = fileList;
-            for(var i = 0; i < fileList.length; i ++) {
-                console.log(fileList[i])
-                this.showImages1.push(URL.createObjectURL(fileList[i]));
-            }
-        }
-     },
-    deleteImage1(idx) {
-         this.showImages1.splice(idx,1);
-    },
-
-    setPhotoFiles2 (fieldName, fileList) {
-        if(fileList.length > 3) {
-            alert('업로드한 이미지가 3개를 초과했습니다.');
-        } else if (fileList.length < 2) {
-            alert('업로드한 이미지가 2개 미만입니다.');
-        } else {
-            this.images2 = fileList;
-            for(var i = 0; i < fileList.length; i ++) {
-                console.log(fileList[i])
-                this.showImages2.push(URL.createObjectURL(fileList[i]));
-            }
-        }
-     },
-    deleteImage2(idx) {
-         this.showImages2.splice(idx,1);
-    },
-
-    setPhotoFiles3 (fieldName, fileList) {
-        if(fileList.length > 30) {
-            alert('업로드한 이미지가 3개를 초과했습니다.');
-        } else if (fileList.length < 2) {
-            alert('업로드한 이미지가 2개 미만입니다.');
-        } else {
-            this.images3 = fileList;
-            for(var i = 0; i < fileList.length; i ++) {
-                console.log(fileList[i])
-                this.showImages3.push(URL.createObjectURL(fileList[i]));
-            }
-        }
-     },
-    deleteImage3(idx) {
-         this.showImages3.splice(idx,1);
     },
 
      setPhotoFilesTitle (fieldName, fileList) {
@@ -339,6 +322,9 @@ methods:{
             }
         }
      },
+    deleteImageTitle(idx) {
+         this.showImagesTitle.splice(idx,1);
+    },
 
      resizeImage (settings) {
       console.log('setting!!! ' + settings)
@@ -347,55 +333,346 @@ methods:{
       var reader = new FileReader();
       var image = new Image();
       var canvas = document.createElement('canvas');
-      var dataURItoBlob = function (dataURI) {
-          var bytes = dataURI.split(',')[0].indexOf('base64') >= 0 ?
-              atob(dataURI.split(',')[1]) :
-              unescape(dataURI.split(',')[1]);
-          var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
-          var max = bytes.length;
-          var ia = new Uint8Array(max);
-          for (var i = 0; i < max; i++)
-              ia[i] = bytes.charCodeAt(i);
-
-
-              console.log('ia!' + ia)
-          return new Blob([ia], { type: mime });
+      var dataURItoBlob = function (value) {
+            var binary = atob(value.split(',')[1]);
+            var array = [];
+            for(var i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i));
+            }
+            var blobfile = new Blob([new Uint8Array(array)], {type: 'image/jpg'});
+          return blobfile;
       };
+      
       var resize = function () {
           var width = image.width;
           var height = image.height;
-          if (width > height) {
-              if (width > maxSize) {
-                  height *= maxSize / width;
-                  width = maxSize;
-              }
-          } else {
-              if (height > maxSize) {
-                  width *= maxSize / height;
-                  height = maxSize;
-              }
-          }
+          height *= (maxSize / width).toFixed(2);
+          width = maxSize;
           canvas.width = width;
           canvas.height = height;
+          console.log('image!!! ' + image)
           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-          var dataUrl = canvas.toDataURL('image/jpeg');
-          console.log('dataUrl!!! ' + dataUrl)
+          var dataUrl = canvas.toDataURL('image/jpg');
           return dataURItoBlob(dataUrl);
       };
-      return  resize();
+      return new Promise(function (ok, no) {
+        if (!file.type.match(/image.*/)) {
+            no(new Error("Not an image"));
+            return;
+        }
+        reader.onload = function (readerEvent) {
+            image.onload = function () { return ok(resize()); };
+            image.src = readerEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
 },
 
-    deleteImageTitle(idx) {
-         this.showImagesTitle.splice(idx,1);
+    async plusDetailFiles (fieldName, fileList) {
+      console.log('fileList!!! ' + fileList)
+       this.plusDetailImages = [];
+        // if(fileList.length > 1) {
+        //     alert('이미지를 1개만 선택해주세요.');
+        // } else if (fileList.length ==0) {
+        //     alert('이미지를 선택해주세요.');
+        // } else {
+            console.log('fileList!!!22222')
+            for(var i = 0; i < fileList.length; i ++) {
+                console.log(fileList[i])
+                console.log('idx!!!22222 '  + i)
+                
+                 var image = await this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 500
+                });
+                this.plusDetailImages.push(image);
+            }
+
+            var detailList = this.$store.getters.CONTS_IMG_DETAIL_LIST;
+            var standardIndex = 0;
+
+            for(var j = 0; j< detailList.length; j++) {
+                console.log(Number(detailList[j].imgIdx))
+                console.log(standardIndex)
+                if(Number(detailList[j].imgIdx) > standardIndex) {
+                    standardIndex = Number(detailList[j].imgIdx);
+                }
+            }
+            console.log(standardIndex);
+
+            console.log(this.plusDetailImages)
+                var newIndex = 0;
+            console.log('기존 이미지 길이' + this.$store.getters.CONTS_IMG_DETAIL_LIST.length)
+
+            for(
+                var idxFile = standardIndex+1; 
+                idxFile < standardIndex+1+ this.plusDetailImages.length; 
+                idxFile++
+                ) {
+                console.log('시작하는 index '+ idxFile)
+                 console.log('new Index는 머야? '+ newIndex)
+                var blobfile = this.plusDetailImages[newIndex];
+                const formData = new FormData();
+                formData.append('imgFile', blobfile, 'image.jpg');
+                var payload = [ localStorage.getItem('thisImageId'), 'detail', idxFile, formData];
+
+                   await this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                    if(response == 200) {
+                        console.log('잘올라감' + idxFile)
+                        if(newIndex < idxFile+ this.plusDetailImages.length-1) {
+                            newIndex++;
+                        }
+                    } else {
+                        console.log('에러' + idxFile)
+                        // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                    }
+                })
+            }
+        // location.reload();
     },
 
-    handleSubmit (e) {
-        const formData = new FormData();
-        formData.append('name', 'hong');
-        this.photoFiles.forEach((element, index, array) => {
-        formData.append('photo-' + index, element);
-        });
+    async plusFrontFiles (fieldName, fileList) {
+      console.log('fileList!!! ' + fileList)
+       this.plusDetailImages = [];
+        // if(fileList.length > 1) {
+        //     alert('이미지를 1개만 선택해주세요.');
+        // } else if (fileList.length ==0) {
+        //     alert('이미지를 선택해주세요.');
+        // } else {
+            console.log('fileList!!!22222')
+            for(var i = 0; i < fileList.length; i ++) {
+                console.log(fileList[i])
+                console.log('idx!!!22222 '  + i)
+                
+                 var image = await this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 500
+                });
+                this.plusDetailImages.push(image);
+            }
+
+            var detailList = this.$store.getters.CONTS_IMG_DETAIL_LIST;
+            var standardIndex = 0;
+
+            for(var j = 0; j< detailList.length; j++) {
+                console.log(Number(detailList[j].imgIdx))
+                console.log(standardIndex)
+                if(Number(detailList[j].imgIdx) > standardIndex) {
+                    standardIndex = Number(detailList[j].imgIdx);
+                }
+            }
+            console.log(standardIndex);
+
+            console.log(this.plusDetailImages)
+                var newIndex = 0;
+            console.log('기존 이미지 길이' + this.$store.getters.CONTS_IMG_DETAIL_LIST.length)
+
+            for(
+                var idxFile = standardIndex+1; 
+                idxFile < standardIndex+1+ this.plusDetailImages.length; 
+                idxFile++
+                ) {
+                console.log('시작하는 index '+ idxFile)
+                 console.log('new Index는 머야? '+ newIndex)
+                var blobfile = this.plusDetailImages[newIndex];
+                const formData = new FormData();
+                formData.append('imgFile', blobfile, 'image.jpg');
+                var payload = [ localStorage.getItem('thisImageId'), 'front', idxFile, formData];
+
+                   await this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                    if(response == 200) {
+                        console.log('잘올라감' + idxFile)
+                        if(newIndex < idxFile+ this.plusDetailImages.length-1) {
+                            newIndex++;
+                        }
+                    } else {
+                        console.log('에러' + idxFile)
+                        // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                    }
+                })
+            }
+        location.reload();
     },
+
+    async plusPartFiles (fieldName, fileList) {
+      console.log('fileList!!! ' + fileList)
+       this.plusDetailImages = [];
+        // if(fileList.length > 1) {
+        //     alert('이미지를 1개만 선택해주세요.');
+        // } else if (fileList.length ==0) {
+        //     alert('이미지를 선택해주세요.');
+        // } else {
+            console.log('fileList!!!22222')
+            for(var i = 0; i < fileList.length; i ++) {
+                console.log(fileList[i])
+                console.log('idx!!!22222 '  + i)
+                
+                 var image = await this.resizeImage({
+                    file: fileList[i],
+                    maxSize: 500
+                });
+                this.plusDetailImages.push(image);
+            }
+
+            var detailList = this.$store.getters.CONTS_IMG_DETAIL_LIST;
+            var standardIndex = 0;
+
+            for(var j = 0; j< detailList.length; j++) {
+                console.log(Number(detailList[j].imgIdx))
+                console.log(standardIndex)
+                if(Number(detailList[j].imgIdx) > standardIndex) {
+                    standardIndex = Number(detailList[j].imgIdx);
+                }
+            }
+            console.log(standardIndex);
+
+            console.log(this.plusDetailImages)
+                var newIndex = 0;
+            console.log('기존 이미지 길이' + this.$store.getters.CONTS_IMG_DETAIL_LIST.length)
+
+            for(
+                var idxFile = standardIndex+1; 
+                idxFile < standardIndex+1+ this.plusDetailImages.length; 
+                idxFile++
+                ) {
+                console.log('시작하는 index '+ idxFile)
+                 console.log('new Index는 머야? '+ newIndex)
+                var blobfile = this.plusDetailImages[newIndex];
+                const formData = new FormData();
+                formData.append('imgFile', blobfile, 'image.jpg');
+                var payload = [ localStorage.getItem('thisImageId'), 'part', idxFile, formData];
+
+                   await this.$store.dispatch("sendContentsImage", payload).then((response) => {
+                    if(response == 200) {
+                        console.log('잘올라감' + idxFile)
+                        if(newIndex < idxFile+ this.plusDetailImages.length-1) {
+                            newIndex++;
+                        }
+                    } else {
+                        console.log('에러' + idxFile)
+                        // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                    }
+                })
+            }
+        location.reload();
+    },
+
+    async plusTitleFiles(fieldName, fileList) {
+        var image = await this.resizeImage({
+            file: fileList[0],
+            maxSize: 500
+        }); 
+        const formData = new FormData();
+        formData.append('imgFile', image, 'image.jpg');
+        var payload = [ localStorage.getItem('thisImageId'), 'title', '0', formData];
+
+            await this.$store.dispatch("sendContentsImage", payload).then((response) => {
+            if(response == 200) {
+                console.log('잘올라감 title')
+            } else {
+                console.log('에러 title')
+                // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+            }
+        })
+        location.reload();
+    },
+
+    async deleteImage(type){
+        switch(type) {
+            case 'detail':
+                for(var i = 0; i < this.checkedDetails.length; i++) {
+                var payload = [localStorage.getItem('thisImageId'), type, this.checkedDetails[i]];
+                    await this.$store.dispatch("deleteContentsImage", payload).then((response) => {
+                        if(response == 200) {
+                            console.log('잘 지워짐 : title')
+                        } else {
+                            console.log('error')
+                        }
+                    })
+                }
+                break;
+            case 'front':
+                for(var i = 0; i < this.checkedFronts.length; i++) {
+                var payload = [localStorage.getItem('thisImageId'), type, this.checkedFronts[i]];
+                    await this.$store.dispatch("deleteContentsImage", payload).then((response) => {
+                        if(response == 200) {
+                            console.log('잘 지워짐 : title')
+                        } else {
+                            console.log('error')
+                        }
+                    })
+                }
+                break;
+            case 'part':
+                for(var i = 0; i < this.checkedParts.length; i++) {
+                var payload = [localStorage.getItem('thisImageId'), type, this.checkedParts[i]];
+                    await this.$store.dispatch("deleteContentsImage", payload).then((response) => {
+                        if(response == 200) {
+                            console.log('잘 지워짐 : title')
+                        } else {
+                            console.log('error')
+                        }
+                    })
+                }
+                break;
+            case 'title':
+                var payload = [localStorage.getItem('thisImageId'), type, 0];
+                    await this.$store.dispatch("deleteContentsImage", payload).then((response) => {
+                        if(response == 200) {
+                            console.log('잘 지워짐 : title')
+                        } else {
+                            console.log('error')
+                        }
+                    })
+                break;
+        }
+        location.reload();
+    },
+
+    async changeIndex(type) {
+        switch(type) {
+            case 'detail':
+                for(var i = 0; i < this.detailImages.length; i++) {
+                    this.detailImages[i].orderIdx = String(i);
+                }
+                var payload = [localStorage.getItem('thisImageId'), type, this.detailImages];
+                await this.$store.dispatch("changeContentsImageIndex", payload).then((response) => {
+                    if(response == 200) {
+                        console.log('잘 지워짐 : title')
+                    } else {
+                        console.log('error')
+                    }
+                })
+                break;
+            case 'front':
+                for(var i = 0; i < this.frontImages.length; i++) {
+                    this.detailImages[i].orderIdx = String(i);
+                }
+                var payload = [localStorage.getItem('thisImageId'), type, this.frontImages];
+                await this.$store.dispatch("changeContentsImageIndex", payload).then((response) => {
+                    if(response == 200) {
+                        console.log('잘 지워짐 : title')
+                    } else {
+                        console.log('error')
+                    }
+                })
+                break;
+            case 'part':
+                for(var i = 0; i < this.partImages.length; i++) {
+                    this.detailImages[i].orderIdx = String(i);
+                }
+                var payload = [localStorage.getItem('thisImageId'), type, this.partImages];
+                await this.$store.dispatch("changeContentsImageIndex", payload).then((response) => {
+                    if(response == 200) {
+                        console.log('잘 지워짐 : title')
+                    } else {
+                        console.log('error')
+                    }
+                })
+                break;
+        }
+    },
+
 
 },
 
@@ -468,31 +745,17 @@ a {
 
 .button{
     &_container{
-        display: flex;
         text-align: center;
-        justify-content: center;
-        width: 100%;
-        height: 60px;
+        width: 200px;
+        height: 30px;
         align-items: center;
-        position: fixed;
-        bottom: 0px;
-        padding-bottom: 10px;
-        background: linear-gradient(transparent, #d9d9d9);
-        z-index:3;
-        max-width: 500px;
-    }
-
-    &_contents{
-        width: 50%;
-        font-size: 1.1em;
+        font-size: 1em;
         font-weight: 700;
         color: #000;
-    }
-
-    &_divider{
-        font-size: 1.2em;
-        font-weight: 700;
-        color: #000;
+        border: 1px solid #000;
+        border-radius: 5px;
+        padding: 1.5% 0;
+        margin: 20px 0 0 21%;
     }
 }
 
@@ -600,7 +863,10 @@ a {
     margin: 2%;
     display: inline-block;
 }
+
 .image2{
+    width: 90px;
+    height: 90px;
     position: relative;
      z-index: 1;
      border-radius: 5px;
@@ -617,19 +883,91 @@ a {
      float:right;
 }
 
-.image__index {
-    position: absolute;
-     z-index: 2;
-     left: 2px;
-     top: 3px;
-     width: 23px;
-     height: 23px;
-     color: #000;
-     background-color: #fff;
-     border-radius: 50px;
-     float:left;
-     border: 1px solid #000;
-     text-align: center;
+.image{
+    &__index{
+        position: absolute;
+        z-index: 2;
+        left: 2px;
+        top: 3px;
+        width: 23px;
+        height: 23px;
+        color: #000;
+        background-color: #fff;
+        border-radius: 50px;
+        float:left;
+        border: 1px solid #000;
+        text-align: center;
+    }
+
+     &__button1{
+         padding: 3% 0;
+         border-radius: 5px;
+         border: 1px solid #000;
+         margin-right: 10px;
+         font-size: 0.9em;
+         width: 100px;
+         height: 30px;
+         text-align: center;
+     }
+
+     &__button2{
+         padding: 1% 0;
+         border-radius: 5px;
+         border: 1px solid #000;
+         margin-right: 10px;
+         font-size: 0.9em;
+         width: 120px;
+         height: 30px;
+         text-align: center;
+     }
+
+     &__button3{
+         padding: 1.5% 0;
+         border-radius: 5px;
+         border: 1px solid #000;
+         margin-right: 10px;
+         font-size: 0.9em;
+         width: 100px;
+         height: 30px;
+         text-align: center;
+     }
+
+     &__button__container{
+         display: flex;
+         margin: 5% 0 0 7%;
+     }
+}
+
+.changeIndexSum{
+    margin: 2% 7%;
+}
+
+
+.title{
+    &__container{
+        margin: 10% 7% 10% 7%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__t{
+        font-size: 1.5em;
+        font-weight: 800;
+
+    }
+
+    &__b{
+        font-size: 1.0em;
+        font-weight: 800;
+        margin-top: 9px;
+    }
+}
+
+.zeroImage{
+    width: 90px;
+    height:90px;
+    border-radius: 5px;
+    border: 1px solid #ececec;    
 }
 
 </style>

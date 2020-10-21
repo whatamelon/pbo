@@ -89,8 +89,8 @@ export default {
     return {
       alertMsg:'',
       loginForm : {
-        userId: 'q1@pickling.kr',
-        passWd: 'q1234567',
+        userId: '',
+        passWd: '',
         passWd2: "",
       }
     };

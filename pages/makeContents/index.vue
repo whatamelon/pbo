@@ -269,21 +269,21 @@ methods:{
               if(this.contents.title.trim() == '') {
                 alert('제목을 입력해주세요.');
               } 
-              // else if( this.contents.title.length  > 20) {
-              //   alert('제목이 20자를 초과했습니다.');
-              // } else if( this.contents.exp.trim() == '') {
-              //   alert('상세 설명을 입력해주세요.');
-              // } else if( this.contents.exp.length  > 150) {
-              //   alert('상세 설명이 150자를 초과했습니다.');
-              // } else if(this.imagesTitle.length == 0) {
-              //   alert('대표 사진을 업로드 해주세요.');
-              // } else if(this.images1.length == 0) {
-              //   alert('상세 사진을 업로드 해주세요.');
-              // } else if(this.images2.length == 0) {
-              //   alert('정자세 사진을 업로드 해주세요.');
-              // } else if(this.images3.length == 0) {
-              //   alert('부분 확대 사진을 업로드 해주세요.');
-              // } 
+              else if( this.contents.title.length  > 20) {
+                alert('제목이 20자를 초과했습니다.');
+              } else if( this.contents.exp.trim() == '') {
+                alert('상세 설명을 입력해주세요.');
+              } else if( this.contents.exp.length  > 150) {
+                alert('상세 설명이 150자를 초과했습니다.');
+              } else if(this.imagesTitle.length == 0) {
+                alert('대표 사진을 업로드 해주세요.');
+              } else if(this.images1.length == 0) {
+                alert('상세 사진을 업로드 해주세요.');
+              } else if(this.images2.length == 0) {
+                alert('정자세 사진을 업로드 해주세요.');
+              } else if(this.images3.length == 0) {
+                alert('부분 확대 사진을 업로드 해주세요.');
+              } 
               else {
                 console.log('1')
                 console.log(this.imagesTitle.length)
