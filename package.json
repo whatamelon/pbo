@@ -60,7 +60,8 @@
     "vue2-datepicker": "^3.6.2",
     "vuedraggable": "^2.24.2",
     "vuejs-datepicker": "^1.6.2",
-    "vuetify": "^1.5.6"
+    "vuetify": "^1.5.6",
+    "vuetify-dialog": "^0.4.0-beta.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "0.0.1",

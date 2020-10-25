@@ -1,6 +1,7 @@
 <template>
 
         <div class="model-list" style="background-color:#f2f2f2">
+  <GoUpButton></GoUpButton>
 
             <div class="title__container">
                 <span class="title__t">프로필 수정</span>
@@ -463,7 +464,7 @@
                 
             </div>
             
-            <p class="lastPicky">수정 후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. 아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</p>
+            <!-- <p class="lastPicky">수정 후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. 아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</p> -->
 
         </div>
 
@@ -487,6 +488,7 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import GoUpButton from "@/components/App/GoUpButton";
 
 const FilePond = vueFilePond(
   FilePondPluginFileValidateType,
@@ -507,16 +509,17 @@ components:{
     SelectBox,
     VueImageUploadCroppie,
     FilePond, 
-    "no-ssr": NoSSR
+    "no-ssr": NoSSR,
+      GoUpButton
 },
 data() {
       return{
         step: '2',
         imageUploadIdx: 0,
         postCodeOpen: false,
-        postCode1:'',
-        postCode2:'',
-        postCode3:'',
+        postCode1: this.$store.getters.USER_GRP4.addr0 == null ? '':  this.$store.getters.USER_GRP4.addr0 ,
+        postCode2:this.$store.getters.USER_GRP4.addr1 == null ? '':  this.$store.getters.USER_GRP4.addr1 ,
+        postCode3:this.$store.getters.USER_GRP4.addrCode == null ? '':  this.$store.getters.USER_GRP4.addrCode ,
         defaultImage: '',
         trans: { 
             'cropImage': '대표 사진 선택', 
@@ -555,8 +558,6 @@ data() {
         image: null,
         inst: false,
         yout: false,
-        currentInstaId : this.$store.getters.USER_GRP1.instIdx == null ? '':  this.$store.getters.USER_GRP1.instIdx ,
-        currentYoutubeId :this.$store.getters.USER_GRP1.youtIdx == null ? '':  this.$store.getters.USER_GRP1.youtIdx ,
         currentYouChk :'',
         currentMyinfoChk:'',
         group1 : {
@@ -585,13 +586,13 @@ data() {
         ],
         youtube:[
             {
-                'id': 'you1','name': '1000 이하'
+                'id': 'yout1','name': '1000 이하'
             },
             {
-                'id': 'you2', 'name': '1001 ~ 5000명 이하'
+                'id': 'yout2', 'name': '1001 ~ 5000명 이하'
             },
             {
-                'id': 'you3', 'name': '5001명 이상'
+                'id': 'yout3', 'name': '5001명 이상'
             }
         ],
         youtubeChk:[
@@ -622,7 +623,10 @@ data() {
                 'id': this.$store.getters.USER_GRP1.youtLink == null? '' :this.$store.getters.USER_GRP1.youtLink ,
             },
         ],
-        checkedNames:[],
+        checkedNames: this.$store.getters.USER_GRP1.isInst == 'y' &&this.$store.getters.USER_GRP1.isYout == 'y'?
+        ['inst', 'yout'] :  this.$store.getters.USER_GRP1.isInst == 'y' &&this.$store.getters.USER_GRP1.isYout == 'n'?
+        ['inst'] : this.$store.getters.USER_GRP1.isInst == 'n' &&this.$store.getters.USER_GRP1.isYout == 'y'?
+       ['yout'] : [] ,
         myintro: this.$store.getters.USER_GRP2.myExp,
         bodyIntro: this.$store.getters.USER_GRP2.styleExp,
         topList: [
@@ -808,8 +812,30 @@ async asyncData({ store }) {
         }
         console.log(list2)
 
+        var instIDx = '';
+        var youtIDx = '';
+        
+        if(store.getters.USER_GRP1.instIdx == null) {
+            instIDx = 'inst4';
+        } else {
+            var instNum = Number(store.getters.USER_GRP1.instIdx) + 1;
+            instIDx =  'inst' + instNum;
+        }
+      
+        if(store.getters.USER_GRP1.youtIdx == null) {
+            youtIDx = 'yout4';
+        } else { 
+            var youtNum = Number(store.getters.USER_GRP1.youtIdx) + 1;
+            youtIDx =  'yout' + youtNum;
+        }
+
+        console.log(instIDx);
+      
+
 
     return {
+        currentInstaId:instIDx,
+        currentYoutubeId:youtIDx,
         brandList: list1,
         brandList2: list2,
         likeList:userLst,
@@ -825,6 +851,7 @@ created() {
 },
 
 mounted() {
+    console.log(this.currentInstaId);
     console.log(this.sixImages);
 },
 
@@ -838,7 +865,6 @@ methods: {
     },
     showSellers(i) {
         this.currentInstaId = i;
-        console.log(i)
     },
     showSellers2(i) {
         this.currentYoutubeId = i;
@@ -865,72 +891,102 @@ methods: {
     },
 
     async editProfile(stepID) {
-         switch(this.step) {
-            case '1':
+         switch(stepID) {
+            case 1:
                 if (this.group1.name.trim() =='' ) {
-                        alert('이름을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '이름을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                 } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
-                        alert('전화번호를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '전화번호를 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                 } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
-                        alert('날짜를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '날짜를 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                 } else if(this.checkedNames.length ==0) {
-                        alert('SNS를 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: 'SNS를 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
                 } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
-                        alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
-                } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
-                        alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '인스타그램 ID / 유튜브 채널명을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
+                } else if(this.currentInstaId == 4 && this.currentYoutubeId == 4) {
+                            const res = await this.$dialog.confirm({
+                                text: '인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
                 } else {
+                    console.log(this.checkedNames)
+                    console.log(this.checkedYout)
+                    console.log(this.checkSns)
 
                     var params = {
                         'status': 'req',
                         'nameReal': this.group1.name,
                         'mobileNo': this.group1.phoneNo,
                         'birthYear': this.group1.year,
-                        'isYout': this.checkedNames.includes('yout') ? 'y': 'n',
-                        'youtLink':  this.checkedNames.includes('yout') ? this.checkSns[1].id : '',
-                        'youtIdx':  this.checkedNames.includes('yout') ? Number(this.currentYoutubeId.slice(-1))-1: '',
-                        'isInst': this.checkedNames.includes('inst') ? 'y': 'n',
-                        'instLink': this.checkedNames.includes('inst') ? this.checkSns[0].id  : '',
-                        'instIdx': this.checkedNames.includes('inst') ? Number(this.currentInstaId.slice(-1))-1: '',
+                        'isInst': this.checkedInst == true ? 'y': 'n',
+                        'instLink': this.checkedInst == true ? this.checkSns[0].id  : '',
+                        'instIdx': this.checkedInst == true ? Number(this.currentInstaId.slice(-1)-1): '',
+                        'isYout': this.checkedYout == true ? 'y': 'n',
+                        'youtLink':  this.checkedYout == true ? this.checkSns[1].id : '',
+                        'youtIdx':  this.checkedYout == true ?  Number(this.currentYoutubeId.slice(-1)-1): '',
                     }
+
+                    console.log(params)
 
                     var payload = ['ugr1', params];
 
                         await this.$store.dispatch("sendUserInfo", payload).then((response) => {
                         if(response == 200) {
-                        } else {
-                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '수정되었습니다. 피클링 앱에서는 최대 1주일 후부터 확인 가능합니다',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(response == 400) {
+                            const res =  this.$dialog.confirm({
+                                text: '모든 항목을 알맞게 작성해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        }else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                         }
                     })
                     .catch((e) => {
-                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                     })
                 }
                 break;
-                case '2':
-                    for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
-
-                        var blobfile = this.replacedImages[idxFile].file;
-                        const formData = new FormData();
-                        formData.append('imgFile', blobfile, 'image.jpg');
-                        var payload = [ this.replacedImages[idxFile].index, formData];
-
-                            this.$store.dispatch("sendUserImage", payload).then((response) => {
-                            if(response == 200) {
-                                console.log('잘올라감' + this.imageUploadIdx)
-                            } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                            }
-                        })
-                    }    
+                case 2:
                     if (this.myintro.trim() =='' ) {
-                            alert(' 자기소개를 입력해주세요.');
-                    } else if(this.image == null) {
-                            alert('대표 사진을 업로드해주세요..');
-                    }else if( this.myFiles.length != 6) {
-                            alert('스타일 사진을 6장 업로드해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '자기소개를 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
+                    } else if( this.myFiles.length != 6) {
+                            const res = await this.$dialog.confirm({
+                                text: '스타일 사진을 6장 업로드해주세요',
+                                actions:{true:'닫기'}
+                            });
                     } else if(this.bodyIntro.trim() == '') {
-                            alert('체형 설명을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '체형 설명을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                     } else if(
                         this.size.height.trim() == '' || 
                         this.size.top.trim() == '' || 
@@ -939,7 +995,10 @@ methods: {
                         this.size.shoulder.trim() == '' || 
                         this.size.pelvis.trim() == '' 
                     ) {
-                            alert('체형을 선택 / 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '체형을 선택 / 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                     }  else {
 
                         var params = {
@@ -956,30 +1015,77 @@ methods: {
 
                         var payload = ['ugr2', params];
 
+                    for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
+
+                        var blobfile = this.replacedImages[idxFile].file;
+                        const formData = new FormData();
+                        formData.append('imgFile', blobfile, 'image.jpg');
+                        var payload = [ this.replacedImages[idxFile].index, formData];
+
+                            this.$store.dispatch("sendUserImage", payload).then((response) => {
+                            if(response == 200) {
+                                console.log('잘올라감' + this.imageUploadIdx)
+                            } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
+                            }
+                        })
+                    }    
+
                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
                             if(response == 200) {
+                            const res =  this.$dialog.confirm({
+                                text: '수정되었습니다. 피클링 앱에서는 최대 1주일 후부터 확인 가능합니다',
+                                actions:{true:'닫기'}
+                            });
                             } else {
-                            alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                             }
                         })
                         .catch((e) => {
-                            alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                         })
                     }
                     break;
-                    case '3':
+                    case 3:
                         if (this.likeList.length < 1) {
-                                alert(' 자주 입는 스타일을 최소 1개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '자주 입는 스타일을 최소 1개 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.dislikeList.length < 3) {
-                                alert(' 절대 안 입는 스타일을 최소 3개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '절대 안 입는 스타일을 최소 3개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         }else if( this.likeBrand.length < 3 || this.likeBrand.length > 10) {
-                                alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
                         } else if( this.mallList.length < 2 || this.mallList.length > 5) {
-                                alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
-                                alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '유튜브 컨텐츠 연동 항목을 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
-                                alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다',
+                                actions:{true:'닫기'}
+                            });
                         } else {
 
                             var params = {
@@ -995,21 +1101,37 @@ methods: {
 
                              await this.$store.dispatch("sendUserInfo", payload).then((response) => {
                                 if(response == 200) {
+                            const res =  this.$dialog.confirm({
+                                text: '수정되었습니다. 피클링 앱에서는 최대 1주일 후부터 확인 가능합니다',
+                                actions:{true:'닫기'}
+                            });
                                 } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                                 }
                             })
                             .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                             })
 
                         }
                         break;
-                        case '4':
+                        case 4:
                              if (this.postCode1.trim() == '') {
-                                    alert(' 주소를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '주소를 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                             } else if(this.postCode2.trim() == '') {
-                                    alert(' 상세 주소를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 주소를 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
                             } else {
 
                                 var code = {
@@ -1024,8 +1146,15 @@ methods: {
 
                             await this.$store.dispatch("sendUserInfo", payload).then((response) => {
                                     if(response == 200) {
+                            const res =  this.$dialog.confirm({
+                                text: '수정되었습니다. 피클링 앱에서는 최대 1주일 후부터 확인 가능합니다',
+                                actions:{true:'닫기'}
+                            });
                                     } else {
-                                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                                     }
                                 })}
                             break;
@@ -1040,10 +1169,11 @@ methods: {
     },
 
     async setPhotoFilesEdit (fieldName, fileList, index) {
-        if(fileList.length > 30) {
-            alert('업로드한 이미지가 30개를 초과했습니다.');
-        }else if (fileList.length < 14) {
-            alert('업로드한 이미지가 14개 미만입니다.');
+        if(fileList.length != 0) {
+                            const res = await this.$dialog.confirm({
+                                text: '이미지를 1개만 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
         } else {
                  var image = await this.resizeImage({
                     file: fileList[0],

@@ -65,9 +65,12 @@ export default {
             // alert('로그아웃에 실패 했습니다. \n 네트워크를 확인해주세요.');
         })
 
+        // console.log()
+
             localStorage.removeItem('token');
             localStorage.removeItem('tokenExpire');
-            location.replace(document.URL);
+            this.$router.push('/') 
+            // location.replace(document.URL);
 
     },
     openSearch() {

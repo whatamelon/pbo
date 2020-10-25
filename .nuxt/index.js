@@ -20,6 +20,7 @@ import nuxt_plugin_templatesplugin86bc744c_528c6b98 from 'nuxt_plugin_templatesp
 import nuxt_plugin_vueamplitudeplugin_4cfd9585 from 'nuxt_plugin_vueamplitudeplugin_4cfd9585' // Source: ./vue-amplitude-plugin.js (mode: 'client')
 import nuxt_plugin_googletagmanager_0889dd03 from 'nuxt_plugin_googletagmanager_0889dd03' // Source: ./google-tag-manager.js (mode: 'client')
 import nuxt_plugin_vuedaumpostcode_e6ba5c72 from 'nuxt_plugin_vuedaumpostcode_e6ba5c72' // Source: ./vue-daum-postcode.js (mode: 'client')
+import nuxt_plugin_vuetifydialog_61c721e2 from 'nuxt_plugin_vuetifydialog_61c721e2' // Source: ./vuetify-dialog.js (mode: 'all')
 import nuxt_plugin_historypush_2a9379ae from 'nuxt_plugin_historypush_2a9379ae' // Source: ../plugins/history-push (mode: 'all')
 import nuxt_plugin_vuemasonry_087bf870 from 'nuxt_plugin_vuemasonry_087bf870' // Source: ../plugins/vue-masonry (mode: 'all')
 import nuxt_plugin_routerplugin_481e3bd6 from 'nuxt_plugin_routerplugin_481e3bd6' // Source: ../plugins/router-plugin.js (mode: 'all')
@@ -212,6 +213,10 @@ async function createApp (ssrContext) {
 
   if (process.client && typeof nuxt_plugin_vuedaumpostcode_e6ba5c72 === 'function') {
     await nuxt_plugin_vuedaumpostcode_e6ba5c72(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vuetifydialog_61c721e2 === 'function') {
+    await nuxt_plugin_vuetifydialog_61c721e2(app.context, inject)
   }
 
   if (typeof nuxt_plugin_historypush_2a9379ae === 'function') {

@@ -6,7 +6,7 @@
                 <span class="material-icons" @click="goBack">
                 arrow_back_ios
                 </span>
-                <span class="select-title1">픽키 회원가입</span>
+                <p class="select-title1">인플루언서 센터 <br/>회원가입</p>
             </div>
             <br/>
             <br/>
@@ -19,7 +19,7 @@
                     <div class="input">
                     <input
                         placeholder="이메일"
-                        v-model="loginForm.mail"
+                        v-model="loginForm.userId"
                         class="input__bottom"
                         type="text"
                     />
@@ -78,8 +78,8 @@ components:{
     return {
       alertMsg:'',
       loginForm : {
-        mail: 'q1@pickling.kr',
-        passWd: 'q1234567',
+        userId: '',
+        passWd: '',
         passWd2: "",
       }
     };
@@ -108,36 +108,61 @@ methods: {
     },
 
     async clickButton() {
-        if(this.loginForm.mail.trim() == '') {
-            alert('이메일을 입력해주세요.');
+        var mailformat = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;	
+        var passformat = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}$/;
+
+        if(this.loginForm.userId.trim() == '') {
+                            const res = await this.$dialog.confirm({
+                                text: '이메일을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
+        }  else if(!this.loginForm.userId.match(mailformat)) {
+                            const res = await this.$dialog.confirm({
+                                text: '이메일 형식에 맞게 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else if(this.loginForm.passWd.trim().length < 8) {
-            alert('비밀번호는 최소 8자 이상 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '비밀번호는 최소 8자 이상 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
+        } else if(!this.loginForm.passWd.match(passformat)) {
+                            const res = await this.$dialog.confirm({
+                                text: '비밀번호 형식에 맞게 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else if(this.loginForm.passWd2.trim().length < 8) {
-            alert('비밀번호 확인은 최소 8자 이상 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '비밀번호 확인은 최소 8자 이상 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
         }else if(this.loginForm.passWd2.trim() != this.loginForm.passWd.trim() ) {
-            alert('비밀번호와 비밀번호확인이 다릅니다. 한 번 더 확인해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '비밀번호와 비밀번호확인이 다릅니다. 한 번 더 확인해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else {
         await this.$store.dispatch("signup", this.loginForm).then((response) => {
             if(response == 200) {
-                    var res = confirm( '픽키 회원가입이 완료되었습니다! \n 바로 픽키 정보등록을 하실래요?' );
-
-                    if(res == true) {
-                        this.$router.push('/register');
-                    } else {
-                        location.replace(window.location.origin + "/home");
-                    }
+                    this.$router.push('/register');
             } else if(response == 401) {
-            this.alertMsg = "사용할 수 없는 이메일 입니다. 다른 이메일을 선택해주세요.";
-            this.$refs.appAlert.showAlert();
+                            const res =  this.$dialog.confirm({
+                                text: '사용할 수 없는 이메일 입니다. 다른 이메일을 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
             } else {
-            this.alertMsg = "네트워크를 확인해주세요.";
-            this.$refs.appAlert.showAlert();
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크를 확인해주세요',
+                                actions:{true:'닫기'}
+                            });
             }
             })
             .catch((e) => {
-            console.log(e)
-            this.alertMsg = "네트워크를 확인해주세요.";
-            this.$refs.appAlert.showAlert();
+                console.log(e)
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크를 확인해주세요',
+                                actions:{true:'닫기'}
+                            });
             })
         }
   },
@@ -184,10 +209,10 @@ beforeRouteLeave(to, from, next) {
     }
 
     &1{
+        text-align: center;
         font-size: 1.8em;
         font-weight: 800;
-        color: $primary;
-        margin-left: 20%;
+        color: #000;
     }
 
     &2{

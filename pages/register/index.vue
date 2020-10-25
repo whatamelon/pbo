@@ -13,7 +13,8 @@
 
     <div class="select-title-container">
         <span class="select-title1">반갑습니다!</span>
-        <span class="select-title1">지금부터 <span class="select-title2">픽키 등록</span>을 시작하겠습니다.</span>
+        <span class="select-title1">아래 항목을 작성하여</span>
+        <span class="select-title1">프로필 등록을 완료해주세요.</span>
     </div>
                 <div class="input-container2">
                     <div class="input-title2">
@@ -21,7 +22,7 @@
                     </div>
                     <div class="input3">
                     <input
-                    placeholder="이름"
+                    placeholder="한글"
                         v-model="group1.name"
                         class="input__bottom"
                         type="text"
@@ -53,7 +54,7 @@
                     <div class="input">
                     <input
                     maxlength="4"
-                    placeholder="출생연도 ( 4자리 )"
+                    placeholder="출생연도 ( 숫자 4자리 )"
                         v-model="group1.year"
                         class="input__bottom"
                         type="text"
@@ -152,6 +153,7 @@
 
                     <div class="input22">
                         <textarea 
+                        maxlength="200"
                         style="resize: none;"
                         v-model="myintro"
                         class="input__bottom2"
@@ -168,6 +170,8 @@
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">프로필 페이지에 동그랗게 나오는 프로필 사진이므로 <br/>머리가 잘리지 않은 전체 얼굴 사진으로 선택해주세요!</p>
 
+                        <img src="/profile_ex.png" style="height: 100px; margin: 20px auto 0 auto;">
+                   
                     <div style="text-align:center; margin-top:5%;" v-show="defaultImage != ''">
                         <img :src="defaultImage" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
                     </div>
@@ -180,8 +184,9 @@
                 <div class="input-title2" style="margin-bottom:5%;">
                     스타일 사진 선택 ( 6장 )
                 </div>
-                <p style="font-size:0.9em; font-weight:400; margin:0 7% 4% 7%;"> 내가 가장 좋아하는 나의 베스트 코디 사진을 등록해 주세요!<br/> 되도록이면 셀카 사진이 아닌 다른 사람이 찍어준 사진으로 등록해 주세요~</p>
+                <p style="font-size:0.9em; font-weight:400; margin:0 7% 4% 7%;"> 내가 가장 좋아하는 나의 베스트 코디 사진을 등록해 주세요! 되도록이면 셀카 사진이 아닌 다른 사람이 찍어준 사진으로 등록해 주세요~</p>
 
+                        <img src="/style_ex.png" style="height: 200px; margin: 0 auto;">
                   <label class="file-select">
                     <div class="select-button">
                     <span>사진 업로드</span>
@@ -209,6 +214,7 @@
 
                     <div class="input22">
                         <textarea 
+                        maxlength="100"
                         style="resize: none; height:95px !important;"
                         v-model="bodyIntro"
                         class="input__bottom2"
@@ -292,14 +298,14 @@
 
 
             </div>
-            <div v-else-if="step == '3'">
+            <div v-else-if="step == '3'" style="padding: 0 30px;">
 
                 <div class="input-container2">
                     <div class="input-title2">
                         자주 입는 스타일 <br/><p class="select__range">(최대 3개)</p>
                     </div>
-                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">내가 너무나 애정하는 스타일을 최대 3개까지만 선택해 주세요~</p>
-                    <div class="input22" style="display:block; margin-top:3%">
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">내가 너무나 애정하는 스타일을 최대 3개까지만 선택해 주세요~</p>
+                    <div class="input22" style="display:flow-root; margin-top:3%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in brandList" 
                         class="brandItem" 
@@ -325,9 +331,9 @@
                     <div class="input-title2">
                         절대 안입는 스타일 <br/><p class="select__range">(최소 3개)</p>
                     </div>
-                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">무슨 일이 있어도 절대 안 입는 스타일 있잖아요?! 그런 스타일을 최소 3개 이상 선택해 주세요!</p>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">무슨 일이 있어도 절대 안 입는 스타일 있잖아요?! 그런 스타일을 최소 3개 이상 선택해 주세요!</p>
                     
-                    <div class="input22" style="display:block; margin-top:3%">
+                    <div class="input22" style="display:flow-root; margin-top:3%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in brandList2" 
                         class="brandItem" 
@@ -352,9 +358,9 @@
                     <div class="input-title2">
                         좋아하는 브랜드 <br/><p class="select__range">(최소 3개, 최대 10개)</p>
                     </div>
-                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">스트릿브랜드, 국내브랜드, 명품브랜드 등 내가 특별히 좋아하는 패션 브랜드가 있다면 최대 10개까지 적어주세요~ </p>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">스트릿브랜드, 국내브랜드, 명품브랜드 등 내가 특별히 좋아하는 패션 브랜드가 있다면 최대 10개까지 적어주세요~ </p>
                     
-                    <div class="input22" style="display:block; margin-top:5%">
+                    <div class="input22" style="display:flow-root; margin-top:5%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in likeBrand" 
                         class="brandItem2" 
@@ -377,9 +383,9 @@
                     <div class="input-title2">
                         자주 가는 인터넷 쇼핑몰<br/><p class="select__range">(최소 2개, 최대 5개)</p>
                     </div>
-                    <p style="font-size:0.9em; font-weight:400; margin:2% 7% 0 7%;">자주 방문하는 인터넷(브랜드X)쇼핑몰을 최소 2개 이상 알려주세요~ </p>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">자주 방문하는 인터넷(브랜드X)쇼핑몰을 최소 2개 이상 알려주세요~ </p>
                     
-                    <div class="input22" style="display:block; margin-top:5%">
+                    <div class="input22" style="display:flow-root; margin-top:5%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in mallList" 
                         class="brandItem2" 
@@ -402,7 +408,7 @@
                     <div class="input-title2">
                         유튜브 컨텐츠 연동 확인
                     </div>
-                    <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">유튜브 채널을 운영중이신가요? 그렇다면 픽 등록이 더 쉬워집니다! <br/>내 채널에 등록된 패션하울 영상이 피클링에 연동되어 더 많은 사람들이 나의 패션영상을 볼 수 있게 됩니다. <br/>이렇게 진행을 해드릴까요? </p>
+                    <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">유튜브 채널을 운영중이신가요? 그렇다면 픽 등록이 더 쉬워집니다! <br/>내 채널에 등록된 패션하울 영상이 피클링에 연동되어 더 많은 사람들이 나의 패션영상을 볼 수 있게 됩니다. <br/>이렇게 진행을 해드릴까요? </p>
                     <div class="logos" style="justify-content: start; margin-left:7%" >
                         <div class="logos-checkbox">
                             <div class="radios-container">
@@ -452,12 +458,12 @@
             <div v-else-if="step == 'sellerPicky'">
 
             <div class="select-title-container">
-                <span class="select-title1">축하합니다!</span>
-                <span class="select-title1">픽키님은 <span class="select-title2">셀러픽키</span>입니다!</span>
+                <span class="select-title1">스토어에 참여할 수 있는</span>
+                <span class="select-title1">인플루언서이십니다!</span>
             </div>
 
             <div style="text-align:start; font-size:1.0em; font-weight:500; margin: 5%">
-                <span>셀러픽키는 원하시는 상품 2개를 선택하시면 저희가 상품을 드리고 상품이 도착하면 상품 입고 홍보 하시면 됩니당</span>
+                <span>피클링 스토어는 인플루언서와 함께 판매하고 수익을 나누는 공간입니다. 자세한 설명은 카카오채널 ‘피클링_픽키센터'를 통해 확인해주세요. <br/>상품 샘플을 지원받을 주소를 입력해주세요~</span>
             </div>
 
             <br/>
@@ -489,28 +495,25 @@
             <div v-else-if="step == 'getNickname'">
 
             <div class="select-title-container">
-                <span class="select-title1">정말 마지막이에요!</span>
-                <span class="select-title1">픽키님의 <span class="select-title2">피클링 닉네임</span>을 알려주세요!</span>
+                <span class="select-title1">피클링에서 사용할</span>
+                <span class="select-title1"><span class="select-title2">한글 닉네임</span>을 정해주세요!</span>
             </div>
-
+                <p class="lastPicky">반드시 피클링앱에서 먼저 닉네임을 수정하여 이미 사용중인 닉네임이 아닌지 확인해주세요.</p>
+        
             <br/>
-            <br/>
-
+            <img src="/nick_ex.png" style="margin: 10px 0 30px 30px; width: 300px; height: 240px;" />
                     <div style="padding-left: 7%;">
                     <div class="input-title3">
-                    피클링 닉네임
+                    한글 닉네임
                     </div>
+                    <br/>
                     <input
-                    placeholder=""
+                    placeholder="( 최대 6자 )"
                         v-model="picklingNickname"
                         class="input__bottom"
                         type="text"
                     />
                     </div>
-                <p class="lastPicky">픽키 등록후 최대 1주일 뒤에 피클링앱에서 확인하실 수 있습니다. 아래 피클링 채널을 통해 픽키 센터 친구추가해주세요.</p>
-            
-            <br/>
-            <br/>
             <br/>
             <br/>
             <button class="step-buttons-container2" @click="goAny(3)" >프로필 승인 신청하기</button>
@@ -568,7 +571,7 @@ components:{
 },
 data() {
       return{
-        step: '1',
+        step: '3',
         imageUploadIdx: 0,
         picklingNickname:'',
         postCodeOpen: false,
@@ -682,67 +685,72 @@ data() {
         myintro: '',
         bodyIntro: '',
         topList: [
-            {'no': 1, 'keyword': '33반 이하'},
-            {'no': 2, 'keyword': '44'},
-            {'no': 3, 'keyword': '44반'},
-            {'no': 4, 'keyword': '55'},
-            {'no': 5, 'keyword': '55반'},
-            {'no': 6, 'keyword': '66'},
-            {'no': 7, 'keyword': '66반'},
-            {'no': 8, 'keyword': '77'},
-            {'no': 9, 'keyword': '77반'},
-            {'no': 10, 'keyword': '88'},
-            {'no': 11, 'keyword': '88반'},
-            {'no': 12, 'keyword': '99'},
-            {'no': 13, 'keyword': '100 이상'},
+            {'no': 1, 'keyword': '상의 사이즈'},
+            {'no': 2, 'keyword': '33반 이하'},
+            {'no': 3, 'keyword': '44'},
+            {'no': 4, 'keyword': '44반'},
+            {'no': 5, 'keyword': '55'},
+            {'no': 6, 'keyword': '55반'},
+            {'no': 7, 'keyword': '66'},
+            {'no': 8, 'keyword': '66반'},
+            {'no': 9, 'keyword': '77'},
+            {'no': 10, 'keyword': '77반'},
+            {'no': 11, 'keyword': '88'},
+            {'no': 12, 'keyword': '88반'},
+            {'no': 13, 'keyword': '99'},
+            {'no': 14, 'keyword': '100 이상'},
         ],
         bottomList: [
-            {'no': 1, 'keyword': '20 이하'},
-            {'no': 2, 'keyword': '21'},
-            {'no': 3, 'keyword': '22'},
-            {'no': 4, 'keyword': '23'},
-            {'no': 5, 'keyword': '24'},
-            {'no': 6, 'keyword': '25'},
-            {'no': 7, 'keyword': '26'},
-            {'no': 8, 'keyword': '27'},
-            {'no': 9, 'keyword': '28'},
-            {'no': 10, 'keyword': '29'},
-            {'no': 11, 'keyword': '30'},
-            {'no': 12, 'keyword': '31'},
-            {'no': 13, 'keyword': '32'},
-            {'no': 14, 'keyword': '33'},
-            {'no': 14, 'keyword': '34'},
-            {'no': 14, 'keyword': '35'},
-            {'no': 14, 'keyword': '36이상'}
+            {'no': 1, 'keyword': '하의 사이즈'},
+            {'no': 2, 'keyword': '20 이하'},
+            {'no': 3, 'keyword': '21'},
+            {'no': 4, 'keyword': '22'},
+            {'no': 5, 'keyword': '23'},
+            {'no': 6, 'keyword': '24'},
+            {'no': 7, 'keyword': '25'},
+            {'no': 8, 'keyword': '26'},
+            {'no': 9, 'keyword': '27'},
+            {'no': 10, 'keyword': '28'},
+            {'no': 11, 'keyword': '29'},
+            {'no': 12, 'keyword': '30'},
+            {'no': 13, 'keyword': '31'},
+            {'no': 14, 'keyword': '32'},
+            {'no': 15, 'keyword': '33'},
+            {'no': 16, 'keyword': '34'},
+            {'no': 17, 'keyword': '35'},
+            {'no': 18, 'keyword': '36이상'}
         ],
         footList: [
-            {'no': 1, 'keyword': '200이하'},
-            {'no': 2, 'keyword': '205'},
-            {'no': 3, 'keyword': '210'},
-            {'no': 4, 'keyword': '220'},
-            {'no': 5, 'keyword': '225'},
-            {'no': 6, 'keyword': '230'},
-            {'no': 7, 'keyword': '235'},
-            {'no': 8, 'keyword': '240'},
-            {'no': 9, 'keyword': '245'},
-            {'no': 10, 'keyword': '250'},
-            {'no': 11, 'keyword': '255'},
-            {'no': 12, 'keyword': '260'},
-            {'no': 13, 'keyword': '265 이상'},
+            {'no': 1, 'keyword': '신발 사이즈'},
+            {'no': 2, 'keyword': '200이하'},
+            {'no': 3, 'keyword': '205'},
+            {'no': 4, 'keyword': '210'},
+            {'no': 5, 'keyword': '220'},
+            {'no': 6, 'keyword': '225'},
+            {'no': 7, 'keyword': '230'},
+            {'no': 8, 'keyword': '235'},
+            {'no': 9, 'keyword': '240'},
+            {'no': 10, 'keyword': '245'},
+            {'no': 11, 'keyword': '250'},
+            {'no': 12, 'keyword': '255'},
+            {'no': 13, 'keyword': '260'},
+            {'no': 14, 'keyword': '265 이상'},
         ],
         shoulderList: [
-            {'no': 1, 'keyword': '매우 좁은편'},
-            {'no': 2, 'keyword': '좁은편'},
-            {'no': 3, 'keyword': '보통'},
-            {'no': 4, 'keyword': '넓은편'},
-            {'no': 5, 'keyword': '매우 넓은편'},
+            {'no': 1, 'keyword': '어깨 너비'},
+            {'no': 2, 'keyword': '매우 좁은편'},
+            {'no': 3, 'keyword': '좁은편'},
+            {'no': 4, 'keyword': '보통'},
+            {'no': 5, 'keyword': '넓은편'},
+            {'no': 6, 'keyword': '매우 넓은편'},
         ],
         pelvisList: [
-            {'no': 1, 'keyword': '매우 좁은편'},
-            {'no': 2, 'keyword': '좁은편'},
-            {'no': 3, 'keyword': '보통'},
-            {'no': 4, 'keyword': '넓은편'},
-            {'no': 5, 'keyword': '매우 넓은편'},
+            {'no': 1, 'keyword': '골반 너비'},
+            {'no': 2, 'keyword': '매우 좁은편'},
+            {'no': 3, 'keyword': '좁은편'},
+            {'no': 4, 'keyword': '보통'},
+            {'no': 5, 'keyword': '넓은편'},
+            {'no': 6, 'keyword': '매우 넓은편'},
         ],
         newLikeStyle:'',
         newDisLikeStyle:'',
@@ -883,7 +891,7 @@ data() {
             var array = [];
             for(var i = 0; i < binary.length; i++) {
                 array.push(binary.charCodeAt(i));
-            }
+            } 
             var blobfile = new Blob([new Uint8Array(array)], {type: 'image/jpg'});
 
             // if(blobfile.size ==)
@@ -909,7 +917,7 @@ data() {
     ]),
 
     postCodeBody() {
-        return this.postCode1 == '' ? '주소 입력' : '주소 다시 입력';
+        return this.postCode1 == '' ? '주소 찾기' : '주소 다시 입력';
     }
         },
 
@@ -976,17 +984,35 @@ methods: {
                 switch(this.step) {
                     case '1':
                         if (this.group1.name.trim() =='' ) {
-                                alert('이름을 입력해주세요.');
-                        } else if( this.group1.phoneNo.trim() == '' || this.group1.phoneNo.trim().length < 11) {
-                                alert('전화번호를 입력해주세요.');
-                        } else if( this.group1.year.trim() == '' || this.group1.year.trim().length < 4) {
-                                alert('날짜를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '이름을 입력해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if( this.group1.phoneNo.trim().length != 11) {
+                            const res = await this.$dialog.confirm({
+                                text: '전화번호를 확인해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if( this.group1.year.trim().length != 4) {
+                            const res = await this.$dialog.confirm({
+                                text: '출생연도를 확인해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.checkedNames.length ==0) {
-                                alert('SNS를 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: 'SNS를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.checkSns[0].id == '' && this.checkSns[1].id == '') {
-                                alert('인스타그램 ID / 유튜브 채널명을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '인스타그램 ID / 유튜브 채널명을 입력해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.currentInstaId == '' && this.currentYoutubeId == '') {
-                                alert('인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '인스타그램 / 유튜브 팔로워 or 구독자 수를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else {
 
                             var params = {
@@ -1009,16 +1035,81 @@ methods: {
                                     window.scrollTo(0,0);
                                     this.step = '2';
                                 } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                                 }
                             })
                             .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             })
                         }
                         break;
                     case '2':
                         console.log(this.myFiles.length)
+                        if (this.myintro.trim().length < 100 ) {
+                            const res = await this.$dialog.confirm({
+                                text: '자기소개는 최소 100자 이상 적어주셔야 합니다.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.defaultImage == null) {
+                            const res = await this.$dialog.confirm({
+                                text: '대표 사진을 업로드해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        }else if( this.images2.length != 6) {
+                            const res = await this.$dialog.confirm({
+                                text: '스타일 사진을 6장 업로드해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.size.top.no == '상의 사이즈') {
+                            const res = await this.$dialog.confirm({
+                                text: '상의 사이즈를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.size.bottom.no == '하의 사이즈') {
+                            const res = await this.$dialog.confirm({
+                                text: '하의 사이즈를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.size.foot.no == '신발 사이즈') {
+                            const res = await this.$dialog.confirm({
+                                text: '신발 사이즈를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.size.shoulder.no == '어깨 너비') {
+                            const res = await this.$dialog.confirm({
+                                text: '어깨 너비를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.size.pelvis.no == '골반 너비') {
+                            const res = await this.$dialog.confirm({
+                                text: '골반 너비를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(this.bodyIntro.trim() .length < 50) {
+                            const res = await this.$dialog.confirm({
+                                text: '체형 설명은 최소 50자 이상 적어주셔야 합니다.',
+                                actions:{true:'닫기'}
+                            });
+                        } else if(
+                            this.size.height.trim() == '' || 
+                            this.size.top.trim() == '' || 
+                            this.size.bottom.trim() == '' || 
+                            this.size.foot.trim() == '' || 
+                            this.size.shoulder.trim() == '' || 
+                            this.size.pelvis.trim() == '' 
+                        ) {
+                            const res = await this.$dialog.confirm({
+                                text: '체형 정보를 모두 입력해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        }  else {
+
 
                         for(var idxFile = 0; idxFile < 6; idxFile++) {
                             // console.log(this.imageUploadIdx)
@@ -1033,28 +1124,13 @@ methods: {
                                 if(response == 200) {
                                     console.log('잘올라감' + this.imageUploadIdx)
                                 } else {
-                                    alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res = this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                                 }
                             })
                         }
-                        if (this.myintro.trim() =='' ) {
-                                alert(' 자기소개를 입력해주세요.');
-                        } else if(this.image == null) {
-                                alert('대표 사진을 업로드해주세요..');
-                        }else if( this.myFiles.length != 6) {
-                                alert('스타일 사진을 6장 업로드해주세요.');
-                        } else if(this.bodyIntro.trim() == '') {
-                                alert('체형 설명을 입력해주세요.');
-                        } else if(
-                            this.size.height.trim() == '' || 
-                            this.size.top.trim() == '' || 
-                            this.size.bottom.trim() == '' || 
-                            this.size.foot.trim() == '' || 
-                            this.size.shoulder.trim() == '' || 
-                            this.size.pelvis.trim() == '' 
-                        ) {
-                                alert('체형을 선택 / 입력해주세요.');
-                        }  else {
 
                             var params = {
                                 'status': 'req',
@@ -1075,27 +1151,52 @@ methods: {
                                     window.scrollTo(0,0);
                                     this.step = '3';
                                 } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                                 }
                             })
                             .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             })
                         }
                         break;
                     case '3':
+                        console.log(this.currentMyinfoChk);
                         if (this.likeList.length < 1) {
-                                alert(' 자주 입는 스타일을 최소 1개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '자주 입는 스타일을 최소 1개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.dislikeList.length < 3) {
-                                alert(' 절대 안 입는 스타일을 최소 3개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '절대 안 입는 스타일을 최소 3개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         }else if( this.likeBrand.length < 3 || this.likeBrand.length > 10) {
-                                alert(' 좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '좋아하는 브랜드를 최소 3개, 최대 10개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else if( this.mallList.length < 2 || this.mallList.length > 5) {
-                                alert(' 자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
-                                alert(' 유튜브 컨텐츠 연동 항목을 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '유튜브 컨텐츠 연동 항목을 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
-                                alert('개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '개인 정보 처리 방침에 동의 해주셔야 프로필 등록이 가능합니다ㅜ',
+                                actions:{true:'닫기'}
+                            });
                         } else {
 
                             var params = {
@@ -1119,11 +1220,17 @@ methods: {
                                     }
                                     window.scrollTo(0,0);
                                 } else {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                                 }
                             })
                             .catch((e) => {
-                                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             })
 
                         }
@@ -1133,9 +1240,15 @@ methods: {
         /// 셀러픽키에서 닉네임 받는 부분으로 ㄲ
 
          if (this.postCode1.trim() == '') {
-                alert(' 주소를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '주소를 입력해주세요.',
+                                actions:{true:'닫기'}
+                            });
         } else if(this.postCode2.trim() == '') {
-                alert(' 상세 주소를 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 주소를 입력해 주세요.',
+                                actions:{true:'닫기'}
+                            });
         } else {
 
             var code = {
@@ -1152,7 +1265,10 @@ methods: {
                 if(response == 200) {
                     this.step = 'getNickname';
                 } else {
-                     alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                 }
             })
         }
@@ -1160,7 +1276,10 @@ methods: {
         /// 다했다! 홈으로 ㄲ
 
         if(this.picklingNickname.trim() == '') {
-            alert(' 피클링 닉네임을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '피클링 닉네임을 입력해주세요.',
+                                actions:{true:'닫기'}
+                            });
         } else {
                 await this.$store.dispatch("sendUserNick", this.picklingNickname).then((response) => {
                 if(response == 200) {
@@ -1168,13 +1287,22 @@ methods: {
                     console.log(window.location.origin);
                     location.replace(window.location.origin + "/home");
                 } else if(response == 404){
-                alert('피클링앱에 해당하는 닉네임이 존재하지 않습니다. \n 다시 입력해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '확인되지 않은 닉네임입니다. 피클링 앱에서 먼저 닉네임을 수정한 후 입력해주세요.',
+                                actions:{true:'닫기'}
+                            });
                 }else {
-                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                 }
             })
             .catch((e) => {
-                alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
             })
         }
         }
@@ -1185,10 +1313,16 @@ methods: {
     },
 
     async setPhotoFiles2 (fieldName, fileList) {
-        if(fileList.length > 30) {
-            alert('업로드한 이미지가 30개를 초과했습니다.');
-        }else if (fileList.length < 14) {
-            alert('업로드한 이미지가 14개 미만입니다.');
+        if(fileList.length > 6) {
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 6개를 초과했습니다.',
+                                actions:{true:'닫기'}
+                            });
+        }else if (fileList.length < 6) {
+                            const res = await this.$dialog.confirm({
+                                text: '6장의 사진을 한 번에 등록해주세요.',
+                                actions:{true:'닫기'}
+                            });
         } else {
             this.showImages2 = [];
             this.images2 = [];
@@ -1479,18 +1613,15 @@ beforeRouteLeave(to, from, next) {
         }
         &-container2{
             border-radius: 5px;
-            margin: 0 10px;
+            margin: 0 25%;
             width: 200px;
             height: 40px;
             border: 2px solid #000;
-            background-color: #fff;
-            color: #000;
+            background-color: #000;
+            color: #fff;
             font-size: 1.2em;
             text-align: center;
             padding: 5px 0;
-            left:20%;
-            bottom:10%;
-            position: fixed;
         }
     }
 }

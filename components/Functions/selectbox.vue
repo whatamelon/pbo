@@ -5,7 +5,8 @@
           @input="clicked"
     >
         <option 
-        v-for="item in items" 
+        :disabled="index == 0"
+        v-for="(item, index) in items" 
         :value="item.keyword" 
         :key="item.no">{{ item.keyword }}</option>
     </select>

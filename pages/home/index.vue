@@ -6,8 +6,12 @@
 
   <GoUpButton></GoUpButton>
 
-    <div class="infoN__container" v-if="this.$store.getters.IS_INFO == 'n'">
-      <p class="infoN__title">아직 프로필을 등록 하지 않으셨군요? 🤭<br/>프로필 등록하고 픽키 활동을 해보세요!</p>
+    <div class="infoN__container" v-if="this.plzLogout == true">
+      <p class="infoN__title">페이지가 안나오시나요? <br/> 로그아웃 후 로그인을 해보세요.</p>
+    </div>
+
+    <div class="infoN__container" v-else-if="this.$store.getters.IS_INFO == 'n'">
+      <p class="infoN__title">아직 프로필을 등록 하지 않으셨군요? 🤭<br/>프로필을 등록하고 활동을 시작해보세요!</p>
 
       <div class="infoN__goRegister" @click="goRegister">프로필 등록하러 가기!</div>
     </div>
@@ -191,10 +195,23 @@ export default {
 
     
   async asyncData({ store, to }) {
+      var isTrue = false;
 
-    await store.dispatch("getUserInfo");
+    await store.dispatch("getUserInfo").then((response) => {
+        if(response == 200) {
+            isTrue= false;
+        } else {
+            isTrue= true;
+        }
+    })
+    .catch((e) => {
+            isTrue= true;
+    })
     store.dispatch("setCurrentRoute", "/home");
 
+    return {
+        plzLogout:isTrue,
+    };
   },
 
 created() {
@@ -272,6 +289,8 @@ methods:{
 .home-container{
   margin-bottom:100px;
   height:100%;
+  max-width: 500px;
+  width: 100%;
 }
 
 .infoN {
@@ -350,6 +369,7 @@ methods:{
         font-weight: 800;
         position: relative;
         margin-right: 5%;
+        width:300px;
     }
 
     &-sns{
@@ -391,7 +411,7 @@ methods:{
     &-bodyInfo{
         display: flex;
         margin:0;
-        justify-content: space-between;
+        justify-content: start;
     }
 
     &-bodyInfo-index{
@@ -422,7 +442,8 @@ methods:{
         font-size: 1em;
         font-weight: 500;
         color:#a9a9a9;
-        border-bottom: 1px solid #ececec;;
+        border-bottom: 1px solid #ececec;
+        max-width: 360px;
     }
 
     &-middle{
@@ -460,6 +481,7 @@ methods:{
         font-size: 1em;
         font-weight: 500;
         color:#a9a9a9;
+        max-width: 360px;
     }
 }
 
@@ -500,7 +522,7 @@ methods:{
     }
 
     &s{
-        margin: 0 0 8% 0;
+        margin: 0 0 20px 0;
     }
 }
 
@@ -523,7 +545,7 @@ methods:{
 .bodyInfo{
     &__container{
         display: grid;
-        width: 15%;
+        width: 60px;
     }
 
     &__value1{

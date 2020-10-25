@@ -8,7 +8,7 @@
     </div> -->
     <div class="hello">
        <img class="logos-icon" src="/p_red_logo.png" />
-      피클링 픽키센터
+      인플루언서 센터 
     </div>
 
       <div class="input-container">
@@ -133,6 +133,18 @@ if(!localStorage.getItem("tokenExpire")) {
   },
   created() {
     console.log('dd');
+    var id = localStorage.getItem("id");
+    if(!id) {
+      
+    } else {
+      this.loginForm.userId = id;
+    }
+    var pwd = localStorage.getItem("pwd");
+    if(!pwd) {
+      
+    } else {
+      this.loginForm.passWd = pwd;
+    }
   },
 
   mounted(){
@@ -141,6 +153,8 @@ if(!localStorage.getItem("tokenExpire")) {
     async clickButton() {
        await this.$store.dispatch("adminLogin", this.loginForm).then((response) => {
           if(response == 200) {
+            localStorage.setItem('id', this.loginForm.userId);
+            localStorage.setItem('pwd', this.loginForm.passWd);
             location.replace(document.URL + "home");
           } else if(response == 401) {
           this.alertMsg = "틀린 비밀번호 입니다.";
@@ -274,7 +288,7 @@ if(!localStorage.getItem("tokenExpire")) {
   font-weight: 600;
   height: 50px;
   color: #fff;
-  margin-top:10%;
+  margin-top:20px;
   background-color: #000;
   &--active {
     border: 0;

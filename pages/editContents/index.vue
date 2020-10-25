@@ -254,22 +254,46 @@ methods:{
                 this.$router.push('/contents');
             } else {
               if(this.contents.title.trim() == '') {
-                alert('제목을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '제목을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
               } 
               else if( this.contents.title.length  > 20) {
-                alert('제목이 20자를 초과했습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '제목이 20자를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
               } else if( this.contents.exp.trim() == '') {
-                alert('상세 설명을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 설명을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if( this.contents.exp.length  > 150) {
-                alert('상세 설명이 150자를 초과했습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 설명이 150자를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.imagesTitle.length == 0) {
-                alert('대표 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '대표 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images1.length == 0) {
-                alert('상세 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images2.length == 0) {
-                alert('정자세 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '정자세 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images3.length == 0) {
-                alert('부분 확대 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '부분 확대 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } 
               else {
                 console.log('1')
@@ -289,21 +313,30 @@ methods:{
                           console.log('잘올라감 : title')
                       } else {
                           console.log('error')
-                          // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                       }
                   })
             }
         }
     },
 
-     setPhotoFilesTitle (fieldName, fileList) {
+    async setPhotoFilesTitle (fieldName, fileList) {
       console.log('fileList!!! ' + fileList)
        this.showImagesTitle = [];
        this.imagesTitle = [];
         if(fileList.length > 1) {
-            alert('이미지를 1개만 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '이미지를 1개만 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else if (fileList.length ==0) {
-            alert('이미지를 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '이미지를 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else {
             console.log('fileList!!!22222')
             for(var i = 0; i < fileList.length; i ++) {
@@ -371,11 +404,17 @@ methods:{
     async plusDetailFiles (fieldName, fileList) {
       console.log('fileList!!! ' + fileList)
        this.plusDetailImages = [];
-        // if(fileList.length > 1) {
-        //     alert('이미지를 1개만 선택해주세요.');
-        // } else if (fileList.length ==0) {
-        //     alert('이미지를 선택해주세요.');
-        // } else {
+        if(fileList.length > 30 || fileList.length < 14) {
+                            const res =  this.$dialog.confirm({
+                                text: '이미지를 14~30개선택해주세요',
+                                actions:{true:'닫기'}
+                            });
+        } else if (fileList.length ==0) {
+                            const res =  this.$dialog.confirm({
+                                text: '이미지를 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
+        } else {
             console.log('fileList!!!22222')
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
@@ -424,21 +463,31 @@ methods:{
                         }
                     } else {
                         console.log('에러' + idxFile)
-                        // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                     }
                 })
             }
-        // location.reload();
+        }
+        location.reload();
     },
 
     async plusFrontFiles (fieldName, fileList) {
       console.log('fileList!!! ' + fileList)
        this.plusDetailImages = [];
-        // if(fileList.length > 1) {
-        //     alert('이미지를 1개만 선택해주세요.');
-        // } else if (fileList.length ==0) {
-        //     alert('이미지를 선택해주세요.');
-        // } else {
+        if(fileList.length > 3 || fileList.length < 2) {
+                            const res =  this.$dialog.confirm({
+                                text: '이미지를 2~3개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+        } else if (fileList.length ==0) {
+                            const res =  this.$dialog.confirm({
+                                text: '이미지를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+        } else {
             console.log('fileList!!!22222')
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
@@ -486,22 +535,31 @@ methods:{
                             newIndex++;
                         }
                     } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         console.log('에러' + idxFile)
-                        // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                     }
                 })
-            }
+            }}
         location.reload();
     },
 
     async plusPartFiles (fieldName, fileList) {
       console.log('fileList!!! ' + fileList)
        this.plusDetailImages = [];
-        // if(fileList.length > 1) {
-        //     alert('이미지를 1개만 선택해주세요.');
-        // } else if (fileList.length ==0) {
-        //     alert('이미지를 선택해주세요.');
-        // } else {
+        if(fileList.length > 3 || fileList.length < 2) {
+                            const res =  this.$dialog.confirm({
+                                text: '이미지를 2~3개 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+        } else if (fileList.length ==0) {
+                            const res =  this.$dialog.confirm({
+                                text: '이미지를 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+        } else {
             console.log('fileList!!!22222')
             for(var i = 0; i < fileList.length; i ++) {
                 console.log(fileList[i])
@@ -549,11 +607,14 @@ methods:{
                             newIndex++;
                         }
                     } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요',
+                                actions:{true:'닫기'}
+                            });
                         console.log('에러' + idxFile)
-                        // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
                     }
                 })
-            }
+            }}
         location.reload();
     },
 
@@ -570,8 +631,11 @@ methods:{
             if(response == 200) {
                 console.log('잘올라감 title')
             } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                 console.log('에러 title')
-                // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
             }
         })
         location.reload();
@@ -586,6 +650,10 @@ methods:{
                         if(response == 200) {
                             console.log('잘 지워짐 : title')
                         } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             console.log('error')
                         }
                     })
@@ -598,6 +666,10 @@ methods:{
                         if(response == 200) {
                             console.log('잘 지워짐 : title')
                         } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             console.log('error')
                         }
                     })
@@ -610,6 +682,10 @@ methods:{
                         if(response == 200) {
                             console.log('잘 지워짐 : title')
                         } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             console.log('error')
                         }
                     })
@@ -621,6 +697,10 @@ methods:{
                         if(response == 200) {
                             console.log('잘 지워짐 : title')
                         } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                             console.log('error')
                         }
                     })
@@ -640,6 +720,10 @@ methods:{
                     if(response == 200) {
                         console.log('잘 지워짐 : title')
                     } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         console.log('error')
                     }
                 })
@@ -653,6 +737,10 @@ methods:{
                     if(response == 200) {
                         console.log('잘 지워짐 : title')
                     } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         console.log('error')
                     }
                 })
@@ -666,6 +754,10 @@ methods:{
                     if(response == 200) {
                         console.log('잘 지워짐 : title')
                     } else {
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                         console.log('error')
                     }
                 })

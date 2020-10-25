@@ -3,6 +3,11 @@
     <main class="home-container">
   <GoUpButton></GoUpButton>
 
+    <div class="infoN__container" v-if="this.plzLogout == true">
+      <p class="infoN__title">페이지가 안나오시나요? <br/> 로그아웃 후 로그인을 해보세요.</p>
+    </div>
+    <div v-else>
+
   <v-container>
     <v-tabs grow>
       <v-tab 
@@ -73,6 +78,7 @@
       </v-tabs-items>
     </v-tabs>
   </v-container>
+    </div>
     </main>
 </template>
 
@@ -123,9 +129,25 @@ export default {
   async asyncData({ store, to }) {
 
       var payload = {'offset':0};
+      var isTrue = false;
+     console.log('dd')
 
-    await store.dispatch("getMyContentsList", payload);
+    await store.dispatch("getMyContentsList", payload).then((response) => {
+     console.log(response)
+        if(response == 200) {
+            isTrue= false;
+        } else {
+            isTrue= true;
+        }
+    })
+    .catch((e) => {
+            isTrue= true;
+    });
     store.dispatch("setCurrentRoute", "/contents");
+
+    return {
+        plzLogout:isTrue,
+    };
 
   },
 
@@ -198,6 +220,9 @@ methods:{
 </script>
 
 <style lang="scss" scoped>
+.container{
+  padding-top: 0px !important;
+}
 .home-container{
   margin-bottom:100px;
   height:100%;

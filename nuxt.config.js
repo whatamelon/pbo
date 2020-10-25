@@ -2,7 +2,7 @@ module.exports = {
   mode: "spa",
 
   head: {
-    title: "Pickling back office",
+    title: "인플루언서 센터",
     script: [
       {
         src: "https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js",
@@ -153,6 +153,7 @@ module.exports = {
 
   css: ["@/assets/main.css", "~assets/app.styl"],
   modules: [
+    'vuetify-dialog/nuxt',
     'vue-daum-postcode/nuxt',
     "bootstrap-vue/nuxt",
     "@nuxtjs/vuetify",

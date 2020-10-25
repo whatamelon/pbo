@@ -160,8 +160,8 @@ layout: "blank",
         // bn: '나가기',
         // nn: '컨텐츠 작성하기',
         contents:{
-            'title': '승호 테스트입니다!',
-            'exp': '승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 승호 테스트 '
+            'title': '',
+            'exp': ''
         },
         showImages1 : [],
         showImages2 : [],
@@ -215,9 +215,11 @@ layout: "blank",
         console.log(objSelect[0])
 
         var list = new Array();
-        for(var k = 0; k < objValue.length; k++) {
-            list.push({'no':k, 'keyword': objValue[k], 'title': objSelect[0]});
+            list.push({'no':k, 'keyword': '선택해주세요.', 'title': objSelect[0]});
+        for(var k = 1; k < objValue.length+1; k++) {
+            list.push({'no':k, 'keyword': objValue[k-1], 'title': objSelect[0]});
         }
+        console.log(list)
         options.push(list);
         // options.push(objSelect);
     }
@@ -257,7 +259,10 @@ methods:{
                 console.log(this.optionModels)
                 console.log(so)
                 if(so == false) {
-                    alert('옵션을 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '옵션을 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
                 } else {
                     this.step = 'contents';
                 }
@@ -267,22 +272,46 @@ methods:{
                 this.step = 'option';
             } else {
               if(this.contents.title.trim() == '') {
-                alert('제목을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '제목을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
               } 
               else if( this.contents.title.length  > 20) {
-                alert('제목이 20자를 초과했습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '제목이 20자를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
               } else if( this.contents.exp.trim() == '') {
-                alert('상세 설명을 입력해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 설명을 입력해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if( this.contents.exp.length  > 150) {
-                alert('상세 설명이 150자를 초과했습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 설명이 150자를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.imagesTitle.length == 0) {
-                alert('대표 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '대표 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images1.length == 0) {
-                alert('상세 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '상세 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images2.length == 0) {
-                alert('정자세 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '정자세 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images3.length == 0) {
-                alert('부분 확대 사진을 업로드 해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '부분 확대 사진을 업로드 해주세요',
+                                actions:{true:'닫기'}
+                            });
               } 
               else {
                 console.log('1')
@@ -379,7 +408,10 @@ methods:{
                       }
 
                       if(errorLog == 0) {
-                        alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
                       }
                   })
 
@@ -417,9 +449,15 @@ methods:{
 
    async setPhotoFiles2 (fieldName, fileList) {
         if(fileList.length > 3) {
-            alert('업로드한 이미지가 3개를 초과했습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 3개를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
         } else if (fileList.length < 2) {
-            alert('업로드한 이미지가 2개 미만입니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 2개 미만입니다',
+                                actions:{true:'닫기'}
+                            });
         } else {
             this.showImages2 = [];
             this.images2 = [];
@@ -443,9 +481,15 @@ methods:{
 
    async setPhotoFiles3 (fieldName, fileList) {
         if(fileList.length > 30) {
-            alert('업로드한 이미지가 3개를 초과했습니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 3개를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
         } else if (fileList.length < 2) {
-            alert('업로드한 이미지가 2개 미만입니다.');
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 2개 미만입니다',
+                                actions:{true:'닫기'}
+                            });
         } else {
             this.showImages3 = [];
             this.images3 = [];
@@ -474,9 +518,15 @@ methods:{
        this.showImagesTitle = [];
        this.imagesTitle = [];
         if(fileList.length > 1) {
-            alert('이미지를 1개만 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '이미지를 1개만 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else if (fileList.length ==0) {
-            alert('이미지를 선택해주세요.');
+                            const res = await this.$dialog.confirm({
+                                text: '이미지를 선택해주세요',
+                                actions:{true:'닫기'}
+                            });
         } else {
             console.log('fileList!!!22222')
             for(var i = 0; i < fileList.length; i ++) {
@@ -636,7 +686,8 @@ a {
         position: fixed;
         bottom: 0px;
         padding-bottom: 10px;
-        background: linear-gradient(transparent, #d9d9d9);
+        // background: linear-gradient(transparent, #d9d9d9);
+        background-color: transparent;
         z-index:3;
         max-width: 500px;
     }
