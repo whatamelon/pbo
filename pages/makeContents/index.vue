@@ -1,6 +1,13 @@
 <template>
 
     <main class="home-container">
+        <div class="waitBg" v-show="this.wait == true">
+            <div style="text-align: center; margin: 0 auto;">
+            <p class="wait__Text">컨텐츠를 등록중입니다.</p>
+            <p class="wait__Text">잠시만 기다려주세요.</p>
+            <img src="/spin.gif" style="width: 100px; height: 100px; margin-top: 20px; z-index:101;"/>
+            </div>
+        </div>
             <div class="appbar">
                 {{ itemTitle }}
             </div>
@@ -23,20 +30,20 @@
 
         <div v-else>
             <div class="appbar2">
-                제목
+                제목 ( 최대 20자 )
             </div>
 
             <div class="input">
             <input
             maxlength="20"
-            placeholder="제목 ( 공백 포함 최대 20자 )"
+            placeholder="(예시: 153cm 직장인의 크롭 자켓룩)"
                 v-model="contents.title"
                 class="input__bottom"
                 type="text"
             />
             </div>
             <div class="appbar2">
-                상세 설명
+                상세 설명 ( 100~150자 )
             </div>
             <div class="input22">
                 <textarea 
@@ -171,6 +178,7 @@ layout: "blank",
         images2 : [],
         images3 : [],
         imagesTitle : [],
+        wait: false
     };
   },
 
@@ -185,7 +193,7 @@ layout: "blank",
     },
 
     nn () {
-      return this.step == 'contents' ? '확인' : '컨텐츠 작성하기';
+      return this.step == 'contents' ? '승인요청' : '컨텐츠 작성하기';
     },
 
     itemTitle() {
@@ -250,8 +258,9 @@ methods:{
                 this.$router.go(-1);
             } else {
                 var so = true;
+                console.log(this.optionModels)
                 for(var j = 0; j < this.optionModels.length; j++) {
-                    if(this.optionModels[j]['option'] == '') {
+                    if(this.optionModels[j] == '선택해주세요.' || this.optionModels[j] ['option']== '') {
                         so = false;
                          break;
                     }
@@ -287,7 +296,12 @@ methods:{
                                 text: '상세 설명을 입력해주세요',
                                 actions:{true:'닫기'}
                             });
-              } else if( this.contents.exp.length  > 150) {
+              } else if( this.contents.exp.length  < 100) {
+                            const res = await this.$dialog.confirm({
+                                text: '상세 설명이 100자 미만입니다',
+                                actions:{true:'닫기'}
+                            });
+              }else if( this.contents.exp.length  > 150) {
                             const res = await this.$dialog.confirm({
                                 text: '상세 설명이 150자를 초과했습니다',
                                 actions:{true:'닫기'}
@@ -302,18 +316,34 @@ methods:{
                                 text: '상세 사진을 업로드 해주세요',
                                 actions:{true:'닫기'}
                             });
+              } else if(this.images1.length < 14 || this.images1.length > 30) {
+                            const res = await this.$dialog.confirm({
+                                text: '상세 사진을 14~30개 업로드해야합니다.',
+                                actions:{true:'닫기'}
+                            });
+              } else if(this.images2.length < 2 || this.images2.length > 3) {
+                            const res = await this.$dialog.confirm({
+                                text: '정자세 사진을 2-3개 업로드해야합니다.',
+                                actions:{true:'닫기'}
+                            });
               } else if(this.images2.length == 0) {
                             const res = await this.$dialog.confirm({
                                 text: '정자세 사진을 업로드 해주세요',
                                 actions:{true:'닫기'}
                             });
-              } else if(this.images3.length == 0) {
+              } else if(this.images3.length < 2 || this.images3.length > 3) {
+                            const res = await this.$dialog.confirm({
+                                text: '부분 사진을 2-3개 업로드해야합니다.',
+                                actions:{true:'닫기'}
+                            });
+              }else if(this.images3.length == 0) {
                             const res = await this.$dialog.confirm({
                                 text: '부분 확대 사진을 업로드 해주세요',
                                 actions:{true:'닫기'}
                             });
               } 
               else {
+                  this.wait = true;
                 console.log('1')
                 console.log(this.imagesTitle.length)
 
@@ -407,11 +437,25 @@ methods:{
                           errorLog = 0;
                       }
 
+                  this.wait = false;
                       if(errorLog == 0) {
                             const res = await this.$dialog.confirm({
                                 text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
                                 actions:{true:'닫기'}
                             });
+                      } else {
+                          var thisContsId=  this.$store.getters.SELECT_ITEM.nitemId;
+                         await this.$store.dispatch("sendConfirmRequire", thisContsId).then((response) => {
+                            if(response == 200) {
+                                this.$router.push('/contents');
+                            } else {
+                                console.log('error')
+                            const res =  this.$dialog.confirm({
+                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                            }
+                        })
                       }
                   })
 
@@ -422,11 +466,19 @@ methods:{
     },
 
     async setPhotoFiles1 (fieldName, fileList) {
-        // if(fileList.length > 30) {
-        //     alert('업로드한 이미지가 30개를 초과했습니다.');
-        // }else if (fileList.length < 14) {
-        //     alert('업로드한 이미지가 14개 미만입니다.');
-        // } else {
+        if(fileList.length > 30) {
+
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 30개를 초과했습니다',
+                                actions:{true:'닫기'}
+                            });
+        }else if (fileList.length < 14) {
+
+                            const res = await this.$dialog.confirm({
+                                text: '업로드한 이미지가 14개 미만입니다',
+                                actions:{true:'닫기'}
+                            });
+        } else {
             this.showImages1 = [];
             this.images1 = [];
             for(var i = 0; i < fileList.length; i ++) {
@@ -440,7 +492,7 @@ methods:{
                 this.images1.push(image);
                 this.showImages1.push(URL.createObjectURL(fileList[i]));
             }
-        // }
+        }
      },
     deleteImage1(idx) {
         this.images1.splice(idx,1);
@@ -480,7 +532,7 @@ methods:{
     },
 
    async setPhotoFiles3 (fieldName, fileList) {
-        if(fileList.length > 30) {
+        if(fileList.length > 3) {
                             const res = await this.$dialog.confirm({
                                 text: '업로드한 이미지가 3개를 초과했습니다',
                                 actions:{true:'닫기'}
@@ -616,6 +668,26 @@ methods:{
 </script>
 
 <style lang="scss" scoped>
+.wait{
+    &Bg{
+    z-index: 100;
+        width: 100%;
+        max-width: 500px;
+        height: 100%;
+        position: fixed;
+        background-color:rgba(140, 140, 140, 0.9);
+        padding: 100px 0 0 0;
+    }
+
+    &__Text{
+    z-index: 101;
+        margin: 10px auto;
+        font-size: 1.2em;
+        font-weight: 800;
+        color: #fff;
+    }
+}
+
 
 #my-strictly-unique-vue-upload-multiple-image {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

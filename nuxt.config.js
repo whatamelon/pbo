@@ -222,9 +222,9 @@ module.exports = {
     "~/plugins/v-viewer.js",
     "~/plugins/swiper.js",
     "~/plugins/vue-upload-multiple-image.js",
-    '~/plugins/vuedraggable.js'
-    // {
-    //   src: "~/plugins/vue-draggable.js", ssr: false
-    // }
+    '~/plugins/vuedraggable.js',
+    {
+      src:  '~/plugins/vue-anka-cropper.js', ssr: false
+    }
   ]
 };

@@ -3,7 +3,13 @@
     <main class="home-container">
   <GoUpButton></GoUpButton>
 
-    <div class="infoN__container" v-if="this.plzLogout == true">
+    <div class="infoN__container" v-if="this.$store.getters.IS_INFO == 'n'">
+      <p class="infoN__title">아직 프로필을 등록 하지 않으셨군요? 🤭<br/>프로필을 등록하고 활동을 시작해보세요!</p>
+
+      <div class="infoN__goRegister" @click="goRegister">프로필 등록하러 가기!</div>
+    </div>
+    
+    <div class="infoN__container" v-else-if="this.plzLogout == true" style="margin: 50px auto 0 auto;">
       <p class="infoN__title">페이지가 안나오시나요? <br/> 로그아웃 후 로그인을 해보세요.</p>
     </div>
     <div v-else>
@@ -37,7 +43,7 @@
                   <span class="mcproduct__name"> {{ product2.title }} </span>
 
                   <div class="mcproduct__optionContainer">
-                     이름 :  {{ product2.nitemName }}
+                     상품 :  {{ product2.nitemName }}
                   </div>
                   <div class="mcproduct__optionContainer">
                     옵션 :  {{ product2.options.replaceAll(",", " | ") }}
@@ -120,7 +126,8 @@ export default {
       "IMAGE_URL",
       "MC_OFFSET",
       "BC_PRODUCT_LIST",
-      "MC_PRODUCT_LIST"
+      "MC_PRODUCT_LIST",
+      "IS_INFO",
     ]),
 
 

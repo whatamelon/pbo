@@ -172,12 +172,45 @@
 
                         <img src="/profile_ex.png" style="height: 100px; margin: 20px auto 0 auto;">
                    
-                    <div style="text-align:center; margin-top:5%;" v-show="defaultImage != ''">
-                        <img :src="defaultImage" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
+                    <div style="text-align:center; margin-top:5%;" v-show="dataURIString != ''">
+                        <img :src="dataURIString" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
                     </div>
-                    
-                    <VueImageUploadCroppie :defaultImage.sync="defaultImage" :height="100" :width="100" :circle="true" :trans="trans"></VueImageUploadCroppie>
-                </div>
+                    <no-ssr>
+                     <vueAnkaCropper
+                        :options="{
+                            aspectRatio: 1,
+                            closeOnSave: false,
+                            cropArea: 'box',
+                            croppedHeight: 500,
+                            croppedWidth: 500,
+                            cropperHeight: true,
+                            dropareaMessage: '.',
+                            frameLineDash: [5,3],
+                            frameStrokeColor: 'rgba(255, 255, 255, 0.8)',
+                            handleFillColor: 'rgba(255, 255, 255, 0.2)',
+                            handleHoverFillColor: 'rgba(255, 255, 255, 0.4)',
+                            handleHoverStrokeColor: 'rgba(255, 255, 255, 1)',
+                            handleSize: 10,
+                            handleStrokeColor: 'rgba(255, 255, 255, 0.8)',
+                            layoutBreakpoint: 350,
+                            maxCropperHeight: 300,
+                            maxFileSize: 10000000,
+                            overlayFill: 'rgba(0, 0, 0, 0.5)',
+                            previewOnDrag: true,
+                            previewQuality: 0.8,
+                            resultQuality: 0.95,
+                            resultMimeType: 'image/jpeg',
+                            selectButtonLabel: '사진을 선택해주세요.',
+                            showPreview: true,
+                            skin: 'light',
+                            uploadData: {},
+                            uploadTo: false}"
+                            @cropper-error="errorTitle"
+                            @cropper-preview="previewTitle"
+                            @cropper-saved="uploadTitle"
+                            @cropper-file-selected="selectTitle"
+                            ></vueAnkaCropper>
+                    </no-ssr></div>
 
 
                 <div class="input-container2">
@@ -522,7 +555,7 @@
             <div v-else>
             </div>
                 <div class="step-buttons">
-                    <button class="step-buttons-container" @click="goAny(0)" v-if="step == '2' || step == '3'">이전</button>
+                    <!-- <button class="step-buttons-container" @click="goAny(0)" v-if="step == '2' || step == '3'">이전</button> -->
                     <button class="step-buttons-container" @click="goAny(1)"  v-if="step == '1' || step == '2'|| step == '3'">다음</button>
                 </div>
         </div>
@@ -571,7 +604,8 @@ components:{
 },
 data() {
       return{
-        step: '3',
+        dataURIString:'',
+        step: '1',
         imageUploadIdx: 0,
         picklingNickname:'',
         postCodeOpen: false,
@@ -885,7 +919,7 @@ data() {
       'defaultImage':async function(value) {
           if (value) {
             this.image = value;
-            console.log(this.image)
+            console.log('image!!! : ' + this.image)
 
             var binary = atob(value.split(',')[1]);
             var array = [];
@@ -1166,6 +1200,7 @@ methods: {
                         }
                         break;
                     case '3':
+                        console.log(this.checkSns[1]);
                         console.log(this.currentMyinfoChk);
                         if (this.likeList.length < 1) {
                             const res = await this.$dialog.confirm({
@@ -1187,9 +1222,14 @@ methods: {
                                 text: '자주가는 인터넷 쇼핑몰을 최소 2개, 최대 5개 선택해주세요.',
                                 actions:{true:'닫기'}
                             });
-                        }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
+                        }  else if(this.checkSns[1].id != '' && this.currentYouChk == '' ) {
                             const res = await this.$dialog.confirm({
                                 text: '유튜브 컨텐츠 연동 항목을 선택해주세요.',
+                                actions:{true:'닫기'}
+                            });
+                        }  else if(this.checkSns[1].id != '' && this.currentYouChk == 'youChk2' ) {
+                            const res = await this.$dialog.confirm({
+                                text: '유튜브 컨텐츠 연동 항목을 동의해주세요..',
                                 actions:{true:'닫기'}
                             });
                         } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
@@ -1205,7 +1245,7 @@ methods: {
                                 'styleDislike': this.dislikeList.join(),
                                 'likeBrand': this.likeBrand.join(),
                                 'likeMall': this.mallList.join(),
-                                'youtFlag':  this.currentYouChk == 'youChk1' && this.this.checkSns[1].id != '' ? 'y' : 'n'
+                                'youtFlag':  this.currentYouChk == 'youChk1' && this.checkSns[1].id != '' ? 'y' : 'n'
                             }
 
                             var payload = ['ugr3', params];
@@ -1339,6 +1379,46 @@ methods: {
             }
         }
      },
+async uploadTitle(cropData) {
+    console.log('cropData : ' + cropData)
+    var blobfile = cropData.croppedFile;
+
+    console.log('size!! : ' + blobfile);
+
+
+    const formData = new FormData();
+    formData.append('imgFile', blobfile, 'image.jpg');
+    var payload = ['title', formData];
+
+    await this.$store.dispatch("sendUserImage", payload).then((response) => {
+        if(response == 200) {
+            console.log('잘올라감 : title')
+            const res =  this.$dialog.confirm({
+                text: '대표 사진을 성공적으로 올렸습니다.',
+                actions:{true:'닫기'}
+            });
+        } else {
+            console.log('error')
+            // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+        }
+    })
+},
+
+async previewTitle(res) {
+    console.log('previe title image' + res)
+    this.dataURIString = res;
+},
+
+async selectTitle(res) {
+    console.log('select title' + res)
+},
+
+async errorTitle() {
+    const res2 =  this.$dialog.confirm({
+        text: '다른 사진을 선택해주세요.',
+        actions:{true:'닫기'}
+    });
+},
 
 
      resizeImage (settings) {

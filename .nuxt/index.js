@@ -31,6 +31,7 @@ import nuxt_plugin_vviewer_14000650 from 'nuxt_plugin_vviewer_14000650' // Sourc
 import nuxt_plugin_swiper_68e7f06e from 'nuxt_plugin_swiper_68e7f06e' // Source: ../plugins/swiper.js (mode: 'all')
 import nuxt_plugin_vueuploadmultipleimage_26547dea from 'nuxt_plugin_vueuploadmultipleimage_26547dea' // Source: ../plugins/vue-upload-multiple-image.js (mode: 'all')
 import nuxt_plugin_vuedraggable_11e72f9a from 'nuxt_plugin_vuedraggable_11e72f9a' // Source: ../plugins/vuedraggable.js (mode: 'all')
+import nuxt_plugin_vueankacropper_329caad2 from 'nuxt_plugin_vueankacropper_329caad2' // Source: ../plugins/vue-anka-cropper.js (mode: 'client')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -257,6 +258,10 @@ async function createApp (ssrContext) {
 
   if (typeof nuxt_plugin_vuedraggable_11e72f9a === 'function') {
     await nuxt_plugin_vuedraggable_11e72f9a(app.context, inject)
+  }
+
+  if (process.client && typeof nuxt_plugin_vueankacropper_329caad2 === 'function') {
+    await nuxt_plugin_vueankacropper_329caad2(app.context, inject)
   }
 
   // If server-side, wait for async component to be resolved first

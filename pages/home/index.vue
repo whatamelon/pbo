@@ -35,19 +35,19 @@
             <div class="qI-head2">
                 <div class="qI-bodyInfo">
                     <div class="bodyInfo__container">
-                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeHeight }}</span>
+                        <span class="bodyInfo__value2">{{ USER_GRP2.sizeHeight }}</span>
                         <span class="bodyInfo__key">키</span>
                     </div>
                     <div class="bodyInfo__container">
-                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeTop }}</span>
+                        <span class="bodyInfo__value2">{{ USER_GRP2.sizeTop }}</span>
                         <span class="bodyInfo__key">상의</span>
                     </div>
                     <div class="bodyInfo__container">
-                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeBottom }}</span>
+                        <span class="bodyInfo__value2">{{ USER_GRP2.sizeBottom }}</span>
                         <span class="bodyInfo__key">하의</span>
                     </div>
                     <div class="bodyInfo__container">
-                        <span class="bodyInfo__value1">{{ USER_GRP2.sizeFoot }}</span>
+                        <span class="bodyInfo__value2">{{ USER_GRP2.sizeFoot }}</span>
                         <span class="bodyInfo__key">신발</span>
                     </div>
                     <div class="bodyInfo__container">
@@ -356,6 +356,7 @@ methods:{
         margin:0 auto 5% auto;
         width:160px;
         height:auto;
+        border-radius: 50%;
     }
 
     &-headInfo{

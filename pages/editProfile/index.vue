@@ -164,16 +164,52 @@
                         프로필 사진 선택
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 0 0 7%;">프로필 페이지에 동그랗게 나오는 프로필 사진이므로 <br/>머리가 잘리지 않은 전체 얼굴 사진으로 선택해주세요!</p>
-                    <div style="text-align:center; margin-top:5%;" v-show="defaultImage == ''">
+                    <div style="text-align:center; margin-top:5%;" v-show="dataURIString == ''">
                         <img :src="IMAGE_URL + USER_GRP5.imgLinkTitle" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
                     </div>
-                    <div style="text-align:center; margin-top:5%;" v-show="defaultImage != ''">
-                    <img :src="IMAGE_URL + USER_GRP5.imgLinkTitle" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
+                    <div style="text-align:center; margin-top:5%;" v-show="dataURIString != ''">
+                    <img v-show="dataURIString == ''" :src="IMAGE_URL + USER_GRP5.imgLinkTitle" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
                     
-                        <img :src="defaultImage" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
+                        <img :src="dataURIString" style="width: 100px;height: 100px; border: 1px solid #000; border-radius:50px">
                     </div>
-                    
-                    <VueImageUploadCroppie :defaultImage.sync="defaultImage" :height="100" :width="100" :circle="true" :trans="trans"></VueImageUploadCroppie>
+                    <no-ssr>
+                     <vueAnkaCropper
+                        :options="{
+                            aspectRatio: 1,
+                            closeOnSave: false,
+                            cropArea: 'box',
+                            croppedHeight: 500,
+                            croppedWidth: 500,
+                            cropperHeight: true,
+                            dropareaMessage: '.',
+                            frameLineDash: [5,3],
+                            frameStrokeColor: 'rgba(255, 255, 255, 0.8)',
+                            handleFillColor: 'rgba(255, 255, 255, 0.2)',
+                            handleHoverFillColor: 'rgba(255, 255, 255, 0.4)',
+                            handleHoverStrokeColor: 'rgba(255, 255, 255, 1)',
+                            handleSize: 10,
+                            handleStrokeColor: 'rgba(255, 255, 255, 0.8)',
+                            layoutBreakpoint: 350,
+                            maxCropperHeight: 300,
+                            maxFileSize: 10000000,
+                            overlayFill: 'rgba(0, 0, 0, 0.5)',
+                            previewOnDrag: true,
+                            previewQuality: 0.8,
+                            resultQuality: 0.95,
+                            resultMimeType: 'image/jpeg',
+                            selectButtonLabel: '사진을 선택해주세요.',
+                            showPreview: true,
+                            skin: 'light',
+                            uploadData: {},
+                            uploadTo: false}"
+                            @cropper-error="errorTitle"
+                            @cropper-preview="previewTitle"
+                            @cropper-saved="uploadTitle"
+                            @cropper-file-selected="selectTitle"
+                            ></vueAnkaCropper>
+                    </no-ssr>
+                    <!-- <VueImageUploadCroppie 
+                    :defaultImage.sync="defaultImage" :height="500" :width="500" :circle="true" :trans="trans"></VueImageUploadCroppie> -->
                 </div>
 
 
@@ -472,34 +508,12 @@
 <script>
 
 import NoSSR from "vue-no-ssr";
-
 import VueDaumPostcode from "vue-daum-postcode"
 import SelectBox from "@/components/Functions/selectbox";
-import VueImageUploadCroppie from 'vue-image-upload-croppie'
-import { mapGetters, mapActions } from "vuex";import Vue from 'vue';
-import vueFilePond from 'vue-filepond';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilePondPluginImageEdit from 'filepond-plugin-image-edit';
-import FilePondPluginImageResize from 'filepond-plugin-image-resize';
-import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
-
-import 'filepond/dist/filepond.min.css';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import { mapGetters, mapActions } from "vuex";
+// import Vue from 'vue';
 import GoUpButton from "@/components/App/GoUpButton";
 
-const FilePond = vueFilePond(
-  FilePondPluginFileValidateType,
-  FilePondPluginImageExifOrientation,
-  FilePondPluginImagePreview,
-  FilePondPluginImageCrop,
-  FilePondPluginImageEdit,
-  FilePondPluginImageResize,
-  FilePondPluginImageTransform
-    );
-Vue.component('filePond', FilePond);
 
         
 export default {
@@ -507,10 +521,8 @@ layout: "blank",
 
 components:{
     SelectBox,
-    VueImageUploadCroppie,
-    FilePond, 
     "no-ssr": NoSSR,
-      GoUpButton
+      GoUpButton,
 },
 data() {
       return{
@@ -520,7 +532,8 @@ data() {
         postCode1: this.$store.getters.USER_GRP4.addr0 == null ? '':  this.$store.getters.USER_GRP4.addr0 ,
         postCode2:this.$store.getters.USER_GRP4.addr1 == null ? '':  this.$store.getters.USER_GRP4.addr1 ,
         postCode3:this.$store.getters.USER_GRP4.addrCode == null ? '':  this.$store.getters.USER_GRP4.addrCode ,
-        defaultImage: '',
+        dataURIString:'',
+        // defaultImage: '',
         trans: { 
             'cropImage': '대표 사진 선택', 
             'chooseImage':'사진 가져오기', 
@@ -705,34 +718,36 @@ data() {
 },
 
   watch: {
-      'defaultImage':async function(value) {
-          if (value) {
-            this.image = value;
-            console.log(this.image)
+    //   'defaultImage':async function(value) {
+    //       if (value) {
+    //         this.image = value;
+    //         console.log('image!!! : ' + this.image)
 
-            var binary = atob(value.split(',')[1]);
-            var array = [];
-            for(var i = 0; i < binary.length; i++) {
-                array.push(binary.charCodeAt(i));
-            }
-            var blobfile = new Blob([new Uint8Array(array)], {type: 'image/jpg'});
+    //         var binary = atob(value.split(',')[1]);
+    //         var array = [];
+    //         for(var i = 0; i < binary.length; i++) {
+    //             array.push(binary.charCodeAt(i));
+    //         }
+    //         var blobfile = new Blob([new Uint8Array(array)], {type: 'image/jpg'});
 
-            // if(blobfile.size ==)
+    //         console.log('size!! : ' + blobfile.size);
 
-            const formData = new FormData();
-            formData.append('imgFile', blobfile, 'image.jpg');
-            var payload = ['title', formData];
+    //         // if(blobfile.size ==)
 
-            await this.$store.dispatch("sendUserImage", payload).then((response) => {
-                if(response == 200) {
-                    console.log('잘올라감 : title')
-                } else {
-                    console.log('error')
-                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                }
-            })
-          }
-      }
+    //         const formData = new FormData();
+    //         formData.append('imgFile', blobfile, 'image.jpg');
+    //         var payload = ['title', formData];
+
+    //         await this.$store.dispatch("sendUserImage", payload).then((response) => {
+    //             if(response == 200) {
+    //                 console.log('잘올라감 : title')
+    //             } else {
+    //                 console.log('error')
+    //                 // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
+    //             }
+    //         })
+    //       }
+    //   }
   },
   computed: {
     ...mapGetters([
@@ -748,7 +763,37 @@ data() {
 
     postCodeBody() {
         return this.postCode1 == '' ? '주소 입력' : '주소 다시 입력';
-    }
+    },
+
+        //   errorMessage(a) {
+        //       if( a == null || a== undefined) {
+        //         return  '';
+        //       } else {
+        //           return  a;
+        //       }
+        //   },
+
+        //   imageSource(a) {
+        //       if( a == null || a== undefined) {
+        //         return  '';
+        //       } else {
+        //           return  'i';
+        //       }
+        //   },
+        //   file(a) {
+        //       if( a == null || a== undefined) {
+        //         return  '';
+        //       } else {
+        //           return  'a';
+        //       }
+        //   },
+        //   cropData(a) {
+        //       if( a == null || a== undefined) {
+        //         return  '';
+        //       } else {
+        //           return  'b';
+        //       }
+        //   },
 },
 
 async asyncData({ store }) {
@@ -785,6 +830,13 @@ async asyncData({ store }) {
             { 'name':'스트릿', 'isActive': false},
             {'name':'데일리', 'isActive': false}
         ];
+
+        var styleExes = [
+            '페미닌', '모던시크', '심플베이직' , 
+            '러블리', '유니크' ,'캠퍼스룩','빈티지',
+            '섹시글램','스쿨룩','로맨틱','오피스룩',
+            '럭셔리','스트릿','데일리'
+        ];
         var list1 = styleListEx;
         var list2 = styleListEx2;
 
@@ -800,6 +852,12 @@ async asyncData({ store }) {
             }
         }
 
+        for(var m = 0; m < userLst.length; m++) {
+            if(!styleExes.includes(userLst[m])) {
+                list1.push({'name': userLst[m], 'isActive': true});
+            } 
+        }
+
         console.log(list1)
 
         for(var k = 0; k < list2.length; k++) {
@@ -810,6 +868,13 @@ async asyncData({ store }) {
                 } 
             }
         }
+
+        for(var n = 0; n < userDLst.length; n++) {
+            if(!styleExes.includes(userDLst[m])) {
+                list2.push({'name': userDLst[m], 'isActive': true});
+            } 
+        }
+
         console.log(list2)
 
         var instIDx = '';
@@ -1013,8 +1078,9 @@ methods: {
                             'sizePelvis': this.size.pelvis
                         }
 
-                        var payload = ['ugr2', params];
+                        var payloadUgr2 = ['ugr2', params];
 
+                        console.log(payloadUgr2);
                     for(var idxFile = 0; idxFile < this.replacedImages.length; idxFile++) {
 
                         var blobfile = this.replacedImages[idxFile].file;
@@ -1034,7 +1100,7 @@ methods: {
                         })
                     }    
 
-                            await this.$store.dispatch("sendUserInfo", payload).then((response) => {
+                            await this.$store.dispatch("sendUserInfo", payloadUgr2).then((response) => {
                             if(response == 200) {
                             const res =  this.$dialog.confirm({
                                 text: '수정되었습니다. 피클링 앱에서는 최대 1주일 후부터 확인 가능합니다',
@@ -1079,11 +1145,6 @@ methods: {
                         }  else if(this.checkSns[1].id != '' && this.currentYouChk == '') {
                             const res = await this.$dialog.confirm({
                                 text: '유튜브 컨텐츠 연동 항목을 선택해주세요',
-                                actions:{true:'닫기'}
-                            });
-                        } else if(this.currentMyinfoChk == '' || this.currentMyinfoChk == 'myChk2') {
-                            const res = await this.$dialog.confirm({
-                                text: '개인 정보 처리 방침에 동의 하시지 않으시면 픽키 가입을 할 수 없습니다',
                                 actions:{true:'닫기'}
                             });
                         } else {
@@ -1169,7 +1230,7 @@ methods: {
     },
 
     async setPhotoFilesEdit (fieldName, fileList, index) {
-        if(fileList.length != 0) {
+        if(fileList.length != 1) {
                             const res = await this.$dialog.confirm({
                                 text: '이미지를 1개만 선택해주세요.',
                                 actions:{true:'닫기'}
@@ -1248,91 +1309,47 @@ methods: {
     });
 },
 
-    handleFilePondInit () {
-      console.log('FilePond has initialized')
-        this.$refs.pond.getFiles();
-    },
-    onload (e, r) {
-        if(this.uploadFile == true) {
-            console.log('load ok?')
-            // var idx = 0;
-            console.log(this.imageUploadIdx)
-            this.imageUploadIdx = this.imageUploadIdx +1;
+async uploadTitle(cropData) {
+    console.log('cropData : ' + cropData)
+    var blobfile = cropData.croppedFile;
 
-            if(e== null) {
-                console.log('file object : ' + r.file)
-                console.log('file id : ' + r.id)
-                console.log('file extension : ' + r.fileExtension)
-                console.log('fileSize : ' + r.fileSize)
-                console.log('filename : ' + r.filename)
-            }  else {
-                console.log('error? : ' + e)
-            }
+    console.log('size!! : ' + blobfile);
 
-            const formData = new FormData();
-            formData.append('imgFile', r.file, r.file.name);
-            var payload = [ this.imageUploadIdx, formData];
 
-                this.$store.dispatch("sendUserImage", payload).then((response) => {
-                if(response == 200) {
-                    console.log('잘올라감' + this.imageUploadIdx)
-                } else {
-                    // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
-                }
-            })
+    const formData = new FormData();
+    formData.append('imgFile', blobfile, 'image.jpg');
+    var payload = ['title', formData];
+
+    await this.$store.dispatch("sendUserImage", payload).then((response) => {
+        if(response == 200) {
+            console.log('잘올라감 : title')
+            const res =  this.$dialog.confirm({
+                text: '대표 사진 수정을 요청했습니다.',
+                actions:{true:'닫기'}
+            });
         } else {
-
+            console.log('error')
+            // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
         }
-    },
-    updateFiles(files) {
-        this.fileList = files;
-        console.log(this.fileList.length)
-        console.log(this.myFiles.length)
+    })
+},
 
+async previewTitle(res) {
+    console.log('previe title image' + res)
+    this.dataURIString = res;
+},
 
-        if(this.fileList.length < this.myFiles.length) {
-            this.uploadFile = false;
-            this.$refs.pond.removeFile();
-            this.fileList = [];
-            console.log('이건 삭제한거임. api 보내면 안됨.')
-        }
-        else if(files.length == 0) {
-            this.uploadFile = false;
-            console.log('no files')
-        } else if (files.length != 6) {
-            if(this.uploadFile == true) {
-                this.imageUploadIdx = 0;
-                this.uploadFile = true;
-            } 
-            console.log('file length not 6')
-            console.log(files)
-            this.myFiles = [];
-            for(var i =0; i < files.length; i ++) {
-                if(files[i].filename == '') {
-                    console.log('has no file name')      
-                } else {
-                    console.log(files[i].filename)
-                    this.myFiles.push({'idx': i, 'name': files[i].filename});
-                }
-            }
-        } else {
-            if(this.uploadFile == false) {
-                this.imageUploadIdx = 0;
-                this.uploadFile = true;
-            } 
-            console.log('how about update files?')
-            console.log(files)
-            this.myFiles = [];
-            for(var i =0; i < files.length; i ++) {
-                if(files[i].filename == '') {
-                    console.log('has no file name')      
-                } else {
-                    console.log(files[i].filename)
-                    this.myFiles.push({'idx': i, 'name': files[i].filename});
-                }
-            }
-        }
-    },
+async selectTitle(res) {
+    console.log('select title' + res)
+},
+
+async errorTitle() {
+    const res2 =  this.$dialog.confirm({
+        text: '다른 사진을 선택해주세요.',
+        actions:{true:'닫기'}
+    });
+},
+
     clickBrand(item, index){
         console.log(item)
         console.log(index)

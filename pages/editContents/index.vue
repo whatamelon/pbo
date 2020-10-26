@@ -8,21 +8,26 @@
             </div>
 
 
+            <div class="requireChange" @click="requireChange">
+                변경사항 수정 요청
+            </div>
+
+
             <div class="appbar2">
-                제목
+                제목 ( 최대 20자 )
             </div>
 
             <div class="input">
             <input
             maxlength="20"
-            placeholder="제목 ( 공백 포함 최대 20자 )"
+            placeholder="(예시: 153cm 직장인의 크롭 자켓룩)"
                 v-model="contents.title"
                 class="input__bottom"
                 type="text"
             />
             </div>
             <div class="appbar2">
-                상세 설명
+                상세 설명 ( 100~150자 )
             </div>
             <div class="input22">
                 <textarea 
@@ -36,6 +41,9 @@
         <div class="button_container" @click="goTo(1)">
              {{ this.nn }} 
         </div>
+            <br/>
+            <div style="border-top: 7px solid #ececec;"></div>
+            <br/>
 
             <div class="appbar2">
                 대표사진 ( 1장 )
@@ -60,7 +68,7 @@
                 상세사진 ( 14장 ~ 30장 )
             </div>
             <div class="changeIndexSum">
-                드래그 앤 드롭후 '순서변경' 버튼을 누르시면, 순서가 변경됩니다.
+                사진을 드래그 하여 원하는 위치에 놓으신 후, '순서 변경'버튼을 누르면, 순서가 변경됩니다.
             </div>
                 <div v-show="detailImages.length !=0" style="margin:8% 0 0 5%">
                     <draggable v-model="detailImages"  handle=".handle1" >
@@ -89,7 +97,7 @@
                 정자세 사진 ( 2장 - 3장 )
             </div>
             <div class="changeIndexSum">
-                드래그 앤 드롭후 '순서변경' 버튼을 누르시면, 순서가 변경됩니다.
+                사진을 드래그 하여 원하는 위치에 놓으신 후, '순서 변경'버튼을 누르면, 순서가 변경됩니다.
             </div>
                 <div v-show="frontImages.length !=0" style="margin:8% 0 0 5%">
                     <draggable v-model="frontImages"  handle=".handle2" >
@@ -119,7 +127,7 @@
                 부분 확대 사진 ( 2장 - 3장 )
             </div>
             <div class="changeIndexSum">
-                드래그 앤 드롭후 '순서변경' 버튼을 누르시면, 순서가 변경됩니다.
+                사진을 드래그 하여 원하는 위치에 놓으신 후, '순서 변경'버튼을 누르면, 순서가 변경됩니다.
             </div>
                 <div v-show="partImages.length !=0" style="margin:8% 0 0 5%">
                     <draggable v-model="partImages"  handle=".handle3" >
@@ -269,29 +277,14 @@ methods:{
                                 text: '상세 설명을 입력해주세요',
                                 actions:{true:'닫기'}
                             });
-              } else if( this.contents.exp.length  > 150) {
+              } else if( this.contents.exp.length  < 100) {
+                            const res = await this.$dialog.confirm({
+                                text: '상세 설명이 100자 미만입니다',
+                                actions:{true:'닫기'}
+                            });
+              }else if( this.contents.exp.length  > 150) {
                             const res = await this.$dialog.confirm({
                                 text: '상세 설명이 150자를 초과했습니다',
-                                actions:{true:'닫기'}
-                            });
-              } else if(this.imagesTitle.length == 0) {
-                            const res = await this.$dialog.confirm({
-                                text: '대표 사진을 업로드 해주세요',
-                                actions:{true:'닫기'}
-                            });
-              } else if(this.images1.length == 0) {
-                            const res = await this.$dialog.confirm({
-                                text: '상세 사진을 업로드 해주세요',
-                                actions:{true:'닫기'}
-                            });
-              } else if(this.images2.length == 0) {
-                            const res = await this.$dialog.confirm({
-                                text: '정자세 사진을 업로드 해주세요',
-                                actions:{true:'닫기'}
-                            });
-              } else if(this.images3.length == 0) {
-                            const res = await this.$dialog.confirm({
-                                text: '부분 확대 사진을 업로드 해주세요',
                                 actions:{true:'닫기'}
                             });
               } 
@@ -311,6 +304,11 @@ methods:{
                    await this.$store.dispatch("changeContents", payload).then((response) => {
                       if(response == 200) {
                           console.log('잘올라감 : title')
+
+                            const res =  this.$dialog.confirm({
+                                text: '수정 완료',
+                                actions:{true:'닫기'}
+                            }); 
                       } else {
                           console.log('error')
                             const res =  this.$dialog.confirm({
@@ -404,9 +402,10 @@ methods:{
     async plusDetailFiles (fieldName, fileList) {
       console.log('fileList!!! ' + fileList)
        this.plusDetailImages = [];
-        if(fileList.length > 30 || fileList.length < 14) {
+            var detailList = this.$store.getters.CONTS_IMG_DETAIL_LIST;
+        if(fileList.length + detailList.length > 30 ) {
                             const res =  this.$dialog.confirm({
-                                text: '이미지를 14~30개선택해주세요',
+                                text: '총 이미지의 갯수를 30개 이하로 업로드해주세요.',
                                 actions:{true:'닫기'}
                             });
         } else if (fileList.length ==0) {
@@ -427,7 +426,6 @@ methods:{
                 this.plusDetailImages.push(image);
             }
 
-            var detailList = this.$store.getters.CONTS_IMG_DETAIL_LIST;
             var standardIndex = 0;
 
             for(var j = 0; j< detailList.length; j++) {
@@ -706,6 +704,7 @@ methods:{
                     })
                 break;
         }
+
         location.reload();
     },
 
@@ -763,7 +762,24 @@ methods:{
                 })
                 break;
         }
+        location.reload();
     },
+
+    async requireChange() {
+
+            var thisContsId=   localStorage.getItem('thisImageId');
+            await this.$store.dispatch("sendConfirmRequire", thisContsId).then((response) => {
+            if(response == 200) {
+                this.$router.push('/contents');
+            } else {
+                console.log('error')
+            const res =  this.$dialog.confirm({
+                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                actions:{true:'닫기'}
+            });
+            }
+        })
+    }
 
 
 },
@@ -776,6 +792,19 @@ methods:{
 </script>
 
 <style lang="scss" scoped>
+.requireChange{
+    width: 340px;
+    margin: 30px auto;
+    height: 60px;
+    border-radius: 5px;
+    border: 3px solid $primary;
+    color: $primary;
+    background-color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 900;
+}
 
 #my-strictly-unique-vue-upload-multiple-image {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

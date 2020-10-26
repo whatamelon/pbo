@@ -201,3 +201,16 @@ button:focus {outline:0;}
     padding: 10px 0 0 0 !important;
   }
 }
+
+.ankaCropper__navButton{
+  width: 25px !important;
+  height: 25px !important;
+}
+.ankaCropper__saveButton {
+  width: 95px !important;
+  height: 35px !important;
+}
+.feather{
+  width: 12px !important;
+  height: 12px !important;
+}
