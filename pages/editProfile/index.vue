@@ -1310,6 +1310,13 @@ methods: {
 },
 
 async uploadTitle(cropData) {
+    if(cropData == null || cropData == undefined) {
+            const res = await this.$dialog.confirm({
+                text: 'save버튼을 눌러주세요.',
+                actions:{true:'닫기'}
+            });
+    } else {
+
     console.log('cropData : ' + cropData)
     var blobfile = cropData.croppedFile;
 
@@ -1332,6 +1339,7 @@ async uploadTitle(cropData) {
             // alert('네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.');
         }
     })
+    }
 },
 
 async previewTitle(res) {
