@@ -235,6 +235,32 @@ methods:{
   height:100%;
 }
 
+.infoN {
+  &__container{
+    margin-top: 20%;
+  }
+  &__title{
+    text-align: center;
+    margin: 0 auto;
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+
+  &__goRegister{
+    margin: 50px auto 0 auto;
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-align: center;
+    width: 300px;
+    height:50px;
+    padding: 10px;
+  }
+}
+
 .bcproduct{
     &__container{
         display: flex;

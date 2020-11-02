@@ -338,7 +338,7 @@
                         자주 입는 스타일 <br/><p class="select__range">(최대 3개)</p>
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">내가 너무나 애정하는 스타일을 최대 3개까지만 선택해 주세요~</p>
-                    <div class="input22" style="display:flow-root; margin-top:3%; margin-right: 50px;">
+                    <div class="input22" style="display:grid; margin-top:3%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in brandList" 
                         class="brandItem" 
@@ -366,7 +366,7 @@
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">무슨 일이 있어도 절대 안 입는 스타일 있잖아요?! 그런 스타일을 최소 3개 이상 선택해 주세요!</p>
                     
-                    <div class="input22" style="display:flow-root; margin-top:3%; margin-right: 50px;">
+                    <div class="input22" style="display:grid; margin-top:3%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in brandList2" 
                         class="brandItem" 
@@ -393,7 +393,7 @@
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">스트릿브랜드, 국내브랜드, 명품브랜드 등 내가 특별히 좋아하는 패션 브랜드가 있다면 최대 10개까지 적어주세요~ </p>
                     
-                    <div class="input22" style="display:flow-root; margin-top:5%; margin-right: 50px;">
+                    <div class="input22" style="display:grid; margin-top:5%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in likeBrand" 
                         class="brandItem2" 
@@ -418,7 +418,7 @@
                     </div>
                     <p style="font-size:0.9em; font-weight:400; margin:2% 40px 0 7%;">자주 방문하는 인터넷(브랜드X)쇼핑몰을 최소 2개 이상 알려주세요~ </p>
                     
-                    <div class="input22" style="display:flow-root; margin-top:5%; margin-right: 50px;">
+                    <div class="input22" style="display:grid; margin-top:5%; margin-right: 50px;">
                         <span 
                         v-for="(item, index) in mallList" 
                         class="brandItem2" 
