@@ -2,6 +2,14 @@
 
         <div class="model-list" style="background-color:#f2f2f2">
 
+        <div class="waitBg" v-show="this.wait == true">
+            <div style="text-align: center; margin: 0 auto;">
+            <p class="wait__Text">정보를 등록중입니다.</p>
+            <p class="wait__Text">잠시만 기다려주세요.</p>
+            <img src="/spin.gif" style="width: 100px; height: 100px; margin-top: 20px; z-index:101;"/>
+            </div>
+        </div>
+
     <div class="step" style="background-color:#f2f2f2" v-show="step=='2' || step=='3' || step =='1'">
         <div class="step-indicator">1</div>
         <div class="step-indicator" v-if ="step=='2' || step=='3'">2</div>
@@ -604,6 +612,7 @@ components:{
 },
 data() {
       return{
+        wait: false,
         dataURIString:'',
         step: '1',
         imageUploadIdx: 0,
@@ -1144,27 +1153,28 @@ methods: {
                             });
                         }  else {
 
+                                this.wait = true;
+                            var errorRetrun = 'false';
+                            var idxFile = [0,1,2,3,4,5];
+                            for(const item in idxFile) {
 
-                        for(var idxFile = 0; idxFile < 6; idxFile++) {
-                            // console.log(this.imageUploadIdx)
-                            // this.imageUploadIdx = this.imageUploadIdx +1;
-
-                            var blobfile = this.images2[idxFile];
+                            var blobfile = this.images2[item];
                             const formData = new FormData();
                             formData.append('imgFile', blobfile, 'image.jpg');
-                            var payload = [ idxFile, formData];
-
-                                this.$store.dispatch("sendUserImage", payload).then((response) => {
+                            var payload = [ item, formData];
+                            await this.$store.dispatch("sendUserImage", payload).then((response) => {
+                                console.log('이건 리스폰스야 ' + response)
                                 if(response == 200) {
-                                    console.log('잘올라감' + this.imageUploadIdx)
+                                    console.log('잘올라감' + item)
                                 } else {
-                            const res = this.$dialog.confirm({
-                                text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
-                                actions:{true:'닫기'}
-                            });
+                                    errorRetrun = 'true';
                                 }
                             })
-                        }
+                            }
+                            this.wait = false;
+                            console.log('is upload image false?'+errorRetrun);
+                            if(errorRetrun == 'false') {
+
 
                             var params = {
                                 'status': 'req',
@@ -1197,6 +1207,13 @@ methods: {
                                 actions:{true:'닫기'}
                             });
                             })
+                            } else {
+                                const res = this.$dialog.confirm({
+                                    text: '네트워크 에러가 발생했습니다. 잠시후에 다시 시도해주세요.',
+                                    actions:{true:'닫기'}
+                                });
+                            }
+
                         }
                         break;
                     case '3':
@@ -1372,6 +1389,7 @@ methods: {
                     file: fileList[i],
                     maxSize: 500
                 });
+                console.log('blob size!!!!!!!! : '+image.size);
 
                 console.log('image  : ' + image)
                 this.images2.push(image);
@@ -1398,6 +1416,7 @@ async uploadTitle(cropData) {
     var payload = ['title', formData];
 
     await this.$store.dispatch("sendUserImage", payload).then((response) => {
+        console.log(response);
         if(response == 200) {
             console.log('잘올라감 : title')
             const res =  this.$dialog.confirm({
@@ -1410,6 +1429,27 @@ async uploadTitle(cropData) {
         }
     })
     }
+},
+
+ async uploadPickyImages() {
+    var errorRetrun = 'false';
+    var idxFile = [0,1,2,3,4,5];
+    for(const item in idxFile) {
+
+    var blobfile = this.images2[item];
+    const formData = new FormData();
+    formData.append('imgFile', blobfile, 'image.jpg');
+    var payload = [ item, formData];
+    await this.$store.dispatch("sendUserImage", payload).then((response) => {
+        console.log('이건 리스폰스야 ' + response)
+        if(response == 200) {
+            console.log('잘올라감' + item)
+        } else {
+            errorRetrun = 'true';
+        }
+    })
+    }
+    return errorRetrun;
 },
 
 async previewTitle(res) {
@@ -1655,6 +1695,25 @@ beforeRouteLeave(to, from, next) {
 }
 </script>
 <style lang="scss" scoped>
+.wait{
+    &Bg{
+    z-index: 100;
+        width: 100%;
+        max-width: 500px;
+        height: 100%;
+        position: fixed;
+        background-color:rgba(140, 140, 140, 0.9);
+        padding: 100px 0 0 0;
+    }
+
+    &__Text{
+    z-index: 101;
+        margin: 10px auto;
+        font-size: 1.2em;
+        font-weight: 800;
+        color: #fff;
+    }
+}
 .step{
     display: flex;
     justify-content: space-around;

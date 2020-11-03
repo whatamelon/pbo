@@ -212,9 +212,7 @@ const USER = {
       }),
 
     sendUserInfo: ({ getters, commit, dispatch }, payload) =>
-      new Promise(async (resolve, reject) => {
-        console.log(payload[0])
-        console.log(payload[1])
+      new Promise(  async(resolve, reject) => {
         try {
           const response = await sendUserInfoAPI(payload[0], payload[1]);
           resolve(response.status);
@@ -224,15 +222,19 @@ const USER = {
     }),
 
     sendUserImage: ({ getters, commit, dispatch }, payload) =>
-      new Promise(async (resolve, reject) => {
-        console.log(payload[0])
-        console.log(payload[1])
-        try {
-          const response = await sendUserStyleImagesAPI(payload[0], payload[1]);
+      new Promise( resolve=> {
+        // console.log(payload[0])
+        // console.log(payload[1])
+        setTimeout(async() => {
+          const response =  await sendUserStyleImagesAPI(payload[0], payload[1]);
           resolve(response.status);
-        } catch (error) {
-          reject(error);
-        }
+      }, 1000);
+        // try {
+        //   const response = await sendUserStyleImagesAPI(payload[0], payload[1]);
+        //   resolve(response.status);
+        // } catch (error) {
+        //   reject(error);
+        // }
     }),
 
     sendUserNick: ({ getters, commit, dispatch }, nick) =>
