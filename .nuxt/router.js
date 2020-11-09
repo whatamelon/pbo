@@ -11,6 +11,7 @@ const _2214759e = () => interopDefault(import('../pages/createAccount/index.vue'
 const _51bb0ac8 = () => interopDefault(import('../pages/curate/index.vue' /* webpackChunkName: "pages/curate/index" */))
 const _669b26fa = () => interopDefault(import('../pages/editContents/index.vue' /* webpackChunkName: "pages/editContents/index" */))
 const _4e24779f = () => interopDefault(import('../pages/editProfile/index.vue' /* webpackChunkName: "pages/editProfile/index" */))
+const _30636965 = () => interopDefault(import('../pages/flutterBridge/index.vue' /* webpackChunkName: "pages/flutterBridge/index" */))
 const _21570b67 = () => interopDefault(import('../pages/follow/index.vue' /* webpackChunkName: "pages/follow/index" */))
 const _3f1f4456 = () => interopDefault(import('../pages/home/index.vue' /* webpackChunkName: "pages/home/index" */))
 const _37460dde = () => interopDefault(import('../pages/makeContents/index.vue' /* webpackChunkName: "pages/makeContents/index" */))
@@ -77,6 +78,10 @@ export const routerOptions = {
     path: "/editProfile",
     component: _4e24779f,
     name: "editProfile"
+  }, {
+    path: "/flutterBridge",
+    component: _30636965,
+    name: "flutterBridge"
   }, {
     path: "/follow",
     component: _21570b67,

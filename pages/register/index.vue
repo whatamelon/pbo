@@ -613,6 +613,7 @@ components:{
 data() {
       return{
         wait: false,
+        clickSave: false,
         dataURIString:'',
         step: '1',
         imageUploadIdx: 0,
@@ -1104,6 +1105,11 @@ methods: {
                                 text: '대표 사진을 업로드해주세요.',
                                 actions:{true:'닫기'}
                             });
+                        }else if(this.clickSave == false) {
+                            const res = await this.$dialog.confirm({
+                                text: '대표 사진을 업로드하고, Save버튼을 눌러주세요.',
+                                actions:{true:'닫기'}
+                            });
                         }else if( this.images2.length != 6) {
                             const res = await this.$dialog.confirm({
                                 text: '스타일 사진을 6장 업로드해주세요.',
@@ -1419,6 +1425,7 @@ async uploadTitle(cropData) {
         console.log(response);
         if(response == 200) {
             console.log('잘올라감 : title')
+            this.clickSave = true;
             const res =  this.$dialog.confirm({
                 text: '대표 사진을 성공적으로 올렸습니다.',
                 actions:{true:'닫기'}
